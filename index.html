@@ -177,6 +177,24 @@ h3{font-size:12px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;
 .swwrap .upl{position:absolute;left:10px;bottom:10px;background:rgba(255,255,255,.92);color:var(--ink);border-color:var(--line);font-size:12px;padding:6px 10px}
 @media (max-width:560px){.form{grid-template-columns:1fr}}
 
+/* pre-buy vs production */
+.steps{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;margin:0 0 22px}
+.steps div{border:1px solid var(--line);border-radius:12px;padding:12px 14px;font-size:12px;color:var(--ink2)}
+.steps b{display:block;color:var(--ink);font-size:13px;margin-bottom:2px}
+.steps .n{font-size:11px;font-weight:700;color:var(--blue);letter-spacing:.1em}
+.pvpctl{display:flex;gap:16px;flex-wrap:wrap;align-items:center;margin:0 0 14px}
+.seg{display:inline-flex;border:1px solid var(--line);border-radius:9px;overflow:hidden}
+.seg button{border:0;background:#fff;padding:7px 12px;font-size:13px;color:var(--ink2)}
+.seg button.on{background:var(--ink);color:#fff}
+tr.base td{background:#fff}
+tr.base.click td:first-child::before{content:"▸ ";color:var(--mute)}
+tr.base.open td:first-child::before{content:"▾ ";color:var(--mute)}
+tr.colr td{background:#fcfaf6;font-size:12px}
+tr.colr td:first-child{padding-left:28px;color:var(--ink2)}
+.gpos{color:var(--amber);font-weight:600}.gneg{color:var(--red);font-weight:600}
+.act{font-size:12px;color:var(--ink2);max-width:300px}
+@media (max-width:900px){.steps{grid-template-columns:1fr 1fr}}
+
 /* passport drawer */
 .scrim{position:fixed;inset:0;background:rgba(30,27,24,.35);opacity:0;pointer-events:none;transition:opacity .2s;z-index:40}
 .scrim.on{opacity:1;pointer-events:auto}
@@ -291,6 +309,7 @@ tr.click:hover td{background:#fcfaf6}
         <span class="sample">Sample data · illustrative</span>
     <nav class="tabs" role="tablist">
       <button data-v="library" class="on">Library</button>
+      <button data-v="pvp">Pre-buy vs production</button>
       <button data-v="sales">Sales signal</button>
       <button data-v="value">Value recovered</button>
     </nav>
@@ -322,6 +341,30 @@ tr.click:hover td{background:#fcfaf6}
     </div>
     </div>
     <div class="sub" data-sub="data" id="lib-data"></div>
+  </section>
+
+  <!-- PRE-BUY VS PRODUCTION -->
+  <section class="view" id="v-pvp">
+    <h1>Pre-buy against production</h1>
+    <p class="lede">Fabric is ordered months early (the pre-buy), before the collection is final. Once styles and quantities are decided, production orders follow. This page lines the two up, fabric by fabric and colour by colour, and shows what is over, what is short, and what it is worth.</p>
+    <div class="subtabs" data-for="pvp"><button class="on" data-sub="main">Comparison</button><button data-sub="data">Data sources</button></div>
+    <div class="sub on" data-sub="main">
+      <div class="steps">
+        <div><span class="n">01</span><b>Read the order export</b>Season code “PB1” = pre-buy; no PB = production. Cancelled lines are left out.</div>
+        <div><span class="n">02</span><b>Split the code</b>First 7 digits = the fabric, last 4 = the colour. 2790 = undyed, ready to dye.</div>
+        <div><span class="n">03</span><b>Compare</b>Metres pre-bought vs metres production needs, for the fabric in all colours, then per colour.</div>
+        <div><span class="n">04</span><b>Act</b>Over: cut what hasn't shipped, the rest goes to the library. Short: top up now, against the mill's lead time.</div>
+      </div>
+      <div class="kpis" id="pvpKpis"></div>
+      <div class="pvpctl">
+        <div class="seg" id="pvpFilter"><button class="on" data-f="all">All</button><button data-f="over">Over</button><button data-f="short">Short</button><button data-f="mixed">Mixed</button><button data-f="covered">Covered</button></div>
+        <label class="chk"><input type="checkbox" id="pvpRtd" checked> Undyed (2790) covers colours of the same fabric</label>
+        <span class="small muted">Click a fabric to see each colour</span>
+      </div>
+      <div class="tblwrap"><table id="pvpTbl"></table></div>
+      <p class="small muted" style="margin-top:10px" id="pvpNote"></p>
+    </div>
+    <div class="sub" data-sub="data" id="pvp-data"></div>
   </section>
 
   <!-- SALES -->
@@ -504,6 +547,38 @@ const SALES = {
  "2324019":[["SS26","DR-014 Slip dress",380,52,12]],
  "2322903":[]
 };
+
+/* Order export lines: PB1 = pre-buy, no PB = production (sample, FW27) */
+const ORDERS = [];
+(function(){
+  const L=(season,code,desc,sup,ord,rec,date,prom,price,cancel)=>ORDERS.push({season,code,desc,sup,ordered:ord,received:rec,ord:date,prom,price,cancel:cancel||""});
+  // pre-buy (FW27 PB1)
+  L("FW27 PB1","23301032790","Bianco 4963 RTD","Tessitura Moretti",9000,6000,"2026-05-12","2026-08-14",19.80);
+  L("FW27 PB1","23301032790","Bianco 4963 RTD","Tessitura Moretti",6000,0,"2026-06-02","2026-09-05",19.80);
+  L("FW27 PB1","23299980676","Albini Downing","Albini",3200,3200,"2026-04-20","2026-08-08",17.45);
+  L("FW27 PB1","23299982016","Albini Downing","Albini",1350,800,"2026-04-20","2026-08-08",17.45);
+  L("FW27 PB1","23299984985","Albini Downing","Albini",1000,1000,"2026-04-20","2026-08-08",17.45);
+  L("FW27 PB1","23299985497","Albini Downing","Albini",750,750,"2026-04-20","2026-08-08",17.45);
+  L("FW27 PB1","23276622834","Berto 4783 Tiger","Berto",10500,10500,"2026-05-04","2026-07-18",8.65);
+  L("FW27 PB1","23188400410","Gabardine 260","Lanificio Varese",4000,2500,"2026-04-28","2026-08-26",32.40);
+  L("FW27 PB1","23188401010","Gabardine 260","Lanificio Varese",600,0,"2026-04-28","2026-08-26",32.40,"2026-07-02");
+  L("FW27 PB1","23304560102","Cashmere jersey","Maglificio Bassano",1200,1200,"2026-04-15","2026-08-23",61.00);
+  L("FW27 PB1","23240191010","Viscose satin","Tessitura Moretti",2000,2000,"2026-05-20","2026-07-19",11.30);
+  // production (FW27)
+  L("FW27","23301030450","Bianco 4963, dyed navy","Tessitura Moretti",7000,0,"2026-09-15","2026-11-20",21.50);
+  L("FW27","23301031010","Bianco 4963, dyed black","Tessitura Moretti",5400,0,"2026-09-15","2026-11-20",21.50);
+  L("FW27","23299980676","Albini Downing","Albini",3450,0,"2026-09-10","2026-12-01",17.45);
+  L("FW27","23299982016","Albini Downing","Albini",900,0,"2026-09-10","2026-12-01",17.45);
+  L("FW27","23299984985","Albini Downing","Albini",1000,0,"2026-09-10","2026-12-01",17.45);
+  L("FW27","23299985497","Albini Downing","Albini",600,0,"2026-09-10","2026-12-01",17.45);
+  L("FW27","23276622834","Berto 4783 Tiger","Berto",10800,0,"2026-09-08","2026-11-12",8.65);
+  L("FW27","23188400410","Gabardine 260","Lanificio Varese",3100,0,"2026-09-12","2026-12-10",32.40);
+  L("FW27","23304560102","Cashmere jersey","Maglificio Bassano",1500,0,"2026-09-18","2027-01-25",61.00);
+  L("FW27","23240191010","Viscose satin","Tessitura Moretti",2000,0,"2026-09-20","2026-11-15",11.30);
+  L("FW27","23351200001","Silk crepe","Seteria Lario",800,0,"2026-09-22","2026-12-05",42.00);
+})();
+const isPB = o => /PB/i.test(o.season);
+let pvpFilter="all";
 
 /* ---------------- HELPERS ---------------- */
 const $ = s => document.querySelector(s);
@@ -859,6 +934,78 @@ function renderSales(){
   document.querySelectorAll("#commitTbl tr.click").forEach(tr=>tr.onclick=()=>{const d=$("#det"+tr.dataset.i);d.hidden=!d.hidden;});
 }
 
+/* ---------------- PRE-BUY VS PRODUCTION ---------------- */
+function pvpCompute(rtdOn){
+  const live=ORDERS.filter(o=>!o.cancel);
+  const cancelled=ORDERS.filter(o=>o.cancel);
+  const bases={};
+  live.forEach(o=>{
+    const b=o.code.slice(0,7), c=o.code.slice(-4);
+    const B=bases[b]=bases[b]||{base:b,name:o.desc.split(",")[0],sup:o.sup,cols:{},pb:0,pr:0,pending:0,priceN:0,priceD:0,lead:0};
+    const C=B.cols[c]=B.cols[c]||{col:c,pb:0,pr:0,pending:0,price:o.price};
+    if(isPB(o)){ C.pb+=o.ordered; B.pb+=o.ordered; const pend=Math.max(0,o.ordered-(o.received||0)); C.pending+=pend; B.pending+=pend; B.priceN+=o.ordered*o.price; B.priceD+=o.ordered;
+    }
+    else { C.pr+=o.ordered; B.pr+=o.ordered; if(!C.price) C.price=o.price; }
+    const d=(new Date(o.prom)-new Date(o.ord))/864e5; if(d>B.lead) B.lead=Math.round(d);
+  });
+  const leadBySup={}; Object.values(bases).forEach(B=>{ if(B.lead) leadBySup[B.sup]=Math.max(leadBySup[B.sup]||0,B.lead); });
+  const rows=Object.values(bases).map(B=>{
+    const price=B.priceD?B.priceN/B.priceD:(Object.values(B.cols)[0]||{}).price||0;
+    const cols=Object.values(B.cols).sort((a,b)=>a.col.localeCompare(b.col));
+    // undyed pool covers colour shortfalls of the same base
+    const und=B.cols["2790"]; let pool=und?Math.max(0,und.pb-und.pr):0;
+    cols.forEach(C=>{ C.gap=C.pb-C.pr; C.cover=0; });
+    if(rtdOn && pool>0) cols.filter(C=>C.col!=="2790" && C.gap<0).forEach(C=>{ const use=Math.min(pool,-C.gap); C.cover=use; pool-=use; });
+    if(und){ und.usedForColours=cols.reduce((a,C)=>a+C.cover,0); }
+    cols.forEach(C=>{ C.net = C.col==="2790" ? C.gap-(C.usedForColours||0) : C.gap + C.cover; C.val=C.net*(C.price||price);
+      C.status = C.pb===0 ? (C.net>=0&&C.cover>0 ? "covered" : "nopb") : C.net>0 ? "over" : C.net<0 ? "short" : "covered"; });
+    const gap=B.pb-B.pr;
+    const anyShort=cols.some(C=>C.net<0), anyOver=cols.some(C=>C.net>0);
+    let status = B.pb===0 ? "nopb" : anyShort&&anyOver ? "mixed" : gap>0 ? "over" : gap<0 ? "short" : "covered";
+    const lead = B.lead || leadBySup[B.sup] || 0;
+    return {...B, cols, price, gap, val:gap*price, status, lead, cancellable:Math.min(Math.max(0,gap),B.pending)};
+  }).sort((a,b)=>Math.abs(b.val)-Math.abs(a.val));
+  return {rows,cancelled};
+}
+function pvpAction(r){
+  const sup=esc(r.sup);
+  if(r.status==="nopb") return `No pre-buy: the full need is ordered at production. Check ${sup}'s lead time (${r.lead?r.lead+' days':'unknown'}) against the delivery date.`;
+  if(r.status==="covered") return "Nothing to do.";
+  if(r.status==="over"){ const lib=r.gap-r.cancellable;
+    return `${r.cancellable?`Ask ${sup} to cut <b>${m(r.cancellable)}</b> still to ship. `:''}${lib>0?`<b>${m(lib)}</b> already in goes to the leftover library.`:''}`; }
+  if(r.status==="short") return `Top up <b>${m(-r.gap)}</b> now: ${sup} takes ${r.lead||'?'} days.`;
+  const sh=r.cols.filter(C=>C.net<0).reduce((a,C)=>a-C.net,0), ov=r.cols.filter(C=>C.net>0).reduce((a,C)=>a+C.net,0);
+  return `Top up <b>${m(sh)}</b> in the short colours (${sup}: ${r.lead||'?'} days). <b>${m(ov)}</b> extra in other colours: cut if not shipped, otherwise library.`;
+}
+const ST = {over:["a","Over"],short:["r","Short"],mixed:["b","Mixed"],covered:["g","Covered"],nopb:["","No pre-buy"]};
+const pvpOpen = new Set();
+function renderPvp(){
+  const rtdOn=$("#pvpRtd").checked;
+  const {rows,cancelled}=pvpCompute(rtdOn);
+  const pb=rows.reduce((a,r)=>a+r.pb,0), pr=rows.reduce((a,r)=>a+r.pr,0);
+  const overV=rows.reduce((a,r)=>a+r.cols.filter(C=>C.net>0).reduce((x,C)=>x+C.val,0),0);
+  const shortV=rows.reduce((a,r)=>a+r.cols.filter(C=>C.net<0&&C.pb>0).reduce((x,C)=>x-C.val,0),0);
+  const cutV=rows.reduce((a,r)=>a+r.cancellable*r.price,0);
+  $("#pvpKpis").innerHTML=[[m(pb),"pre-bought (open lines)"],[m(pr),"needed by production"],[eur(overV),"over: at risk of becoming leftover"],[eur(shortV),"short: to top up"],[eur(cutV),"over and not yet shipped: can be cut"]]
+    .map(k=>`<div class="kpi"><div class="v num">${k[0]}</div><div class="l">${k[1]}</div></div>`).join("");
+  document.querySelectorAll("#pvpFilter button").forEach(b=>b.classList.toggle("on",b.dataset.f===pvpFilter));
+  const list=rows.filter(r=>pvpFilter==="all"||r.status===pvpFilter);
+  const sg=v=>v>0?`<span class="gpos">+${fmt(v)}</span>`:v<0?`<span class="gneg">−${fmt(-v)}</span>`:'0';
+  const sv=v=>v>0?`<span class="gpos">${eur(v)}</span>`:v<0?`<span class="gneg">${eur(v)}</span>`:'€0';
+  $("#pvpTbl").innerHTML=`<tr><th>Fabric (first 7 digits)</th><th>Colour</th><th class="r">Pre-buy m</th><th class="r">Production m</th><th class="r">Gap m</th><th class="r">Gap value</th><th>Status</th><th>What to do</th></tr>
+  ${list.length?list.map(r=>{const open=pvpOpen.has(r.base); const multi=r.cols.length>1;
+    return `<tr class="base ${multi?'click':''} ${open?'open':''}" data-b="${r.base}"><td><b class="num">${r.base}</b> · ${esc(r.name)}<br><span class="small muted">${esc(r.sup)}</span></td>
+      <td class="small">${multi?`All ${r.cols.length} colours`:`${r.cols[0].col}${r.cols[0].col==="2790"?" · undyed":""}`}</td>
+      <td class="r num">${fmt(r.pb)}</td><td class="r num">${fmt(r.pr)}</td><td class="r num">${sg(r.gap)}</td><td class="r num">${sv(r.val)}</td>
+      <td><span class="pill ${ST[r.status][0]}">${ST[r.status][1]}</span></td><td class="act">${pvpAction(r)}</td></tr>
+      ${open&&multi?r.cols.map(C=>`<tr class="colr"><td>↳ by colour</td><td class="num">${C.col}${C.col==="2790"?" · undyed":""}</td><td class="r num">${fmt(C.pb)}</td><td class="r num">${fmt(C.pr)}</td>
+        <td class="r num">${sg(C.net)}${C.cover?`<br><span class="small" style="color:var(--green)">${fmt(C.cover)} m from undyed</span>`:''}${C.col==="2790"&&C.usedForColours?`<br><span class="small" style="color:var(--green)">${fmt(C.usedForColours)} m given to colours</span>`:''}</td>
+        <td class="r num">${sv(C.val)}</td><td><span class="pill ${ST[C.status][0]}">${ST[C.status][1]}</span></td><td class="act">${C.col==="2790"?'Dye to the colours that are short':C.status==="short"?'Top up this colour':C.status==="over"?'Extra in this colour':C.status==="nopb"?'Ordered at production only':C.cover?'Covered by undyed 2790':''}</td></tr>`).join(""):''}`;}).join("")
+    :'<tr><td colspan="8" class="muted">No fabric in this group.</td></tr>'}`;
+  document.querySelectorAll("#pvpTbl tr.base.click").forEach(tr=>tr.onclick=()=>{const b=tr.dataset.b; pvpOpen.has(b)?pvpOpen.delete(b):pvpOpen.add(b); renderPvp();});
+  $("#pvpNote").innerHTML=`Gap value = gap × pre-buy price per metre. Lead time = longest order-to-promised-delivery on that fabric’s lines. ${cancelled.length?`${cancelled.length} cancelled line${cancelled.length>1?'s':''} left out (${cancelled.map(o=>o.code.slice(0,7)+"-"+o.code.slice(-4)).join(", ")}).`:''} ${ORDERS.some(o=>o.cur&&o.cur!=="EUR")?'Some lines are not in EUR: values are shown as in the file.':''}`;
+}
+
 /* ---------------- VALUE ---------------- */
 function renderValue(){
   let T={pur:0,reuse:0,resale:0,disc:0,lost:0,stock:0};
@@ -893,6 +1040,29 @@ function isoDate(v){ if(v instanceof Date) return v.toISOString().slice(0,10); c
 const MVT = v => { const t=norm(v); if(/recei|recib|entrada|in$/.test(t)) return "Received"; if(/reserv/.test(t)) return "Reserved"; if(/sold|vend|nona|resale/.test(t)) return "Sold"; if(/dispos|destr|scrap|baja/.test(t)) return "Disposed"; return "Used"; };
 const SWKEYS = ["sky","undyed","navy","linen","camel","black","stripe"];
 
+const ORDER_FIELDS=[["code","Article code (2º nº de art)",["2 n de art","2o n de art","n de art","material code","codigo","article","referencia"],1],
+  ["ordered","Quantity ordered",["cantidad ordenada","ordered","quantity ordered","qty ordered","cantidad"],1],
+  ["season","Season (Temporada Pedido Compra)",["temporada pedido compra","temporada","season"],0],
+  ["received","Quantity received",["cantidad recibida","received","qty received"],0],
+  ["desc","Description",["descripcion","description","nombre"],0],["sup","Supplier",["proveedor","supplier","vendor","nombre proveedor"],0],
+  ["ord","Order date (Fch ord)",["fch ord","fecha pedido","order date"],0],["prom","Promised delivery",["entrega prometida","promised delivery","fecha entrega"],0],
+  ["cancel","Cancel date",["fecha cancel","cancel date","fecha cancelacion"],0],["price","Unit price",["precio unitario","unit price","precio"],0],["cur","Currency",["cod moneda","currency","moneda"],0]];
+const LOADED={prebuy:false,prod:false};
+function loadOrders(rows,M,mode,key){
+  const out=[]; rows.forEach(r=>{ const c=code(r[M.code]); const q=num(r[M.ordered]); if(!c||!(q>0)) return;
+    const season=String(M.season!=null&&r[M.season]||"").trim();
+    const pb = mode==="prod" ? false : (season ? /PB/i.test(season) : true);
+    out.push({season: pb?(season||"PB"):(season&&!/PB/i.test(season)?season:"PROD"), code:c.base+c.col, desc:String(M.desc!=null&&r[M.desc]||c.base), sup:String(M.sup!=null&&r[M.sup]||"Unknown").trim(),
+      ordered:q, received:M.received!=null?num(r[M.received])||0:0, ord:M.ord!=null?isoDate(r[M.ord]):TODAY, prom:M.prom!=null?isoDate(r[M.prom]):TODAY,
+      price:M.price!=null?num(r[M.price])||0:0, cur:M.cur!=null?String(r[M.cur]||"").trim().toUpperCase():"", cancel:M.cancel!=null&&String(r[M.cancel]||"").trim()?"x":""}); });
+  if(!out.length) return "No line had an article code and a quantity ordered.";
+  // first upload of each kind replaces the sample lines of that kind
+  const keepPB = key==="prod", keepProd = key==="prebuy" && !out.some(o=>!/PB/i.test(o.season));
+  if(!LOADED.prebuy && !LOADED.prod){ for(let i=ORDERS.length-1;i>=0;i--){ const pbl=isPB(ORDERS[i]); if((pbl&&!keepPB)||(!pbl&&!keepProd)) ORDERS.splice(i,1);} }
+  else { for(let i=ORDERS.length-1;i>=0;i--){ const pbl=isPB(ORDERS[i]); if(key==="prebuy"?pbl:!pbl) ORDERS.splice(i,1);} }
+  LOADED[key]=true; ORDERS.push(...out);
+  const nPB=out.filter(isPB).length; return `${out.length} lines loaded (${nPB} pre-buy, ${out.length-nPB} production).`;
+}
 const SOURCES = {
  stock:{title:"Leftover stock", pages:["lib","value"], where:"Power BI leftover report (from the ERP), or the stock Excel on SharePoint", refresh:"Daily", used:"Every card: metres in stock, price, location, origin season",
   fields:[["code","Material code (base + colour)",["material code","codigo","2 n de art","2o n de art","n de art","article","reference","referencia","codigo material"],1],
@@ -948,6 +1118,10 @@ const SOURCES = {
   apply(rows,M){ const acc={}; rows.forEach(r=>{const sup=String(r[M.supplier]||"").trim(); if(!sup) return; let d=M.days!=null?num(r[M.days]):NaN;
       if(isNaN(d)&&M.ord!=null&&M.del!=null){d=(new Date(isoDate(r[M.del]))-new Date(isoDate(r[M.ord])))/864e5;} if(!(d>0)) return; acc[sup]=Math.max(acc[sup]||0,Math.round(d));});
     const k=Object.keys(acc); if(!k.length) return "No lead time could be read."; k.forEach(s=>SUPPLIERS[s]={lead:acc[s]}); return `${k.length} supplier lead times updated (longest per supplier).`; }},
+ prebuy:{title:"Pre-buy order export", pages:["pvp"], where:"Purchase order export shared by Merch (ERP), e.g. “FW27 WRTW Precollection Prebuy 1”", refresh:"Daily during the buy", used:"Metres pre-bought, still to ship, price, lead time. Lines without PB in the season are read as production.",
+  fields:ORDER_FIELDS, apply(rows,M){ return loadOrders(rows,M,"auto","prebuy"); }},
+ prod:{title:"Production order export", pages:["pvp"], where:"Same ERP export, production orders (season without PB)", refresh:"Daily once the line is final", used:"Metres production needs, per fabric and colour",
+  fields:ORDER_FIELDS, apply(rows,M){ return loadOrders(rows,M,"prod","prod"); }},
  nona:{title:"Resale (ex. Nona Source)", pages:["value"], where:"Sales reports from the resale platform for LOEWE lots", refresh:"Monthly", used:"Resale revenue per lot",
   fields:[["code","Material code",["material code","reference","codigo","sku"],1],["date","Date",["date","fecha"],1],["qty","Metres sold",["quantity","qty","metres","meters","cantidad"],1],["price","Price / m",["price","precio","unit price"],1],["order","Order",["order","pedido"],0]],
   apply(rows,M){ let n=0; rows.forEach(r=>{const c=code(r[M.code]); const q=num(r[M.qty]); if(!c||!(q>0)) return; const l=LOTS.find(x=>x.base===c.base&&x.col===c.col); if(!l) return;
@@ -1017,9 +1191,10 @@ function srcCard(id){
 const FLOW = {
   lib:[["Leftover stock","Power BI / ERP"],["Material master, photos","PLM"],["Movements","ERP, warehouse"],["Lab reports","PDF, SharePoint"],["Restrictions","PLM, contracts"],["FW27 draft BOMs","PLM"]],
   sales:[["Sales by style","Power BI"],["Past BOMs","PLM"],["Line review history","PLM"],["Lead times","Order export"],["FW27 draft BOMs","PLM"],["Undyed stock","Library"]],
+  pvp:[["Pre-buy order lines","ERP order export (PB1)"],["Production order lines","ERP order export"],["Lead times","Order date → promised delivery"],["Prices","Precio unitario"]],
   value:[["Purchase price","Order export, PLM"],["Movements","ERP, warehouse"],["Resale (ex. Nona Source)","Resale sales reports"]]
 };
-const OUT = {lib:"Fabric cards and passports", sales:"Survival odds, firm tranche, reorder holds", value:"Value recovered → Savings report"};
+const OUT = {pvp:"Over, short and value per fabric and colour", lib:"Fabric cards and passports", sales:"Survival odds, firm tranche, reorder holds", value:"Value recovered → Savings report"};
 function renderData(page){
   const ids=Object.keys(SOURCES).filter(k=>SOURCES[k].pages.includes(page));
   $(`#${page}-data`).innerHTML=`
@@ -1040,11 +1215,11 @@ function renderData(page){
   box.querySelectorAll("[data-apply]").forEach(b=>b.onclick=()=>{const id=b.dataset.apply,u=UP[id]; const msg=SOURCES[id].apply(u.rows,u.map); u.msg=msg; u.applied=!/^No /.test(msg); toast(msg); refreshAll();});
   box.querySelectorAll("[data-reset]").forEach(b=>b.onclick=()=>{delete UP[b.dataset.reset]; renderAllData();});
 }
-function renderAllData(){["lib","sales","value"].forEach(renderData);}
+function renderAllData(){["lib","pvp","sales","value"].forEach(renderData);}
 
 
 /* ---------------- WIRING ---------------- */
-function refreshAll(){renderLibrary();renderSales();renderValue();renderAllData();if(openId)renderPassport();}
+function refreshAll(){renderLibrary();renderPvp();renderSales();renderValue();renderAllData();if(openId)renderPassport();}
 document.querySelectorAll("nav.tabs button").forEach(b=>b.onclick=()=>{
   document.querySelectorAll("nav.tabs button").forEach(x=>x.classList.toggle("on",x===b));
   document.querySelectorAll(".view").forEach(v=>v.classList.toggle("on",v.id==="v-"+b.dataset.v));
@@ -1057,6 +1232,8 @@ document.querySelectorAll(".subtabs").forEach(bar=>bar.querySelectorAll("button"
   bar.querySelectorAll("button").forEach(x=>x.classList.toggle("on",x===b));
   bar.parentElement.querySelectorAll(":scope > .sub").forEach(sv=>sv.classList.toggle("on",sv.dataset.sub===b.dataset.sub));
 }));
+document.querySelectorAll("#pvpFilter button").forEach(b=>b.onclick=()=>{pvpFilter=b.dataset.f;renderPvp();});
+$("#pvpRtd").onchange=renderPvp;
 initFilters(); refreshAll();
 </script>
 </body>

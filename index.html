@@ -84,13 +84,60 @@ h3{font-size:12px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;
 .pill.k{background:var(--ink);border-color:var(--ink);color:#fff}
 .dot{width:7px;height:7px;border-radius:50%;background:currentColor;display:inline-block}
 
+/* shop-style library */
+.crumb{font-size:12px;color:var(--mute);margin-bottom:6px}
+.shophead{display:flex;justify-content:space-between;align-items:flex-end;gap:16px;flex-wrap:wrap;margin-bottom:6px}
+.shophead h1{font-family:var(--sans);font-weight:600;font-size:26px;letter-spacing:.02em;text-transform:uppercase;margin:0}
+.statline{font-size:13px;color:var(--ink2);margin:0 0 18px}
+.catbar{display:flex;gap:4px;border-top:1px solid var(--line);border-bottom:1px solid var(--line);margin:0 0 22px;overflow-x:auto}
+.catbar button{background:none;border:0;padding:12px 12px;font-size:12px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--ink2);white-space:nowrap;border-bottom:2px solid transparent;margin-bottom:-1px}
+.catbar button:hover{color:var(--ink)}
+.catbar button.on{color:var(--ink);border-bottom-color:var(--ink)}
+.shop{display:grid;grid-template-columns:220px 1fr;gap:32px;align-items:start}
+.side{position:sticky;top:84px;display:flex;flex-direction:column;gap:18px}
+.facet h4{font-size:11px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;margin:0 0 8px;color:var(--ink)}
+.facet label{display:flex;gap:8px;align-items:center;font-size:13px;color:var(--ink2);padding:3px 0;cursor:pointer}
+.facet label .c{margin-left:auto;color:var(--mute);font-size:12px}
+.facet input{accent-color:var(--ink)}
+.facet + .facet{border-top:1px solid var(--line2);padding-top:16px}
+.clear{background:none;border:0;padding:0;color:var(--blue);font-size:12px;text-align:left}
+.toolbar{display:flex;gap:12px;align-items:center;justify-content:space-between;flex-wrap:wrap;margin-bottom:16px}
+.toolbar input[type=search]{flex:1 1 220px;min-width:0;border:1px solid var(--line);border-radius:0;padding:9px 12px;background:#fff}
+.toolbar select{border:1px solid var(--line);border-radius:0;padding:8px 10px;background:#fff;font-size:13px}
+.togglef{display:none}
+.pgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:28px 18px}
+.prod{background:none;border:0;padding:0;text-align:left;color:inherit;display:flex;flex-direction:column;gap:4px}
+.prod:focus-visible{outline:2px solid var(--blue);outline-offset:4px}
+.prod .img{aspect-ratio:4/5;position:relative;overflow:hidden;margin-bottom:8px}
+.prod .img .inner{position:absolute;inset:0;transition:transform .4s}
+.prod:hover .img .inner{transform:scale(1.04)}
+.badges{position:absolute;left:8px;top:8px;display:flex;flex-direction:column;gap:4px;align-items:flex-start}
+.badge{font-size:10px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;padding:4px 7px;background:#fff;color:var(--ink)}
+.badge.k{background:var(--ink);color:#fff}.badge.r{background:var(--red);color:#fff}.badge.a{background:var(--amber-soft);color:var(--amber)}
+.prod .pn{font-size:14px;font-weight:500;line-height:1.3}
+.prod .pref{font-size:11px;color:var(--mute);letter-spacing:.04em}
+.prod .pp{font-size:14px;font-weight:600;margin-top:2px}
+.prod .ps{font-size:12px;color:var(--ink2)}
+.prod .pfit{font-size:12px;color:var(--blue)}
+.seen{text-align:center;font-size:12px;color:var(--mute);margin-top:30px}
+.ptable{width:100%;font-size:13px;margin-top:14px;border-top:1px solid var(--line2)}
+.ptable td{padding:7px 0;border-bottom:1px solid var(--line2)}
+.ptable td:first-child{color:var(--mute);width:44%}
+@media (max-width:900px){
+  .shop{grid-template-columns:1fr}
+  .side{position:static;display:none;border:1px solid var(--line);padding:14px}
+  .side.open{display:flex}
+  .togglef{display:inline-block}
+  .pgrid{grid-template-columns:repeat(2,minmax(0,1fr))}
+}
+
 /* passport drawer */
 .scrim{position:fixed;inset:0;background:rgba(30,27,24,.35);opacity:0;pointer-events:none;transition:opacity .2s;z-index:40}
 .scrim.on{opacity:1;pointer-events:auto}
 .drawer{position:fixed;top:0;right:0;bottom:0;width:min(820px,100%);background:#fff;z-index:50;transform:translateX(100%);transition:transform .25s ease;overflow-y:auto;box-shadow:-8px 0 30px rgba(0,0,0,.08)}
 .drawer.on{transform:none}
-.dhead{display:grid;grid-template-columns:170px 1fr;gap:20px;padding:24px 28px;border-bottom:1px solid var(--line);position:relative}
-.dhead .sw{height:170px;border-radius:12px}
+.dhead{display:grid;grid-template-columns:240px 1fr;gap:20px;padding:24px 28px;border-bottom:1px solid var(--line);position:relative}
+.dhead .sw{height:300px;border-radius:0}
 .close{position:absolute;right:18px;top:16px;border:1px solid var(--line);background:#fff;width:34px;height:34px;border-radius:50%;font-size:18px;line-height:1}
 .dl{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px 16px;margin-top:12px}
 .dl div{font-size:12px;color:var(--mute)}
@@ -200,7 +247,6 @@ tr.click:hover td{background:#fcfaf6}
     <nav class="tabs" role="tablist">
       <button data-v="library" class="on">Library</button>
       <button data-v="sales">Sales signal</button>
-      <button data-v="nona">Nona Source export<span class="count" id="nonaCount">0</span></button>
       <button data-v="value">Value recovered</button>
     </nav>
   </div>
@@ -209,20 +255,24 @@ tr.click:hover td{background:#fcfaf6}
 <main class="wrap">
   <!-- LIBRARY -->
   <section class="view on" id="v-library">
-    <span class="kicker">Reuse view · Phase 1 + passport</span>
-    <h1>Every lot, every metre</h1>
-    <p class="lede">Lea's leftover library with a full record per lot: movements in and out, quality tests, restrictions, upcoming styles it fits, how the quality sold, and the value recovered. Click a card to open its passport.</p>
-    <div class="kpis" id="libKpis"></div>
-    <div class="filters">
-      <input type="search" id="q" placeholder="Search name, code, supplier, composition…" aria-label="Search">
-      <select id="fCat" aria-label="Category"></select>
-      <select id="fStatus" aria-label="Quality">
-        <option value="">All quality results</option><option value="pass">Tests passed</option><option value="fail">Test failed</option><option value="pending">Report to read</option>
-      </select>
-      <label class="chk"><input type="checkbox" id="fNona"> Nona Source eligible only</label>
-      <label class="chk"><input type="checkbox" id="fFit"> Fits an upcoming style</label>
+    <div class="crumb">Early Line · Reuse view · Leftover library</div>
+    <div class="shophead"><h1>All leftover fabrics</h1></div>
+    <p class="statline num" id="statline"></p>
+    <div class="catbar" id="catbar" role="tablist"></div>
+    <div class="shop">
+      <aside class="side" id="side"></aside>
+      <div>
+        <div class="toolbar">
+          <button class="btn togglef" id="toggleF">Show filters</button>
+          <input type="search" id="q" placeholder="Search fabric, reference, vendor, composition…" aria-label="Search">
+          <label class="small muted">Sorted by <select id="sort" aria-label="Sort">
+            <option value="rel">Relevance</option><option value="new">New in</option><option value="pa">Price, low to high</option><option value="pd">Price, high to low</option><option value="qty">Most in stock</option>
+          </select></label>
+        </div>
+        <div class="pgrid" id="grid"></div>
+        <div class="seen" id="seen"></div>
+      </div>
     </div>
-    <div class="grid" id="grid"></div>
   </section>
 
   <!-- SALES -->
@@ -247,14 +297,6 @@ tr.click:hover td{background:#fcfaf6}
 
     <div class="sechead"><h2>FW27 pre-buy · survival odds and commitment</h2><span class="src">Need = consumption × planned units · reserved stock goes to its style, then free stock of the same quality in row order · click a row for the comparable styles</span></div>
     <div class="tblwrap"><table id="commitTbl"></table></div>
-  </section>
-
-  <!-- NONA -->
-  <section class="view" id="v-nona">
-    <span class="kicker">Reuse view · resale</span>
-    <h1>Send to Nona Source</h1>
-    <p class="lede">Lots added from their passport are checked against their restrictions, then written in one file instead of retyped. Blocked lots stay out of the file with the reason shown.</p>
-    <div id="nonaBody"></div>
   </section>
 
   <!-- VALUE -->
@@ -301,7 +343,7 @@ const LOTS = [
  {id:"L01", base:"2329998", col:"0676", colName:"Sky", name:"Albini Downing", cat:"Shirting", supplier:"Albini", comp:"100% Cotton", gsm:115, width:150, price:17.45, season:"FW26", loc:"Barcelona · Rack B4", sw:"sky",
   mv:[{d:"2026-03-12",t:"Received",q:420,ref:"FW26 production excess · PO 48812",by:"Warehouse"},
       {d:"2026-06-03",t:"Used",q:180,ref:"SS27 SH-014 oversized shirt",by:"Production"},
-      {d:"2026-10-02",t:"Reserved",q:120,ref:"F27-SH-040",by:"C. Roucher"}],
+      {d:"2026-10-02",t:"Reserved",q:120,ref:"F27-SH-040",by:"Sourcing"}],
   tests:{status:"pass",report:"TR-26-0412_Albini_Downing.pdf",lab:"Lab report · 14 Mar 2026",rows:[
       ["Dimensional stability","ISO 5077","−1.5%","±3%",true],["Colour fastness, washing","ISO 105-C06","4–5","≥ 4",true],
       ["Colour fastness, rubbing (wet)","ISO 105-X12","3–4","≥ 3",true],["Tear strength","ISO 13937-2","14 N","≥ 10 N",true]]},
@@ -314,7 +356,7 @@ const LOTS = [
   restr:[]},
  {id:"L02", base:"2330103", col:"2790", colName:"Undyed (RTD)", name:"Bianco 4963 RTD", cat:"Twill", supplier:"Tessitura Moretti", comp:"100% Cotton", gsm:210, width:145, price:19.80, season:"FW27 PB1", loc:"Barcelona · Rack C1", sw:"undyed",
   mv:[{d:"2026-09-28",t:"Received",q:1300,ref:"FW27 pre-buy 1 over production",by:"Warehouse"},
-      {d:"2026-10-14",t:"Reserved",q:400,ref:"F27-JK-012 (to dye)",by:"C. Roucher"}],
+      {d:"2026-10-14",t:"Reserved",q:400,ref:"F27-JK-012 (to dye)",by:"Sourcing"}],
   tests:{status:"pass",report:"TR-26-0871_Bianco_RTD.pdf",lab:"Greige test · re-test after dyeing",rows:[
       ["Dimensional stability","ISO 5077","−2.0%","±3%",true],["Tear strength","ISO 13937-2","22 N","≥ 12 N",true],["Tensile strength","ISO 13934-1","640 N","≥ 400 N",true]]},
   restr:[{k:"info",t:"Ready to dye",d:"Can cover production in any colour of base 2330103."}]},
@@ -337,7 +379,7 @@ const LOTS = [
   restr:[{k:"block",t:"Logo print",d:"Carries the Anagram: cannot be resold. Internal reuse or controlled destruction only."}]},
  {id:"L06", base:"2325510", col:"0920", colName:"Natural", name:"Linen canvas", cat:"Linen", supplier:"Tejidos Ribera", comp:"100% Linen", gsm:340, width:140, price:14.20, season:"SS26", loc:"Barcelona · Rack C4", sw:"linen",
   mv:[{d:"2026-04-02",t:"Received",q:520,ref:"SS26 bulk, rejected at test · PO 46907",by:"Warehouse"},
-      {d:"2026-07-10",t:"Sold",q:300,ref:"Nona Source · order NS-2207",by:"C. Roucher",price:6.00}],
+      {d:"2026-07-10",t:"Sold",q:300,ref:"Nona Source · order NS-2207",by:"Sourcing",price:6.00}],
   tests:{status:"fail",report:"TR-26-0302_Linen_canvas.pdf",lab:"Lab report · 8 Apr 2026",rows:[
       ["Dimensional stability","ISO 5077","−5.5%","±3%",false],["Colour fastness, washing","ISO 105-C06","4","≥ 4",true],["Tear strength","ISO 13937-2","31 N","≥ 15 N",true]],
       why:"Shrinks 5.5% after washing, almost twice the ±3% limit. Fine for unwashed or pre-shrunk uses; not for LOEWE garments."},
@@ -351,7 +393,7 @@ const LOTS = [
  {id:"L08", base:"2324019", col:"1010", colName:"Black", name:"Viscose satin", cat:"Lining & satin", supplier:"Tessitura Moretti", comp:"100% Viscose", gsm:120, width:140, price:11.30, season:"FW25", loc:"Barcelona · Rack E2", sw:"black",
   mv:[{d:"2025-10-20",t:"Received",q:760,ref:"FW25 production excess · PO 44981",by:"Warehouse"},
       {d:"2026-01-14",t:"Used",q:180,ref:"SS26 linings, JK-031 and JK-036",by:"Production"},
-      {d:"2026-04-22",t:"Sold",q:200,ref:"Nona Source · order NS-1964",by:"C. Roucher",price:5.50},
+      {d:"2026-04-22",t:"Sold",q:200,ref:"Nona Source · order NS-1964",by:"Sourcing",price:5.50},
       {d:"2026-06-30",t:"Disposed",q:60,ref:"Water damage in warehouse",by:"Warehouse"}],
   tests:{status:"pass",report:"TR-25-0871_Viscose_satin.pdf",lab:"Lab report · 22 Oct 2025",rows:[
       ["Seam slippage","ISO 13936-2","5 mm","≤ 6 mm",true],["Colour fastness, washing","ISO 105-C06","4","≥ 4",true]]},
@@ -363,6 +405,22 @@ const LOTS = [
       ["Abrasion (Martindale)","ISO 12947-2","30,000 rubs","≥ 20,000",true],["Colour fastness, rubbing (dry)","ISO 105-X12","4","≥ 4",true]]},
   restr:[{k:"block",t:"Logo jacquard",d:"Woven Anagram: cannot be resold. Internal reuse only (linings, pouches)."}]}
 ];
+
+// shop-style fields: descriptive name, material type, product-page details
+const EXTRA = {
+ L01:{title:"Cotton Poplin",type:"Shirting",origin:"Italy",transp:"Opaque",elast:"None"},
+ L10:{title:"Striped Cotton Poplin",type:"Shirting",origin:"Italy",transp:"Opaque",elast:"None"},
+ L02:{title:"Ready-to-Dye Cotton Twill",type:"Lining, Construction & Greige",origin:"Italy",transp:"Opaque",elast:"None"},
+ L03:{title:"Tiger Jacquard Stretch Denim",type:"Casual & Technical",origin:"Italy",transp:"Opaque",elast:"Stretch"},
+ L04:{title:"Virgin Wool Gabardine",type:"Suiting & Coating",origin:"Italy",transp:"Opaque",elast:"None"},
+ L05:{title:"Printed Silk Twill",type:"Flou & Fluid",origin:"Italy",transp:"Semi-sheer",elast:"None"},
+ L06:{title:"Heavy Linen Canvas",type:"Casual & Technical",origin:"Spain",transp:"Opaque",elast:"None"},
+ L07:{title:"Wool Cashmere Jersey",type:"Jersey & Knit",origin:"Italy",transp:"Opaque",elast:"Mechanical"},
+ L08:{title:"Viscose Satin",type:"Lining, Construction & Greige",origin:"Italy",transp:"Semi-opaque",elast:"None"},
+ L09:{title:"Cotton Silk Jacquard",type:"Couture & Fantaisie",origin:"Italy",transp:"Opaque",elast:"None"}
+};
+LOTS.forEach(l=>Object.assign(l,EXTRA[l.id]));
+const TYPES = ["Suiting & Coating","Shirting","Flou & Fluid","Couture & Fantaisie","Casual & Technical","Jersey & Knit","Lining, Construction & Greige"];
 
 const STYLES = [
  {id:"F27-SH-021", name:"Long-sleeve oversized shirt", cat:"Shirts", base:"2329998", cons:2.05, units:600},
@@ -399,7 +457,7 @@ const m = n => fmt(n)+" m";
 const date = s => new Date(s+"T12:00:00").toLocaleDateString("en-GB",{day:"numeric",month:"short",year:"numeric"});
 const esc = s => String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
 const lotById = id => LOTS.find(l=>l.id===id);
-const nonaSet = new Set();
+const F = {type:"", vendor:new Set(), quality:new Set(), resale:new Set(), newIn:false, rtd:false, fit:false};
 let openId = null;
 
 function qty(l){
@@ -415,14 +473,10 @@ function qty(l){
   s.free = Math.max(0,s.avail-s.res);
   return s;
 }
-function nona(l){
-  const block = l.restr.filter(r=>r.k==="block");
-  const cond = l.restr.filter(r=>r.k==="cond");
-  if(block.length) return {ok:false,cls:"r",label:"Blocked for resale",why:block.map(r=>r.t).join(", ")};
-  if(qty(l).free<=0) return {ok:false,cls:"a",label:"All metres reserved",why:"No free metres: all reserved for FW27"};
-  if(l.tests.status==="pending") return {ok:false,cls:"a",label:"Read test report first",why:"Quality not entered yet"};
-  if(cond.length) return {ok:true,cls:"a",label:"Eligible with conditions",why:cond.map(r=>r.t).join(", ")};
-  return {ok:true,cls:"g",label:"Eligible for Nona Source",why:"No restriction"};
+function resale(l){
+  if(l.restr.some(r=>r.k==="block")) return {cls:"r",label:"Internal reuse only",why:l.restr.filter(r=>r.k==="block").map(r=>r.t).join(", ")};
+  if(l.restr.some(r=>r.k==="cond")) return {cls:"a",label:"Resale with conditions",why:l.restr.filter(r=>r.k==="cond").map(r=>r.t).join(", ")};
+  return {cls:"g",label:"Resale allowed",why:"No restriction"};
 }
 function testPill(l){
   if(l.tests.status==="pass") return '<span class="pill g"><span class="dot"></span>Tests passed</span>';
@@ -454,41 +508,72 @@ function toast(t){const e=$("#toast");e.textContent=t;e.classList.add("on");clea
 function swatch(l){return `background:${SW[l.sw]}`;}
 
 /* ---------------- LIBRARY ---------------- */
+const isNew = l => l.season==="FW27 PB1";
+function facetList(title,key,opts){
+  return `<div class="facet"><h4>${title}</h4>${opts.map(o=>`<label><input type="checkbox" data-f="${key}" value="${esc(o.v)}" ${F[key].has(o.v)?'checked':''}> ${esc(o.l)}<span class="c">${o.c}</span></label>`).join("")}</div>`;
+}
 function initFilters(){
-  const cats=[...new Set(LOTS.map(l=>l.cat))].sort();
-  $("#fCat").innerHTML='<option value="">All categories</option>'+cats.map(c=>`<option>${c}</option>`).join("");
-  ["#q","#fCat","#fStatus","#fNona","#fFit"].forEach(s=>$(s).addEventListener("input",renderLibrary));
+  $("#q").addEventListener("input",renderLibrary);
+  $("#sort").addEventListener("input",renderLibrary);
+  $("#toggleF").onclick=()=>{const sd=$("#side");sd.classList.toggle("open");$("#toggleF").textContent=sd.classList.contains("open")?"Hide filters":"Show filters";};
+}
+function renderSide(){
+  const cnt=(fn)=>LOTS.filter(fn).length;
+  const vendors=[...new Set(LOTS.map(l=>l.supplier))].sort();
+  $("#side").innerHTML=
+    facetList("Vendor","vendor",vendors.map(v=>({v,l:v,c:cnt(l=>l.supplier===v)}))) +
+    facetList("Quality","quality",[{v:"pass",l:"Tests passed",c:cnt(l=>l.tests.status==="pass")},{v:"fail",l:"Test failed",c:cnt(l=>l.tests.status==="fail")},{v:"pending",l:"Report to read",c:cnt(l=>l.tests.status==="pending")}]) +
+    facetList("Resale","resale",["Resale allowed","Resale with conditions","Internal reuse only"].map(v=>({v,l:v,c:cnt(l=>resale(l).label===v)}))) +
+    `<div class="facet"><h4>Other</h4>
+      <label><input type="checkbox" data-b="newIn" ${F.newIn?'checked':''}> New in (FW27 pre-buy)<span class="c">${cnt(isNew)}</span></label>
+      <label><input type="checkbox" data-b="rtd" ${F.rtd?'checked':''}> Ready to dye<span class="c">${cnt(l=>l.col==="2790")}</span></label>
+      <label><input type="checkbox" data-b="fit" ${F.fit?'checked':''}> Fits an FW27 style<span class="c">${cnt(l=>matches(l).length>0)}</span></label></div>
+     <button class="clear" id="clearF">Clear all filters</button>`;
+  document.querySelectorAll("#side [data-f]").forEach(i=>i.onchange=()=>{const set=F[i.dataset.f]; i.checked?set.add(i.value):set.delete(i.value); renderLibrary();});
+  document.querySelectorAll("#side [data-b]").forEach(i=>i.onchange=()=>{F[i.dataset.b]=i.checked; renderLibrary();});
+  $("#clearF").onclick=()=>{F.vendor.clear();F.quality.clear();F.resale.clear();F.newIn=F.rtd=F.fit=false;F.type="";$("#q").value="";renderLibrary();};
 }
 function renderLibrary(){
-  const q=$("#q").value.trim().toLowerCase(), cat=$("#fCat").value, st=$("#fStatus").value, onlyN=$("#fNona").checked, onlyF=$("#fFit").checked;
-  let tm=0,tv=0,ne=0,fit=0;
-  LOTS.forEach(l=>{const s=qty(l);tm+=s.avail;tv+=s.avail*l.price;if(nona(l).ok)ne++;if(matches(l).length)fit++;});
-  $("#libKpis").innerHTML=[
-    [LOTS.length,"lots in the library"],[m(tm),"available, all lots"],[eur(tv),"in stock at purchase value"],
-    [ne,"lots eligible for Nona Source"],[fit,"lots fit an FW27 style"]].map(k=>`<div class="kpi"><div class="v num">${k[0]}</div><div class="l">${k[1]}</div></div>`).join("");
-  const list=LOTS.filter(l=>{
-    const hay=[l.name,l.base,l.col,l.supplier,l.comp,l.colName,l.cat].join(" ").toLowerCase();
+  // category bar
+  const present=TYPES.filter(t=>LOTS.some(l=>l.type===t));
+  $("#catbar").innerHTML=[["","All fabrics"],...present.map(t=>[t,t])].map(([v,l])=>`<button class="${F.type===v?'on':''}" data-t="${esc(v)}">${esc(l)}</button>`).join("");
+  document.querySelectorAll("#catbar button").forEach(b=>b.onclick=()=>{F.type=b.dataset.t;renderLibrary();});
+  renderSide();
+  let tm=0,tv=0; LOTS.forEach(l=>{const s=qty(l);tm+=s.avail;tv+=s.avail*l.price;});
+  $("#statline").innerHTML=`${LOTS.length} lots · ${m(tm)} in stock · ${eur(tv)} at purchase value · photos and codes from PLM, stock from Power BI`;
+  const q=$("#q").value.trim().toLowerCase();
+  let list=LOTS.filter(l=>{
+    const hay=[l.title,l.name,l.base,l.col,l.supplier,l.comp,l.colName,l.type,l.base+"."+l.col].join(" ").toLowerCase();
     if(q && !hay.includes(q)) return false;
-    if(cat && l.cat!==cat) return false;
-    if(st && l.tests.status!==st) return false;
-    if(onlyN && !nona(l).ok) return false;
-    if(onlyF && !matches(l).length) return false;
+    if(F.type && l.type!==F.type) return false;
+    if(F.vendor.size && !F.vendor.has(l.supplier)) return false;
+    if(F.quality.size && !F.quality.has(l.tests.status)) return false;
+    if(F.resale.size && !F.resale.has(resale(l).label)) return false;
+    if(F.newIn && !isNew(l)) return false;
+    if(F.rtd && l.col!=="2790") return false;
+    if(F.fit && !matches(l).length) return false;
     return true;
   });
+  const so=$("#sort").value;
+  if(so==="new") list.sort((a,b)=>(isNew(b)-isNew(a)));
+  if(so==="pa") list.sort((a,b)=>a.price-b.price);
+  if(so==="pd") list.sort((a,b)=>b.price-a.price);
+  if(so==="qty") list.sort((a,b)=>qty(b).avail-qty(a).avail);
   $("#grid").innerHTML = list.length? list.map(l=>{
-    const s=qty(l), n=nona(l), mt=matches(l);
-    return `<button class="card" data-id="${l.id}">
-      <div class="sw" style="${swatch(l)}"><div class="tags">${testPill(l)}${l.restr.some(r=>r.k==="block")?'<span class="pill k">Internal only</span>':''}${l.col==="2790"?'<span class="pill b">RTD</span>':''}</div></div>
-      <div class="cbody">
-        <div class="cname">${esc(l.name)}</div>
-        <div class="ccode num">${l.base} · ${l.col} ${esc(l.colName)} · ${esc(l.supplier)}</div>
-        <div class="specs"><span>${esc(l.comp)}</span><span>${l.gsm} g/m²</span><span>${l.width} cm</span></div>
-        <div class="qty"><span class="m num">${m(s.avail)}</span><span class="p num">${eur(l.price,2)} / m</span></div>
-        ${s.res?`<div class="small muted num">of which ${m(s.res)} reserved</div>`:''}
-        <div class="cfoot"><span class="${mt.length?'':'muted'}">${mt.length?`Fits ${mt.length} FW27 style${mt.length>1?'s':''}`:'No FW27 match'}</span><span class="pill ${n.cls}">${n.ok?'Nona ✓':n.cls==='r'?'Nona ✕':'Nona: check'}</span></div>
-      </div></button>`;
-  }).join("") : '<div class="empty">No lots match these filters.</div>';
-  document.querySelectorAll(".card").forEach(c=>c.addEventListener("click",()=>openPassport(c.dataset.id)));
+    const s=qty(l), mt=matches(l), rs=resale(l);
+    const badges=[isNew(l)?'<span class="badge">New</span>':'', l.col==="2790"?'<span class="badge">Ready to dye</span>':'',
+      rs.cls==="r"?'<span class="badge k">Internal only</span>':'', l.tests.status==="fail"?'<span class="badge r">Test failed</span>':'', l.tests.status==="pending"?'<span class="badge a">Report to read</span>':''].join("");
+    return `<button class="prod" data-id="${l.id}">
+      <div class="img"><div class="inner" style="${swatch(l)}"></div><div class="badges">${badges}</div></div>
+      <div class="pn">${esc(l.title)} ${esc(l.colName)}</div>
+      <div class="pref num">${l.base}.${l.col} · ${esc(l.supplier)}</div>
+      <div class="pp num">${fmt(l.price,2)}€/m</div>
+      <div class="ps num">${fmt(s.avail)}m in stock${s.res?` · ${fmt(s.res)}m reserved`:''}</div>
+      ${mt.length?`<div class="pfit">Fits ${mt.length} FW27 style${mt.length>1?'s':''}</div>`:''}
+    </button>`;
+  }).join("") : '<div class="empty" style="grid-column:1/-1">No fabric matches these filters.</div>';
+  $("#seen").textContent=`You have seen ${list.length} items out of ${LOTS.length}`;
+  document.querySelectorAll(".prod").forEach(c=>c.addEventListener("click",()=>openPassport(c.dataset.id)));
 }
 
 /* ---------------- PASSPORT ---------------- */
@@ -496,10 +581,10 @@ function openPassport(id){openId=id;renderPassport();$("#drawer").classList.add(
 function closePassport(){openId=null;$("#drawer").classList.remove("on");$("#scrim").classList.remove("on");$("#drawer").setAttribute("aria-hidden","true");}
 function renderPassport(){
   const l=lotById(openId); if(!l) return;
-  const s=qty(l), n=nona(l), mt=matches(l), sg=signal(l.base), lead=SUPPLIERS[l.supplier].lead;
+  const s=qty(l), n=resale(l), mt=matches(l), sg=signal(l.base), lead=SUPPLIERS[l.supplier].lead;
   const pct=v=>(100*v/s.rec).toFixed(2)+"%";
-  const reuse=s.used*l.price, resale=s.soldVal, lost=s.disp*l.price, disc=s.sold*l.price-s.soldVal, left=(s.used+s.sold+s.disp)*l.price;
-  const rec = left? (reuse+resale)/left : 0;
+  const reuse=s.used*l.price, resold=s.soldVal, lost=s.disp*l.price, disc=s.sold*l.price-s.soldVal, left=(s.used+s.sold+s.disp)*l.price;
+  const rec = left? (reuse+resold)/left : 0;
   const t=l.tests;
   const testRows = t.rows.map(r=>`<tr><td>${r[0]}</td><td class="muted">${r[1]}</td><td class="r num">${r[2]}</td><td class="r num muted">${r[3]}</td><td>${r[4]?'<span class="pill g">Pass</span>':'<span class="pill r">Fail</span>'}</td></tr>`).join("");
   const other = LOTS.filter(x=>x.base===l.base && x.id!==l.id);
@@ -510,16 +595,21 @@ function renderPassport(){
     <div class="sw" style="${swatch(l)}"></div>
     <div>
       <span class="kicker">Fabric passport · ${l.id}</span>
-      <h2 style="margin-top:4px">${esc(l.name)} <span class="muted" style="font-size:18px">· ${esc(l.colName)}</span></h2>
-      <div class="btns" style="margin-top:6px">${testPill(l)}<span class="pill ${n.cls}">${n.label}</span>${l.col==="2790"?'<span class="pill b">Ready to dye</span>':''}</div>
-      <div class="dl">
-        <div>Base · colour<b class="num">${l.base} · ${l.col}</b></div>
-        <div>Supplier<b>${esc(l.supplier)} · ${lead} d lead</b></div>
-        <div>Composition<b>${esc(l.comp)}</b></div>
-        <div>Weight · width<b class="num">${l.gsm} g/m² · ${l.width} cm</b></div>
-        <div>Purchase price<b class="num">${eur(l.price,2)} / m</b></div>
-        <div>Origin · location<b>${l.season} · ${esc(l.loc)}</b></div>
-      </div>
+      <h2 style="margin-top:4px;font-family:var(--sans);font-weight:600;font-size:22px">${esc(l.title)} ${esc(l.colName)}</h2>
+      <div class="pref num" style="font-size:12px;color:var(--mute);margin-top:2px">${l.base}.${l.col} · ${esc(l.supplier)}</div>
+      <div style="display:flex;gap:16px;align-items:baseline;margin-top:10px"><span class="stat num">${fmt(l.price,2)}€/m</span><span class="num">${fmt(s.avail)}m in stock${s.res?` · ${fmt(s.res)}m reserved`:''}</span></div>
+      <div class="btns" style="margin-top:8px">${testPill(l)}<span class="pill ${n.cls}">${n.label}</span>${isNew(l)?'<span class="pill">New in</span>':''}${l.col==="2790"?'<span class="pill b">Ready to dye</span>':''}</div>
+      <table class="ptable"><tbody>
+        <tr><td>Material type</td><td>${esc(l.type)}</td></tr>
+        <tr><td>Composition</td><td>${esc(l.comp)}</td></tr>
+        <tr><td>Weight</td><td class="num">${l.gsm} g/m²</td></tr>
+        <tr><td>Usable width</td><td class="num">${l.width} cm</td></tr>
+        <tr><td>Transparency</td><td>${esc(l.transp)}</td></tr>
+        <tr><td>Elasticity</td><td>${esc(l.elast)}</td></tr>
+        <tr><td>Country of origin</td><td>${esc(l.origin)}</td></tr>
+        <tr><td>Vendor · lead time</td><td>${esc(l.supplier)} · ${lead} days</td></tr>
+        <tr><td>Origin · location</td><td>${l.season} · ${esc(l.loc)}</td></tr>
+      </tbody></table>
       ${other.length?`<div class="small muted" style="margin-top:10px">Same quality, other colours: ${other.map(o=>`<a href="#" data-open="${o.id}">${o.col} ${esc(o.colName)} (${m(qty(o).avail)})</a>`).join(", ")}</div>`:''}
     </div>
   </div>
@@ -554,12 +644,9 @@ function renderPassport(){
   </div>
 
   <div class="sec">
-    <div class="sechead"><h3>Restrictions · Nona Source</h3><span class="src">PLM · contracts · certification</span></div>
-    ${l.restr.length? `<div style="display:flex;flex-direction:column;gap:8px;margin-bottom:12px">${l.restr.map(r=>`<div class="verdict ${r.k==='block'?'r':r.k==='cond'?'a':''}"><div><div class="t">${esc(r.t)}</div><div class="small">${esc(r.d)}</div></div></div>`).join("")}</div>`:'<p class="small muted" style="margin:0 0 12px">No restriction recorded.</p>'}
-    <div class="btns">
-      <button class="btn ${n.ok?'pri':''}" id="nonaBtn" ${n.ok?'':'disabled'}>${nonaSet.has(l.id)?'✓ In Nona Source export':'Add to Nona Source export'}</button>
-      ${n.ok?'':`<span class="small" style="align-self:center;color:var(--${n.cls==='r'?'red':'amber'})">${esc(n.why)}</span>`}
-    </div>
+    <div class="sechead"><h3>Restrictions</h3><span class="src">PLM · contracts · certification</span></div>
+    <div class="verdict ${n.cls}" style="margin-bottom:${l.restr.length?'10px':'0'}"><div><div class="t">${n.label}</div><div class="small">${n.cls==="r"?"Cannot leave LOEWE: reuse in internal projects only.":n.cls==="a"?"Can be resold, with the conditions below.":"No restriction recorded: can be reused or resold."}</div></div></div>
+    ${l.restr.length? `<div style="display:flex;flex-direction:column;gap:8px">${l.restr.map(r=>`<div class="verdict ${r.k==='block'?'r':r.k==='cond'?'a':''}"><div><div class="t">${esc(r.t)}</div><div class="small">${esc(r.d)}</div></div></div>`).join("")}</div>`:''}
   </div>
 
   <div class="sec">
@@ -585,18 +672,17 @@ function renderPassport(){
   <div class="sec">
     <div class="sechead"><h3>Value recovered</h3><span class="src">Feeds the Savings report</span></div>
     <div class="two">
-      <div class="box"><div class="stat num">${eur(reuse+resale)}</div><div class="small muted">recovered of ${eur(left)} that left stock${left?` (${(rec*100).toFixed(0)}%)`:''}</div></div>
+      <div class="box"><div class="stat num">${eur(reuse+resold)}</div><div class="small muted">recovered of ${eur(left)} that left stock${left?` (${(rec*100).toFixed(0)}%)`:''}</div></div>
       <div class="box"><div class="stat num">${eur(s.avail*l.price)}</div><div class="small muted">still in stock at purchase value · ${m(s.avail)}</div></div>
     </div>
-    <div class="legend num" style="margin-top:12px"><span><i class="c-reuse"></i>Reused ${eur(reuse)}</span><span><i class="c-resale"></i>Resold ${eur(resale)}</span><span><i class="c-disc"></i>Resale discount ${eur(disc)}</span><span><i class="c-lost"></i>Disposed ${eur(lost)}</span></div>
+    <div class="legend num" style="margin-top:12px"><span><i class="c-reuse"></i>Reused ${eur(reuse)}</span><span><i class="c-resale"></i>Resold ${eur(resold)}</span><span><i class="c-disc"></i>Resale discount ${eur(disc)}</span><span><i class="c-lost"></i>Disposed ${eur(lost)}</span></div>
   </div>`;
 
   $("#closeBtn").onclick=closePassport;
   document.querySelectorAll("[data-open]").forEach(a=>a.onclick=e=>{e.preventDefault();openPassport(a.dataset.open);});
-  const nb=$("#nonaBtn"); if(nb) nb.onclick=()=>{ if(nonaSet.has(l.id)){nonaSet.delete(l.id);toast("Removed from Nona Source export");} else {nonaSet.add(l.id);toast("Added to Nona Source export");} refreshAll(); };
   document.querySelectorAll("[data-reserve]").forEach(b=>b.onclick=()=>{
     const st=STYLES.find(x=>x.id===b.dataset.reserve); const q=Math.min(qty(l).free,Math.round(st.cons*st.units));
-    l.mv.push({d:TODAY,t:"Reserved",q,ref:st.id,by:"C. Roucher"}); toast(`${m(q)} reserved for ${st.id}`); refreshAll();
+    l.mv.push({d:TODAY,t:"Reserved",q,ref:st.id,by:"Sourcing"}); toast(`${m(q)} reserved for ${st.id}`); refreshAll();
   });
   const ai=$("#aiBtn"); if(ai) ai.onclick=runAI;
 }
@@ -668,44 +754,6 @@ function renderSales(){
   document.querySelectorAll("#commitTbl tr.click").forEach(tr=>tr.onclick=()=>{const d=$("#det"+tr.dataset.i);d.hidden=!d.hidden;});
 }
 
-/* ---------------- NONA EXPORT ---------------- */
-function nonaRows(){
-  return [...nonaSet].map(lotById).filter(Boolean);
-}
-function renderNona(){
-  $("#nonaCount").textContent=nonaSet.size;
-  const sel=nonaRows();
-  const blocked=LOTS.filter(l=>!nona(l).ok);
-  const eligibleNot=LOTS.filter(l=>nona(l).ok && !nonaSet.has(l.id));
-  const cols=["Reference","Material","Composition","Weight (g/m²)","Width (cm)","Colour","Quantity","Unit","Price / unit (€)","Location","Test report","Conditions","Photo"];
-  const row=l=>{const s=qty(l);return [`${l.base}-${l.col}-${l.id}`,l.name,l.comp,l.gsm,l.width,`${l.col} ${l.colName}`,s.free,"m",(l.price*0.4).toFixed(2),l.loc.split(" · ")[0],l.tests.report,l.restr.filter(r=>r.k==="cond").map(r=>r.t).join("; ")||"—",`${l.base}_${l.col}.jpg`];};
-  $("#nonaBody").innerHTML=`
-    <div class="sechead"><h2>In this export · ${sel.length} lot${sel.length===1?'':'s'}</h2>
-      <div class="btns"><button class="btn" id="addAll" ${eligibleNot.length?'':'disabled'}>Add all eligible (${eligibleNot.length})</button><button class="btn pri" id="dl" ${sel.length?'':'disabled'}>Download CSV</button></div></div>
-    ${sel.length? `<div class="grid" style="margin-bottom:22px">${sel.map(l=>{const s=qty(l),n=nona(l);return `<div class="card" style="cursor:default">
-      <div class="sw" style="${swatch(l)};height:110px"><div class="tags"><span class="pill ${n.cls}">${n.label}</span></div></div>
-      <div class="cbody"><div class="cname">${esc(l.name)}</div><div class="ccode num">${l.base} · ${l.col} ${esc(l.colName)}</div>
-      <div class="specs"><span>${esc(l.comp)}</span><span>${l.gsm} g/m²</span><span>${l.width} cm</span></div>
-      <div class="qty"><span class="m num">${m(s.free)}</span><span class="p num">${eur(l.price*0.4,2)} / m</span></div>
-      ${n.cls==='a'?`<div class="small" style="color:var(--amber)">${esc(n.why)}: included in the file</div>`:''}
-      <div class="cfoot"><button class="btn" data-rm="${l.id}">Remove</button><button class="btn" data-open="${l.id}">Passport</button></div></div></div>`}).join("")}</div>
-      <h3>File preview · columns to confirm with Nona Source's upload template</h3>
-      <div class="tblwrap" style="margin-bottom:22px"><table><tr>${cols.map(c=>`<th>${c}</th>`).join("")}</tr>${sel.map(l=>`<tr>${row(l).map(v=>`<td class="num" style="white-space:nowrap">${esc(v)}</td>`).join("")}</tr>`).join("")}</table></div>
-      <p class="small muted">Quantity sent = free metres (reserved metres stay at LOEWE). Resale price shown at 40% of purchase price as a placeholder.</p>`
-    : '<div class="empty" style="margin-bottom:22px">Nothing selected yet. Open a passport and choose “Add to Nona Source export”, or add all eligible lots.</div>'}
-    <h3>Kept out of the file</h3>
-    <div class="tblwrap"><table><tr><th>Lot</th><th>Reason</th><th class="r">Free metres</th></tr>
-      ${blocked.map(l=>{const n=nona(l);return `<tr class="click" data-open="${l.id}"><td><b>${esc(l.name)}</b> <span class="muted num">${l.base} · ${l.col}</span></td><td><span class="pill ${n.cls}">${esc(n.why)}</span></td><td class="r num">${m(qty(l).free)}</td></tr>`}).join("")}
-    </table></div>`;
-  const dl=$("#dl"); if(dl) dl.onclick=()=>{
-    const csv=[cols,...sel.map(row)].map(r=>r.map(v=>`"${String(v).replace(/"/g,'""')}"`).join(";")).join("\r\n");
-    const a=document.createElement("a"); a.href=URL.createObjectURL(new Blob(["﻿"+csv],{type:"text/csv"})); a.download=`nona-source-export_${TODAY}.csv`; a.click(); toast("CSV downloaded");
-  };
-  const aa=$("#addAll"); if(aa) aa.onclick=()=>{eligibleNot.forEach(l=>nonaSet.add(l.id));refreshAll();};
-  document.querySelectorAll("[data-rm]").forEach(b=>b.onclick=()=>{nonaSet.delete(b.dataset.rm);refreshAll();});
-  document.querySelectorAll("#nonaBody [data-open]").forEach(b=>b.onclick=()=>openPassport(b.dataset.open));
-}
-
 /* ---------------- VALUE ---------------- */
 function renderValue(){
   let T={pur:0,reuse:0,resale:0,disc:0,lost:0,stock:0};
@@ -728,7 +776,7 @@ function renderValue(){
 }
 
 /* ---------------- WIRING ---------------- */
-function refreshAll(){renderLibrary();renderSales();renderNona();renderValue();if(openId)renderPassport();}
+function refreshAll(){renderLibrary();renderSales();renderValue();if(openId)renderPassport();}
 document.querySelectorAll("nav.tabs button").forEach(b=>b.onclick=()=>{
   document.querySelectorAll("nav.tabs button").forEach(x=>x.classList.toggle("on",x===b));
   document.querySelectorAll(".view").forEach(v=>v.classList.toggle("on",v.id==="v-"+b.dataset.v));

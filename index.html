@@ -302,7 +302,7 @@ tr.click:hover td{background:#fcfaf6}
   <section class="view on" id="v-library">
     <div class="shophead"><h1>All leftover fabrics</h1></div>
     <p class="statline num" id="statline"></p>
-    <div class="subtabs" data-for="lib"><button class="on" data-sub="main">Fabrics</button><button data-sub="data">Data sources</button><button data-sub="ai">AI-powered</button></div>
+    <div class="subtabs" data-for="lib"><button class="on" data-sub="main">Fabrics</button><button data-sub="data">Data sources</button></div>
     <div class="sub on" data-sub="main">
     <div class="catbar" id="catbar" role="tablist"></div>
     <div class="shop">
@@ -322,14 +322,13 @@ tr.click:hover td{background:#fcfaf6}
     </div>
     </div>
     <div class="sub" data-sub="data" id="lib-data"></div>
-    <div class="sub" data-sub="ai" id="lib-ai"></div>
   </section>
 
   <!-- SALES -->
   <section class="view" id="v-sales">
     <h1>How did this quality sell?</h1>
     <p class="lede">Sell-through of past styles in the same fabric quality, from Power BI, does two things at pre-buy: it moves each new style's survival odds, and it flags fast sellers whose fabric has a long lead time, so undyed (RTD) fabric can be held for a reorder.</p>
-    <div class="subtabs" data-for="sales"><button class="on" data-sub="main">Signal</button><button data-sub="data">Data sources</button><button data-sub="ai">AI-powered</button></div>
+    <div class="subtabs" data-for="sales"><button class="on" data-sub="main">Signal</button><button data-sub="data">Data sources</button></div>
     <div class="sub on" data-sub="main">
     <div class="flow">
       <div><span class="n">01</span><b>Sales by style</b>Power BI sell-through of past styles, grouped by base fabric (first 7 digits).</div>
@@ -350,24 +349,22 @@ tr.click:hover td{background:#fcfaf6}
     <div class="tblwrap"><table id="commitTbl"></table></div>
     </div>
     <div class="sub" data-sub="data" id="sales-data"></div>
-    <div class="sub" data-sub="ai" id="sales-ai"></div>
   </section>
 
   <!-- VALUE -->
   <section class="view" id="v-value">
     <h1>Value recovered</h1>
     <p class="lede">Each movement carries a quantity and a value, so the library can say what leftovers cost and how much came back: reused internally at purchase value, resold at the resale price, or lost.</p>
-    <div class="subtabs" data-for="value"><button class="on" data-sub="main">Recovered</button><button data-sub="data">Data sources</button><button data-sub="ai">AI-powered</button></div>
+    <div class="subtabs" data-for="value"><button class="on" data-sub="main">Recovered</button><button data-sub="data">Data sources</button></div>
     <div class="sub on" data-sub="main">
     <div class="kpis" id="valKpis"></div>
     <div class="legend" style="margin:0 0 12px">
-      <span><i class="c-reuse"></i>Reused internally</span><span><i class="c-resale"></i>Resold (Nona Source)</span><span><i class="c-disc"></i>Resale discount</span><span><i class="c-lost"></i>Disposed</span><span><i class="c-stock"></i>Still in stock</span>
+      <span><i class="c-reuse"></i>Reused internally</span><span><i class="c-resale"></i>Resale (ex. Nona Source)</span><span><i class="c-disc"></i>Resale discount</span><span><i class="c-lost"></i>Disposed</span><span><i class="c-stock"></i>Still in stock</span>
     </div>
     <div class="tblwrap"><table id="valTbl"></table></div>
     <div class="savings" id="savingsBox"></div>
     </div>
     <div class="sub" data-sub="data" id="value-data"></div>
-    <div class="sub" data-sub="ai" id="value-ai"></div>
   </section>
 </main>
 
@@ -438,7 +435,7 @@ const LOTS = [
   restr:[{k:"block",t:"Logo print",d:"Carries the Anagram: cannot be resold. Internal reuse or controlled destruction only."}]},
  {id:"L06", base:"2325510", col:"0920", colName:"Natural", name:"Linen canvas", cat:"Linen", supplier:"Tejidos Ribera", comp:"100% Linen", gsm:340, width:140, price:14.20, season:"SS26", loc:"Barcelona · Rack C4", sw:"linen",
   mv:[{d:"2026-04-02",t:"Received",q:520,ref:"SS26 bulk, rejected at test · PO 46907",by:"Warehouse"},
-      {d:"2026-07-10",t:"Sold",q:300,ref:"Nona Source · order NS-2207",by:"Sourcing",price:6.00}],
+      {d:"2026-07-10",t:"Sold",q:300,ref:"Resale (ex. Nona Source) · order NS-2207",by:"Sourcing",price:6.00}],
   tests:{status:"fail",report:"TR-26-0302_Linen_canvas.pdf",lab:"Lab report · 8 Apr 2026",rows:[
       ["Dimensional stability","ISO 5077","−5.5%","±3%",false],["Colour fastness, washing","ISO 105-C06","4","≥ 4",true],["Tear strength","ISO 13937-2","31 N","≥ 15 N",true]],
       why:"Shrinks 5.5% after washing, almost twice the ±3% limit. Fine for unwashed or pre-shrunk uses; not for LOEWE garments."},
@@ -452,7 +449,7 @@ const LOTS = [
  {id:"L08", base:"2324019", col:"1010", colName:"Black", name:"Viscose satin", cat:"Lining & satin", supplier:"Tessitura Moretti", comp:"100% Viscose", gsm:120, width:140, price:11.30, season:"FW25", loc:"Barcelona · Rack E2", sw:"black",
   mv:[{d:"2025-10-20",t:"Received",q:760,ref:"FW25 production excess · PO 44981",by:"Warehouse"},
       {d:"2026-01-14",t:"Used",q:180,ref:"SS26 linings, JK-031 and JK-036",by:"Production"},
-      {d:"2026-04-22",t:"Sold",q:200,ref:"Nona Source · order NS-1964",by:"Sourcing",price:5.50},
+      {d:"2026-04-22",t:"Sold",q:200,ref:"Resale (ex. Nona Source) · order NS-1964",by:"Sourcing",price:5.50},
       {d:"2026-06-30",t:"Disposed",q:60,ref:"Water damage in warehouse",by:"Warehouse"}],
   tests:{status:"pass",report:"TR-25-0871_Viscose_satin.pdf",lab:"Lab report · 22 Oct 2025",rows:[
       ["Seam slippage","ISO 13936-2","5 mm","≤ 6 mm",true],["Colour fastness, washing","ISO 105-C06","4","≥ 4",true]]},
@@ -794,7 +791,7 @@ function addFabric(){
     sw:"undyed",origin:"",transp:"",elast:"",mv:[],tests:{status:"pending",report:"—",lab:"No report linked",rows:[],ai:[]},restr:[],docs:[]};
   LOTS.unshift(l); editId=l.id; openPassport(l.id);
 }
-function mvPill(t){const c={Received:"",Used:"b",Sold:"b",Disposed:"r",Reserved:"a"}[t];return `<span class="pill ${c}">${t==="Sold"?"Sold to Nona Source":t}</span>`;}
+function mvPill(t){const c={Received:"",Used:"b",Sold:"b",Disposed:"r",Reserved:"a"}[t];return `<span class="pill ${c}">${t==="Sold"?"Resale":t}</span>`;}
 function runAI(){
   const l=lotById(openId), out=$("#aiOut"); $("#aiBtn").disabled=true;
   out.innerHTML='<div class="scan"><span class="spin"></span>Reading TR-26-0988 (4 pages)…</div>';
@@ -868,7 +865,7 @@ function renderValue(){
   const rows=LOTS.map(l=>{const s=qty(l);const r={l,s,pur:s.rec*l.price,reuse:s.used*l.price,resale:s.soldVal,disc:s.sold*l.price-s.soldVal,lost:s.disp*l.price,stock:s.avail*l.price};
     Object.keys(T).forEach(k=>T[k]+=r[k]);return r;}).sort((a,b)=>b.pur-a.pur);
   const left=T.reuse+T.resale+T.disc+T.lost;
-  $("#valKpis").innerHTML=[[eur(T.pur),"leftover at purchase value"],[eur(T.reuse),"reused internally"],[eur(T.resale),"resold on Nona Source"],[eur(T.lost),"disposed"],[left?Math.round(100*(T.reuse+T.resale)/left)+"%":"—","recovered of what left stock"]]
+  $("#valKpis").innerHTML=[[eur(T.pur),"leftover at purchase value"],[eur(T.reuse),"reused internally"],[eur(T.resale),"resale (ex. Nona Source)"],[eur(T.lost),"disposed"],[left?Math.round(100*(T.reuse+T.resale)/left)+"%":"—","recovered of what left stock"]]
     .map(k=>`<div class="kpi"><div class="v num">${k[0]}</div><div class="l">${k[1]}</div></div>`).join("");
   const seg=(r,k,c)=>r[k]>0?`<div class="${c}" style="width:${(100*r[k]/r.pur).toFixed(2)}%" title="${eur(r[k])}"></div>`:'';
   $("#valTbl").innerHTML=`<tr><th>Lot</th><th>Origin</th><th class="r">Purchase value</th><th style="min-width:200px">Breakdown</th><th class="r">Recovered</th><th class="r">In stock</th></tr>
@@ -951,11 +948,11 @@ const SOURCES = {
   apply(rows,M){ const acc={}; rows.forEach(r=>{const sup=String(r[M.supplier]||"").trim(); if(!sup) return; let d=M.days!=null?num(r[M.days]):NaN;
       if(isNaN(d)&&M.ord!=null&&M.del!=null){d=(new Date(isoDate(r[M.del]))-new Date(isoDate(r[M.ord])))/864e5;} if(!(d>0)) return; acc[sup]=Math.max(acc[sup]||0,Math.round(d));});
     const k=Object.keys(acc); if(!k.length) return "No lead time could be read."; k.forEach(s=>SUPPLIERS[s]={lead:acc[s]}); return `${k.length} supplier lead times updated (longest per supplier).`; }},
- nona:{title:"Nona Source sales", pages:["value"], where:"Nona Source sales reports for LOEWE lots", refresh:"Monthly", used:"Resale revenue per lot",
+ nona:{title:"Resale (ex. Nona Source)", pages:["value"], where:"Sales reports from the resale platform for LOEWE lots", refresh:"Monthly", used:"Resale revenue per lot",
   fields:[["code","Material code",["material code","reference","codigo","sku"],1],["date","Date",["date","fecha"],1],["qty","Metres sold",["quantity","qty","metres","meters","cantidad"],1],["price","Price / m",["price","precio","unit price"],1],["order","Order",["order","pedido"],0]],
   apply(rows,M){ let n=0; rows.forEach(r=>{const c=code(r[M.code]); const q=num(r[M.qty]); if(!c||!(q>0)) return; const l=LOTS.find(x=>x.base===c.base&&x.col===c.col); if(!l) return;
-      l.mv.push({d:isoDate(r[M.date]),t:"Sold",q,ref:"Nona Source"+(M.order!=null&&r[M.order]?" · "+r[M.order]:""),by:"Upload",price:num(r[M.price])||0}); n++;});
-    return n?`${n} Nona Source sales added.`:"No sale matched a lot in the library."; }}
+      l.mv.push({d:isoDate(r[M.date]),t:"Sold",q,ref:"Resale (ex. Nona Source)"+(M.order!=null&&r[M.order]?" · "+r[M.order]:""),by:"Upload",price:num(r[M.price])||0}); n++;});
+    return n?`${n} resale lines added.`:"No sale matched a lot in the library."; }}
 };
 const UP = {}; // id -> {file, rows, headers, map, msg}
 
@@ -1005,7 +1002,7 @@ function srcCard(id){
       ${u.msg?`<span class="small" style="align-self:center;color:var(--green)">${esc(u.msg)}</span>`:''}</div></div>`;
   }
   if(u && S.pdf){
-    prev=`<div class="verdict a" style="margin-top:12px"><div><div class="t">${u.count} PDF${u.count>1?'s':''} received: ${esc(u.file)}</div><div class="small">Reading a lab report needs the AI model connected (see AI-powered). In the demo, open the cashmere jersey passport to see the result of a reading.</div></div></div>
+    prev=`<div class="verdict a" style="margin-top:12px"><div><div class="t">${u.count} PDF${u.count>1?'s':''} received: ${esc(u.file)}</div><div class="small">Reading a lab report needs the AI model connected once the tool is hosted. In the demo, open the cashmere jersey passport to see the result of a reading.</div></div></div>
       <div class="btns" style="margin-top:10px"><button class="btn" data-reset="${id}">Remove</button></div>`;
   }
   return `<div class="srccard" id="src-${id}">
@@ -1020,7 +1017,7 @@ function srcCard(id){
 const FLOW = {
   lib:[["Leftover stock","Power BI / ERP"],["Material master, photos","PLM"],["Movements","ERP, warehouse"],["Lab reports","PDF, SharePoint"],["Restrictions","PLM, contracts"],["FW27 draft BOMs","PLM"]],
   sales:[["Sales by style","Power BI"],["Past BOMs","PLM"],["Line review history","PLM"],["Lead times","Order export"],["FW27 draft BOMs","PLM"],["Undyed stock","Library"]],
-  value:[["Purchase price","Order export, PLM"],["Movements","ERP, warehouse"],["Nona Source sales","Nona Source reports"]]
+  value:[["Purchase price","Order export, PLM"],["Movements","ERP, warehouse"],["Resale (ex. Nona Source)","Resale sales reports"]]
 };
 const OUT = {lib:"Fabric cards and passports", sales:"Survival odds, firm tranche, reorder holds", value:"Value recovered → Savings report"};
 function renderData(page){
@@ -1045,39 +1042,6 @@ function renderData(page){
 }
 function renderAllData(){["lib","sales","value"].forEach(renderData);}
 
-/* ---------------- AI-POWERED ---------------- */
-const AI = {
- lib:{intro:"AI reads documents, photos and free text, and matches fabrics. Quantities, prices and eligibility rules stay in code, so every number stays checkable.",
-  rows:[["Read lab reports","Drop the PDF: test names, results, requirements and pass/fail fill in, each with the page it came from. A person checks before saving.","GPT or Gemini (document reading)","Lab PDFs","Shown in the demo (cashmere jersey)"],
-        ["Explain a failure","One plain sentence on why a lot failed and which uses are still safe (“fine for unwashed or pre-shrunk uses”).","GPT or Gemini","Test results, PLM material","To build"],
-        ["Search by look","Upload a swatch photo or click “more like this”: the closest fabrics in stock, by colour, texture and pattern.","Gemini or GPT (vision), image embeddings","PLM photos","To build (phase 2)"],
-        ["Search by sentence","“Black lining under 15€/m, at least 200 m” sets the filters, which stay visible and editable.","GPT or Gemini returns filter values; code applies them","Library fields","To build"],
-        ["Flag restrictions","Reads PLM notes and supplier contracts for “exclusive”, logo, artwork or certificate clauses and proposes a restriction for review.","GPT or Gemini","PLM notes, contracts","To build"],
-        ["Match beyond the same code","Suggests similar qualities for an FW27 style when no lot has the same base fabric (composition, weight, look).","Embeddings over PLM attributes and photos","PLM, draft BOMs","To build"],
-        ["Clean names for the shop view","Turns PLM descriptions into readable names like “Striped Cotton Poplin” and fills transparency or elasticity when missing.","GPT or Gemini","PLM descriptions","To build"]]},
- sales:{intro:"AI finds comparable styles and explains the numbers. The survival odds, tranches and hold quantities are calculated in code from those comparables, so the commitment stays reproducible.",
-  rows:[["Comparable styles by look and build","When a fabric has little history, finds past styles that look and are built like the new one, from the sketch and attributes.","Style profile engine: embeddings over sketches and PLM attributes","PLM sketches, BOMs, sales","Core of Early Line, to build"],
-        ["Sell-through estimate","A predicted sell-through range for the new style, next to the history-based signal, with the styles it learned from.","Forecast model trained on past sales (gradient boosting or similar)","Power BI sales, PLM attributes","To build"],
-        ["Explain the odds","“78%: shirts usually survive 70% of the time, and this poplin sold 76% across three styles.”","GPT or Gemini writes the sentence from the computed figures","Computed odds","To build"],
-        ["Weekly reorder watch","A short note each week: which fast sellers have long lead times, and how much undyed fabric to hold.","GPT or Gemini over the computed alerts","Sales, lead times, stock","To build"],
-        ["Ask the sales data","“How did linen sell in SS26?” answered from the Power BI data, with the table behind the answer.","GPT or Gemini writes the query; the result is shown as is","Power BI dataset","To build"]]},
- value:{intro:"AI writes and sorts; the euros are added up in code. That keeps the Savings report defendable in front of finance.",
-  rows:[["End-of-season report","A one-page draft of what leftovers cost, what came back and what was avoided by reserving stock, ready to edit and export.","GPT or Gemini over the computed figures","Movements, prices","To build"],
-        ["Sort free-text reasons","Movement and disposal notes (“water damage”, “rejected at test”) grouped into causes, to see what creates loss.","GPT or Gemini (classification)","Movement references","To build"],
-        ["Suggest a resale price","A price range per metre from past Nona Source sales of similar fabrics, before listing.","Regression on past resale prices","Nona Source sales, PLM attributes","To build"],
-        ["Spot unusual losses","Flags lots where disposal or discount is far above similar lots, to check with the warehouse.","Anomaly detection on movement values","Movements","To build"]]}
-};
-function renderAI(page){
-  const A=AI[page];
-  $(`#${page}-ai`).innerHTML=`<p class="lede" style="margin-bottom:16px">${esc(A.intro)}</p>
-    <div class="tblwrap"><table class="aitbl"><tr><th>Feature</th><th>What the user sees</th><th>Model</th><th>Data it needs</th><th>Status</th></tr>
-    ${A.rows.map(r=>`<tr><td>${esc(r[0])}</td><td>${esc(r[1])}</td><td class="small">${esc(r[2])}</td><td class="small muted">${esc(r[3])}</td><td>${/demo/.test(r[4])?`<span class="pill g">${esc(r[4])}</span>`:`<span class="pill">${esc(r[4])}</span>`}</td></tr>`).join("")}</table></div>
-    <div class="guard">
-      <div><b>Numbers stay in code</b>Metres, euros, odds and holds are calculated, never generated, so the same inputs always give the same result.</div>
-      <div><b>A person confirms</b>Anything AI reads or proposes (test results, restrictions, names) is shown with its source and saved only once checked.</div>
-      <div><b>Group environment</b>Models run under LVMH's licensed accounts, inside the approved hosting, because collection data is confidential.</div>
-    </div>`;
-}
 
 /* ---------------- WIRING ---------------- */
 function refreshAll(){renderLibrary();renderSales();renderValue();renderAllData();if(openId)renderPassport();}
@@ -1093,7 +1057,6 @@ document.querySelectorAll(".subtabs").forEach(bar=>bar.querySelectorAll("button"
   bar.querySelectorAll("button").forEach(x=>x.classList.toggle("on",x===b));
   bar.parentElement.querySelectorAll(":scope > .sub").forEach(sv=>sv.classList.toggle("on",sv.dataset.sub===b.dataset.sub));
 }));
-["lib","sales","value"].forEach(renderAI);
 initFilters(); refreshAll();
 </script>
 </body>

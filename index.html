@@ -32,6 +32,7 @@ header.top{border-bottom:1px solid var(--line);background:#fff;position:sticky;t
 .brand .name{font-family:var(--serif);font-size:22px}
 .sample{font-size:11px;font-weight:600;color:var(--amber);background:var(--amber-soft);border:1px solid #ead9c2;padding:3px 8px;border-radius:99px;white-space:nowrap}
 nav.tabs{display:flex;gap:2px;margin-left:auto;flex-wrap:wrap}
+main{padding-top:22px}
 nav.tabs button{white-space:nowrap;background:none;border:0;padding:10px 14px;border-radius:8px;color:var(--ink2);font-weight:500}
 nav.tabs button:hover{background:var(--soft)}
 nav.tabs button.on{background:var(--ink);color:#fff}
@@ -130,6 +131,51 @@ h3{font-size:12px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;
   .togglef{display:inline-block}
   .pgrid{grid-template-columns:repeat(2,minmax(0,1fr))}
 }
+
+/* sub tabs */
+.subtabs{display:flex;gap:22px;border-bottom:1px solid var(--line);margin:0 0 22px;overflow-x:auto}
+.subtabs button{background:none;border:0;padding:10px 0;font-size:13px;font-weight:600;color:var(--mute);border-bottom:2px solid transparent;margin-bottom:-1px;white-space:nowrap}
+.subtabs button.on{color:var(--ink);border-bottom-color:var(--ink)}
+.subtabs button:hover{color:var(--ink)}
+.sub{display:none}.sub.on{display:block}
+.srcgrid{display:flex;flex-direction:column;gap:14px}
+.srccard{border:1px solid var(--line);border-radius:12px;padding:16px 18px;background:#fff}
+.srctop{display:flex;justify-content:space-between;gap:12px;align-items:flex-start;flex-wrap:wrap}
+.srctop .t{font-weight:600;font-size:15px}
+.srcmeta{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px 20px;margin:12px 0;font-size:12px;color:var(--mute)}
+.srcmeta b{display:block;color:var(--ink);font-weight:500;font-size:13px}
+.cols{display:flex;flex-wrap:wrap;gap:6px;margin:8px 0 0}
+.col{font-size:11px;padding:3px 8px;border-radius:6px;background:var(--soft);border:1px solid var(--line2);color:var(--ink2)}
+.col.ok{background:var(--green-soft);border-color:#cfe5d7;color:var(--green)}
+.col.miss{background:var(--red-soft);border-color:#efd2cc;color:var(--red)}
+.col.opt{opacity:.75}
+.upl{display:inline-flex;align-items:center;gap:8px;border:1px solid var(--ink);background:var(--ink);color:#fff;border-radius:9px;padding:8px 12px;font-weight:500;cursor:pointer;font-size:13px}
+.upl input{display:none}
+.prev{margin-top:12px}
+.flowmap{display:grid;grid-template-columns:1fr auto 1fr;gap:14px;align-items:center;margin:0 0 22px}
+.flowmap .arrow{font-size:20px;color:var(--mute)}
+.flowmap .boxes{display:flex;flex-direction:column;gap:6px}
+.flowmap .b{border:1px solid var(--line);border-radius:8px;padding:8px 10px;font-size:12px;background:var(--soft)}
+.flowmap .b b{font-size:13px}
+.aitbl td:first-child{font-weight:600;min-width:160px}
+.guard{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin-top:18px}
+.guard div{border:1px solid var(--line);border-radius:12px;padding:12px 14px;font-size:12px;color:var(--ink2)}
+.guard b{display:block;color:var(--ink);font-size:13px;margin-bottom:2px}
+@media (max-width:900px){.srcmeta,.guard{grid-template-columns:1fr}.flowmap{grid-template-columns:1fr}.flowmap .arrow{transform:rotate(90deg);justify-self:center}}
+
+/* editor */
+.form{display:grid;grid-template-columns:1fr 1fr;gap:10px 14px;margin-top:14px}
+.form label{display:flex;flex-direction:column;gap:4px;font-size:11px;color:var(--mute);font-weight:600;letter-spacing:.02em}
+.form input,.form select{border:1px solid var(--line);border-radius:8px;padding:8px 10px;font-size:13px;color:var(--ink);background:#fff;font-weight:400}
+.form .full{grid-column:1/-1}
+.docs{display:flex;flex-direction:column;gap:8px}
+.doc{display:flex;gap:10px;align-items:center;border:1px solid var(--line);border-radius:10px;padding:8px 12px;flex-wrap:wrap}
+.doc a{font-weight:500;color:var(--ink)}
+.doc select{border:1px solid var(--line);border-radius:6px;padding:4px 6px;font-size:12px;background:#fff}
+.doc .x{margin-left:auto;background:none;border:0;color:var(--mute);font-size:16px}
+.swwrap{position:relative;align-self:start}
+.swwrap .upl{position:absolute;left:10px;bottom:10px;background:rgba(255,255,255,.92);color:var(--ink);border-color:var(--line);font-size:12px;padding:6px 10px}
+@media (max-width:560px){.form{grid-template-columns:1fr}}
 
 /* passport drawer */
 .scrim{position:fixed;inset:0;background:rgba(30,27,24,.35);opacity:0;pointer-events:none;transition:opacity .2s;z-index:40}
@@ -242,8 +288,7 @@ tr.click:hover td{background:#fcfaf6}
 <body>
 <header class="top">
   <div class="wrap row">
-    <div class="brand"><span class="kicker">Early Line · Reuse + Commit</span><span class="name">Fabric passport</span></div>
-    <span class="sample">Sample data · illustrative</span>
+        <span class="sample">Sample data · illustrative</span>
     <nav class="tabs" role="tablist">
       <button data-v="library" class="on">Library</button>
       <button data-v="sales">Sales signal</button>
@@ -255,15 +300,17 @@ tr.click:hover td{background:#fcfaf6}
 <main class="wrap">
   <!-- LIBRARY -->
   <section class="view on" id="v-library">
-    <div class="crumb">Early Line · Reuse view · Leftover library</div>
     <div class="shophead"><h1>All leftover fabrics</h1></div>
     <p class="statline num" id="statline"></p>
+    <div class="subtabs" data-for="lib"><button class="on" data-sub="main">Fabrics</button><button data-sub="data">Data sources</button><button data-sub="ai">AI-powered</button></div>
+    <div class="sub on" data-sub="main">
     <div class="catbar" id="catbar" role="tablist"></div>
     <div class="shop">
       <aside class="side" id="side"></aside>
       <div>
         <div class="toolbar">
           <button class="btn togglef" id="toggleF">Show filters</button>
+          <button class="btn pri" id="addFab">+ Add a fabric</button>
           <input type="search" id="q" placeholder="Search fabric, reference, vendor, composition…" aria-label="Search">
           <label class="small muted">Sorted by <select id="sort" aria-label="Sort">
             <option value="rel">Relevance</option><option value="new">New in</option><option value="pa">Price, low to high</option><option value="pd">Price, high to low</option><option value="qty">Most in stock</option>
@@ -273,13 +320,17 @@ tr.click:hover td{background:#fcfaf6}
         <div class="seen" id="seen"></div>
       </div>
     </div>
+    </div>
+    <div class="sub" data-sub="data" id="lib-data"></div>
+    <div class="sub" data-sub="ai" id="lib-ai"></div>
   </section>
 
   <!-- SALES -->
   <section class="view" id="v-sales">
-    <span class="kicker">Commit view · early sales signal</span>
     <h1>How did this quality sell?</h1>
     <p class="lede">Sell-through of past styles in the same fabric quality, from Power BI, does two things at pre-buy: it moves each new style's survival odds, and it flags fast sellers whose fabric has a long lead time, so undyed (RTD) fabric can be held for a reorder.</p>
+    <div class="subtabs" data-for="sales"><button class="on" data-sub="main">Signal</button><button data-sub="data">Data sources</button><button data-sub="ai">AI-powered</button></div>
+    <div class="sub on" data-sub="main">
     <div class="flow">
       <div><span class="n">01</span><b>Sales by style</b>Power BI sell-through of past styles, grouped by base fabric (first 7 digits).</div>
       <div><span class="n">02</span><b>Signal per quality</b>Unit-weighted sell-through vs the 60% median.</div>
@@ -297,19 +348,26 @@ tr.click:hover td{background:#fcfaf6}
 
     <div class="sechead"><h2>FW27 pre-buy · survival odds and commitment</h2><span class="src">Need = consumption × planned units · reserved stock goes to its style, then free stock of the same quality in row order · click a row for the comparable styles</span></div>
     <div class="tblwrap"><table id="commitTbl"></table></div>
+    </div>
+    <div class="sub" data-sub="data" id="sales-data"></div>
+    <div class="sub" data-sub="ai" id="sales-ai"></div>
   </section>
 
   <!-- VALUE -->
   <section class="view" id="v-value">
-    <span class="kicker">Savings · leftovers</span>
     <h1>Value recovered</h1>
     <p class="lede">Each movement carries a quantity and a value, so the library can say what leftovers cost and how much came back: reused internally at purchase value, resold at the resale price, or lost.</p>
+    <div class="subtabs" data-for="value"><button class="on" data-sub="main">Recovered</button><button data-sub="data">Data sources</button><button data-sub="ai">AI-powered</button></div>
+    <div class="sub on" data-sub="main">
     <div class="kpis" id="valKpis"></div>
     <div class="legend" style="margin:0 0 12px">
       <span><i class="c-reuse"></i>Reused internally</span><span><i class="c-resale"></i>Resold (Nona Source)</span><span><i class="c-disc"></i>Resale discount</span><span><i class="c-lost"></i>Disposed</span><span><i class="c-stock"></i>Still in stock</span>
     </div>
     <div class="tblwrap"><table id="valTbl"></table></div>
     <div class="savings" id="savingsBox"></div>
+    </div>
+    <div class="sub" data-sub="data" id="value-data"></div>
+    <div class="sub" data-sub="ai" id="value-ai"></div>
   </section>
 </main>
 
@@ -317,6 +375,7 @@ tr.click:hover td{background:#fcfaf6}
 <aside class="drawer" id="drawer" aria-hidden="true"></aside>
 <div class="toast" id="toast"></div>
 
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 <script>
 /* ---------------- SAMPLE DATA ---------------- */
 const TODAY = "2026-10-26";
@@ -498,14 +557,14 @@ function signal(base){
   return {st: rows.reduce((a,r)=>a+r[2]*r[3],0)/u, units:u, rows, fastest: rows.reduce((a,r)=>r[3]>a[3]?r:a,rows[0])};
 }
 function odds(style){
-  const base = BASE_ODDS[style.cat];
+  const base = BASE_ODDS[style.cat] ?? 60;
   const sg = signal(style.base);
   if(!sg) return {base, adj:0, odds:base, sg:null};
   const adj = Math.max(-15,Math.min(15,0.5*(sg.st-MEDIAN)));
   return {base, adj, odds:Math.max(5,Math.min(95,base+adj)), sg};
 }
 function toast(t){const e=$("#toast");e.textContent=t;e.classList.add("on");clearTimeout(e._t);e._t=setTimeout(()=>e.classList.remove("on"),2200);}
-function swatch(l){return `background:${SW[l.sw]}`;}
+function swatch(l){return l.photo?`background:#eee url('${l.photo}') center/cover no-repeat`:`background:${SW[l.sw]||SW.undyed}`;}
 
 /* ---------------- LIBRARY ---------------- */
 const isNew = l => l.season==="FW27 PB1";
@@ -514,11 +573,12 @@ function facetList(title,key,opts){
 }
 function initFilters(){
   $("#q").addEventListener("input",renderLibrary);
+  $("#addFab").onclick=addFabric;
   $("#sort").addEventListener("input",renderLibrary);
   $("#toggleF").onclick=()=>{const sd=$("#side");sd.classList.toggle("open");$("#toggleF").textContent=sd.classList.contains("open")?"Hide filters":"Show filters";};
 }
 function renderSide(){
-  const cnt=(fn)=>LOTS.filter(fn).length;
+  const cnt=(fn)=>LOTS.filter(l=>!l._new).filter(fn).length;
   const vendors=[...new Set(LOTS.map(l=>l.supplier))].sort();
   $("#side").innerHTML=
     facetList("Vendor","vendor",vendors.map(v=>({v,l:v,c:cnt(l=>l.supplier===v)}))) +
@@ -535,14 +595,14 @@ function renderSide(){
 }
 function renderLibrary(){
   // category bar
-  const present=TYPES.filter(t=>LOTS.some(l=>l.type===t));
+  const present=[...TYPES.filter(t=>LOTS.some(l=>!l._new&&l.type===t)),...[...new Set(LOTS.filter(l=>!l._new).map(l=>l.type))].filter(t=>t&&!TYPES.includes(t))];
   $("#catbar").innerHTML=[["","All fabrics"],...present.map(t=>[t,t])].map(([v,l])=>`<button class="${F.type===v?'on':''}" data-t="${esc(v)}">${esc(l)}</button>`).join("");
   document.querySelectorAll("#catbar button").forEach(b=>b.onclick=()=>{F.type=b.dataset.t;renderLibrary();});
   renderSide();
   let tm=0,tv=0; LOTS.forEach(l=>{const s=qty(l);tm+=s.avail;tv+=s.avail*l.price;});
   $("#statline").innerHTML=`${LOTS.length} lots · ${m(tm)} in stock · ${eur(tv)} at purchase value · photos and codes from PLM, stock from Power BI`;
   const q=$("#q").value.trim().toLowerCase();
-  let list=LOTS.filter(l=>{
+  let list=LOTS.filter(l=>!l._new).filter(l=>{
     const hay=[l.title,l.name,l.base,l.col,l.supplier,l.comp,l.colName,l.type,l.base+"."+l.col].join(" ").toLowerCase();
     if(q && !hay.includes(q)) return false;
     if(F.type && l.type!==F.type) return false;
@@ -578,11 +638,11 @@ function renderLibrary(){
 
 /* ---------------- PASSPORT ---------------- */
 function openPassport(id){openId=id;renderPassport();$("#drawer").classList.add("on");$("#scrim").classList.add("on");$("#drawer").setAttribute("aria-hidden","false");$("#drawer").scrollTop=0;}
-function closePassport(){openId=null;$("#drawer").classList.remove("on");$("#scrim").classList.remove("on");$("#drawer").setAttribute("aria-hidden","true");}
+function closePassport(){const cur=lotById(openId); if(cur&&cur._new){LOTS.splice(LOTS.indexOf(cur),1);} editId=null; openId=null; if(cur) refreshAll();$("#drawer").classList.remove("on");$("#scrim").classList.remove("on");$("#drawer").setAttribute("aria-hidden","true");}
 function renderPassport(){
   const l=lotById(openId); if(!l) return;
-  const s=qty(l), n=resale(l), mt=matches(l), sg=signal(l.base), lead=SUPPLIERS[l.supplier].lead;
-  const pct=v=>(100*v/s.rec).toFixed(2)+"%";
+  const s=qty(l), n=resale(l), mt=matches(l), sg=signal(l.base), lead=(SUPPLIERS[l.supplier]||{lead:"?"}).lead;
+  const pct=v=>s.rec?(100*v/s.rec).toFixed(2)+"%":"0%";
   const reuse=s.used*l.price, resold=s.soldVal, lost=s.disp*l.price, disc=s.sold*l.price-s.soldVal, left=(s.used+s.sold+s.disp)*l.price;
   const rec = left? (reuse+resold)/left : 0;
   const t=l.tests;
@@ -592,14 +652,14 @@ function renderPassport(){
   $("#drawer").innerHTML = `
   <div class="dhead">
     <button class="close" id="closeBtn" aria-label="Close">×</button>
-    <div class="sw" style="${swatch(l)}"></div>
+    <div class="swwrap"><div class="sw" style="${swatch(l)}"></div><label class="upl">${l.photo?'Change photo':'Upload photo'}<input type="file" id="photoIn" accept="image/*"></label></div>
     <div>
       <span class="kicker">Fabric passport · ${l.id}</span>
-      <h2 style="margin-top:4px;font-family:var(--sans);font-weight:600;font-size:22px">${esc(l.title)} ${esc(l.colName)}</h2>
-      <div class="pref num" style="font-size:12px;color:var(--mute);margin-top:2px">${l.base}.${l.col} · ${esc(l.supplier)}</div>
-      <div style="display:flex;gap:16px;align-items:baseline;margin-top:10px"><span class="stat num">${fmt(l.price,2)}€/m</span><span class="num">${fmt(s.avail)}m in stock${s.res?` · ${fmt(s.res)}m reserved`:''}</span></div>
-      <div class="btns" style="margin-top:8px">${testPill(l)}<span class="pill ${n.cls}">${n.label}</span>${isNew(l)?'<span class="pill">New in</span>':''}${l.col==="2790"?'<span class="pill b">Ready to dye</span>':''}</div>
-      <table class="ptable"><tbody>
+      <h2 style="margin-top:4px;font-family:var(--sans);font-weight:600;font-size:22px">${l._new?"New fabric":esc(l.title)+" "+esc(l.colName)}</h2>
+      <div class="pref num" style="font-size:12px;color:var(--mute);margin-top:2px">${l._new?"Fill in the details, add a photo and its source, then save.":`${l.base}.${l.col} · ${esc(l.supplier)}`}</div>
+      <div style="display:${l._new?"none":"flex"};gap:16px;align-items:baseline;margin-top:10px"><span class="stat num">${fmt(l.price,2)}€/m</span><span class="num">${fmt(s.avail)}m in stock${s.res?` · ${fmt(s.res)}m reserved`:''}</span></div>
+      <div class="btns" style="margin-top:8px">${testPill(l)}<span class="pill ${n.cls}">${n.label}</span>${isNew(l)?'<span class="pill">New in</span>':''}${l.col==="2790"?'<span class="pill b">Ready to dye</span>':''}${editId===l.id?'':'<button class="btn" id="editBtn" style="padding:3px 10px;font-size:12px">Edit details</button>'}</div>
+      ${editId===l.id?editForm(l):`<table class="ptable"><tbody>
         <tr><td>Material type</td><td>${esc(l.type)}</td></tr>
         <tr><td>Composition</td><td>${esc(l.comp)}</td></tr>
         <tr><td>Weight</td><td class="num">${l.gsm} g/m²</td></tr>
@@ -609,9 +669,19 @@ function renderPassport(){
         <tr><td>Country of origin</td><td>${esc(l.origin)}</td></tr>
         <tr><td>Vendor · lead time</td><td>${esc(l.supplier)} · ${lead} days</td></tr>
         <tr><td>Origin · location</td><td>${l.season} · ${esc(l.loc)}</td></tr>
-      </tbody></table>
+      </tbody></table>`}
       ${other.length?`<div class="small muted" style="margin-top:10px">Same quality, other colours: ${other.map(o=>`<a href="#" data-open="${o.id}">${o.col} ${esc(o.colName)} (${m(qty(o).avail)})</a>`).join(", ")}</div>`:''}
     </div>
+  </div>
+
+  <div class="sec">
+    <div class="sechead"><h3>Source documents</h3><span class="src">Spec sheets, PLM exports, supplier sheets, lab reports, contracts</span></div>
+    ${(l.docs||[]).length?`<div class="docs">${l.docs.map((d,i)=>`<div class="doc"><span>📎</span>${d.url?`<a href="${d.url}" target="_blank" rel="noopener">${esc(d.name)}</a>`:`<b>${esc(d.name)}</b>`}
+      <select data-doctype="${i}" aria-label="Document type">${DOCTYPES.map(t=>`<option ${t===d.type?'selected':''}>${t}</option>`).join("")}</select>
+      <span class="small muted">${esc(d.added)}${d.size?` · ${d.size}`:''}</span><button class="x" data-docrm="${i}" aria-label="Remove">×</button></div>`).join("")}</div>`
+      :'<p class="small muted" style="margin:0 0 4px">No source attached yet.</p>'}
+    <div class="btns" style="margin-top:10px"><label class="upl">Attach source<input type="file" id="docIn" multiple accept=".pdf,.xlsx,.xls,.csv,.doc,.docx,.png,.jpg,.jpeg,.txt"></label>
+      <span class="small muted" style="align-self:center">Kept in this browser session only; when hosted, files go to the SharePoint folder for the lot.</span></div>
   </div>
 
   <div class="sec">
@@ -637,7 +707,7 @@ function renderPassport(){
     <div class="sechead"><h3>Quality tests</h3><span class="src">📎 ${esc(t.report)} · ${esc(t.lab)}</span></div>
     ${t.status==="pending" ? `
       <div class="verdict a"><div><div class="t">Test report received, results not entered</div><div class="small">AI reads the PDF and fills the fields below. Each value shows the page it came from, and someone checks it before saving.</div></div></div>
-      <div class="btns" style="margin-top:12px"><button class="btn blue" id="aiBtn">Read report with AI</button><span class="small muted" style="align-self:center">Demo: the extraction is simulated</span></div>
+      <div class="btns" style="margin-top:12px">${(t.ai||[]).length?'<button class="btn blue" id="aiBtn">Read report with AI</button>':'<span class="small muted">No lab PDF linked yet: add it in Data sources → Quality test reports.</span>'}<span class="small muted" style="align-self:center">Demo: the extraction is simulated</span></div>
       <div id="aiOut" style="margin-top:12px"></div>` : `
       ${t.why?`<div class="verdict r" style="margin-bottom:12px"><div><div class="t">Why it failed</div><div class="small">${esc(t.why)}</div></div></div>`:''}
       <div class="tblwrap"><table><tr><th>Test</th><th>Standard</th><th class="r">Result</th><th class="r">Required</th><th>Status</th></tr>${testRows}</table></div>`}
@@ -685,6 +755,44 @@ function renderPassport(){
     l.mv.push({d:TODAY,t:"Reserved",q,ref:st.id,by:"Sourcing"}); toast(`${m(q)} reserved for ${st.id}`); refreshAll();
   });
   const ai=$("#aiBtn"); if(ai) ai.onclick=runAI;
+  $("#photoIn").onchange=e=>{const f=e.target.files[0]; if(!f) return; const r=new FileReader(); r.onload=()=>{l.photo=r.result; addDoc(l,f,"Fabric photo",false); toast("Photo added"); refreshAll();}; r.readAsDataURL(f);};
+  $("#docIn").onchange=e=>{[...e.target.files].forEach(f=>addDoc(l,f,guessType(f.name),true)); toast("Source attached"); refreshAll();};
+  document.querySelectorAll("[data-doctype]").forEach(sel=>sel.onchange=()=>{l.docs[+sel.dataset.doctype].type=sel.value;});
+  document.querySelectorAll("[data-docrm]").forEach(b=>b.onclick=()=>{l.docs.splice(+b.dataset.docrm,1); refreshAll();});
+  const eb=$("#editBtn"); if(eb) eb.onclick=()=>{editId=l.id; renderPassport();};
+  const fc=$("#formCancel"); if(fc) fc.onclick=()=>{ if(l._new){ LOTS.splice(LOTS.indexOf(l),1); editId=null; closePassport(); refreshAll(); return;} editId=null; renderPassport();};
+  const fs=$("#formSave"); if(fs) fs.onclick=()=>saveForm(l);
+}
+let editId=null;
+const DOCTYPES=["PLM sheet","Supplier spec","Lab report","Contract or certificate","Fabric photo","Other"];
+function guessType(n){n=n.toLowerCase(); if(/test|lab|report|tr-/.test(n)) return "Lab report"; if(/contract|cert|rws|gots/.test(n)) return "Contract or certificate"; if(/plm/.test(n)) return "PLM sheet"; if(/\.(png|jpe?g)$/.test(n)) return "Fabric photo"; return "Supplier spec";}
+function addDoc(l,f,type,link){ (l.docs=l.docs||[]).push({name:f.name,type,url:link?URL.createObjectURL(f):"",added:date(TODAY),size:f.size>1048576?(f.size/1048576).toFixed(1)+" MB":Math.max(1,Math.round(f.size/1024))+" KB"}); }
+const EDIT_FIELDS=[["title","Fabric name","text"],["colName","Colour name","text"],["base","Base fabric code (7 digits)","text"],["col","Colour code (4 digits)","text"],
+  ["type","Material type","type"],["supplier","Vendor","text"],["comp","Composition","text"],["gsm","Weight (g/m²)","number"],["width","Usable width (cm)","number"],
+  ["price","Purchase price (€/m)","number"],["transp","Transparency","text"],["elast","Elasticity","text"],["origin","Country of origin","text"],["season","Origin season","text"],["loc","Location","text"]];
+function editForm(l){
+  return `<div class="form">${EDIT_FIELDS.map(([k,lab,t])=>`<label class="${k==="title"||k==="comp"?'full':''}">${lab}${t==="type"
+      ?`<select data-k="${k}">${[...new Set([...TYPES,l.type].filter(Boolean))].map(x=>`<option ${x===l.type?'selected':''}>${esc(x)}</option>`).join("")}</select>`
+      :`<input data-k="${k}" type="${t}" ${t==="number"?'step="any" min="0"':''} value="${esc(l[k]??"")}">`}</label>`).join("")}
+    ${l._new?`<label>Metres received<input data-k="_qty" type="number" min="0" step="any" value=""></label><label>Received on<input data-k="_date" type="date" value="${TODAY}"></label>`:''}
+    <div class="full btns" style="margin-top:4px"><button class="btn pri" id="formSave">Save</button><button class="btn" id="formCancel">Cancel</button>
+      ${l._new?'':'<span class="small muted" style="align-self:center">Metres change through movements, so the history stays complete.</span>'}</div></div>`;
+}
+function saveForm(l){
+  const v={}; document.querySelectorAll("#drawer [data-k]").forEach(i=>v[i.dataset.k]=i.value.trim());
+  if(!/^\d{7}$/.test(v.base)){toast("Base fabric code needs 7 digits");return;}
+  if(!/^\d{4}$/.test(v.col)){toast("Colour code needs 4 digits");return;}
+  EDIT_FIELDS.forEach(([k,,t])=>{ l[k]= t==="number" ? (v[k]===""?"—":parseFloat(v[k])) : (v[k]||"—"); });
+  if(typeof l.price!=="number") l.price=0;
+  l.name=l.title; if(!SUPPLIERS[l.supplier]) SUPPLIERS[l.supplier]={lead:90};
+  if(l._new){ const q=parseFloat(v._qty)||0; if(q>0) l.mv.push({d:v._date||TODAY,t:"Received",q,ref:"Added manually",by:"Sourcing"}); delete l._new; }
+  editId=null; toast("Fabric saved"); refreshAll();
+}
+function addFabric(){
+  const n=LOTS.filter(l=>/^N/.test(l.id)).length+1;
+  const l={id:"N"+String(n).padStart(2,"0"),_new:true,base:"",col:"",colName:"",name:"",title:"",cat:"",type:TYPES[1],supplier:"",comp:"",gsm:"",width:"",price:"",season:"",loc:"Barcelona",
+    sw:"undyed",origin:"",transp:"",elast:"",mv:[],tests:{status:"pending",report:"—",lab:"No report linked",rows:[],ai:[]},restr:[],docs:[]};
+  LOTS.unshift(l); editId=l.id; openPassport(l.id);
 }
 function mvPill(t){const c={Received:"",Used:"b",Sold:"b",Disposed:"r",Reserved:"a"}[t];return `<span class="pill ${c}">${t==="Sold"?"Sold to Nona Source":t}</span>`;}
 function runAI(){
@@ -708,7 +816,7 @@ function renderSales(){
   const al=[];
   bases.forEach(b=>{
     const sg=signal(b); if(!sg) return;
-    const lot=LOTS.find(l=>l.base===b); const sup=lot.supplier, lead=SUPPLIERS[sup].lead;
+    const lot=LOTS.find(l=>l.base===b); if(!lot) return; const sup=lot.supplier, lead=(SUPPLIERS[sup]||{lead:0}).lead;
     if(sg.fastest[3]>=thST && lead>=thLT){
       const need=STYLES.filter(s=>s.base===b).reduce((a,s)=>a+s.cons*s.units,0);
       const hold=Math.round(need*buf/10)*10;
@@ -741,7 +849,7 @@ function renderSales(){
   $("#commitTbl").innerHTML=`<tr><th>Style</th><th>Base fabric</th><th class="r">Need</th><th>Survival odds</th><th class="r">Firm tranche</th><th class="r">From stock</th><th class="r">New firm buy</th><th class="r">Option</th></tr>
   ${rows.map((r,i)=>{const lot=LOTS.find(l=>l.base===r.s.base);return `<tr class="click" data-i="${i}">
     <td><b>${r.s.id}</b><br><span class="small muted">${esc(r.s.name)}</span></td>
-    <td><span class="num">${r.s.base}</span><br><span class="small muted">${esc(lot.name)}</span></td>
+    <td><span class="num">${r.s.base}</span><br><span class="small muted">${lot?esc(lot.title||lot.name):"Not in the library"}</span></td>
     <td class="r num">${m(Math.round(r.need))}</td>
     <td style="min-width:170px"><div style="display:flex;gap:10px;align-items:center"><div class="oddsbar" style="flex:1"><div class="base" style="width:${r.o.base}%"></div><div class="adj" style="left:calc(${r.o.odds}% - 1px)"></div></div><b class="num">${r.o.odds.toFixed(0)}%</b></div>
       <span class="small muted num">${r.o.base}% base ${r.o.sg?`${r.o.adj>=0?'+':'−'} ${Math.abs(r.o.adj).toFixed(1)} sales`:'· no sales data'}</span></td>
@@ -775,8 +883,204 @@ function renderValue(){
    <div style="flex:1;min-width:240px" class="small">Plus <b class="num">${eur(resVal)}</b> of stock already reserved for FW27 styles, which replaces new buying. The same figures go into the end-of-season report on what the production team saved.</div>`;
 }
 
+
+/* ---------------- DATA SOURCES + UPLOAD ---------------- */
+const norm = h => String(h).normalize("NFD").replace(/[̀-ͯ]/g,"").toLowerCase().replace(/[^a-z0-9]+/g," ").trim();
+function num(v){ if(v===null||v===undefined||v==="") return NaN; if(typeof v==="number") return v;
+  let t=String(v).replace(/[^\d,.\-]/g,""); if(t.includes(",")&&t.includes(".")){ t = t.lastIndexOf(",")>t.lastIndexOf(".") ? t.replace(/\./g,"").replace(",",".") : t.replace(/,/g,""); } else if(t.includes(",")) t=t.replace(",","."); return parseFloat(t); }
+function code(v){ const d=String(v||"").replace(/\D/g,""); return d.length>=11?{base:d.slice(0,7),col:d.slice(-4)}:d.length>=7?{base:d.slice(0,7),col:"0000"}:null; }
+function isoDate(v){ if(v instanceof Date) return v.toISOString().slice(0,10); const t=String(v||"").trim();
+  let m1=t.match(/^(\d{4})-(\d{1,2})-(\d{1,2})/); if(m1) return `${m1[1]}-${m1[2].padStart(2,"0")}-${m1[3].padStart(2,"0")}`;
+  let m2=t.match(/^(\d{1,2})[\/.\-](\d{1,2})[\/.\-](\d{2,4})/); if(m2){const y=m2[3].length===2?"20"+m2[3]:m2[3]; return `${y}-${m2[2].padStart(2,"0")}-${m2[1].padStart(2,"0")}`;}
+  return TODAY; }
+const MVT = v => { const t=norm(v); if(/recei|recib|entrada|in$/.test(t)) return "Received"; if(/reserv/.test(t)) return "Reserved"; if(/sold|vend|nona|resale/.test(t)) return "Sold"; if(/dispos|destr|scrap|baja/.test(t)) return "Disposed"; return "Used"; };
+const SWKEYS = ["sky","undyed","navy","linen","camel","black","stripe"];
+
+const SOURCES = {
+ stock:{title:"Leftover stock", pages:["lib","value"], where:"Power BI leftover report (from the ERP), or the stock Excel on SharePoint", refresh:"Daily", used:"Every card: metres in stock, price, location, origin season",
+  fields:[["code","Material code (base + colour)",["material code","codigo","2 n de art","2o n de art","n de art","article","reference","referencia","codigo material"],1],
+          ["desc","Description",["description","descripcion","name","material","nombre"],1],["supplier","Supplier",["supplier","vendor","proveedor","mill"],1],
+          ["qty","Quantity",["quantity","qty","cantidad","metres","meters","stock","cantidad disponible"],1],["price","Unit price",["price","unit price","precio","precio unitario","cost"],1],
+          ["comp","Composition",["composition","composicion"],0],["gsm","Weight g/m²",["weight","gsm","peso","g m2"],0],["width","Width cm",["width","ancho","usable width"],0],
+          ["type","Material type",["type","category","categoria","family"],0],["loc","Location",["location","ubicacion","warehouse","almacen"],0],["season","Season",["season","temporada","temporada pedido compra"],0]],
+  apply(rows,M){ const out=[]; rows.forEach((r,i)=>{const c=code(r[M.code]); const q=num(r[M.qty]); if(!c||!(q>0)) return;
+      const sup=String(r[M.supplier]||"Unknown").trim(); if(!SUPPLIERS[sup]) SUPPLIERS[sup]={lead:90};
+      out.push({id:"U"+String(i+1).padStart(2,"0"),base:c.base,col:c.col,colName:"",name:String(r[M.desc]||c.base),title:String(r[M.desc]||c.base),cat:"",type:String(M.type!=null&&r[M.type]||"Uploaded"),
+        supplier:sup,comp:String(M.comp!=null&&r[M.comp]||"—"),gsm:M.gsm!=null?num(r[M.gsm])||"—":"—",width:M.width!=null?num(r[M.width])||"—":"—",price:num(r[M.price])||0,
+        season:String(M.season!=null&&r[M.season]||"—"),loc:String(M.loc!=null&&r[M.loc]||"—"),sw:SWKEYS[i%SWKEYS.length],origin:"—",transp:"—",elast:"—",
+        mv:[{d:TODAY,t:"Received",q,ref:"Uploaded stock file",by:"Upload"}],tests:{status:"pending",report:"—",lab:"No report linked",rows:[],ai:[]},restr:[]});});
+    if(!out.length) return "No row had a valid material code and a quantity above zero.";
+    LOTS.splice(0,LOTS.length,...out); F.type=""; return `${out.length} lots loaded into the library.`; }},
+ plm:{title:"Material master and photos", pages:["lib"], where:"PLM, by material code", refresh:"Daily or on change", used:"Names, composition, weight, width, transparency, elasticity, origin, photo",
+  fields:[["code","Material code",["material code","codigo","reference","article"],1],["comp","Composition",["composition","composicion"],0],["gsm","Weight",["weight","gsm","peso"],0],["width","Width",["width","ancho"],0],
+          ["transp","Transparency",["transparency","transparencia"],0],["elast","Elasticity",["elasticity","elasticidad","stretch"],0],["origin","Country of origin",["origin","country","pais","origen"],0],["photo","Photo file",["photo","image","foto","imagen"],0]],
+  apply(rows,M){ let n=0; rows.forEach(r=>{const c=code(r[M.code]); if(!c) return; LOTS.filter(l=>l.base===c.base&&(c.col==="0000"||l.col===c.col)).forEach(l=>{n++;
+      ["comp","transp","elast","origin"].forEach(k=>{if(M[k]!=null&&r[M[k]]) l[k]=String(r[M[k]]);}); if(M.gsm!=null&&num(r[M.gsm])) l.gsm=num(r[M.gsm]); if(M.width!=null&&num(r[M.width])) l.width=num(r[M.width]);});});
+    return n?`${n} lots updated from PLM.`:"No material code matched a lot in the library."; }},
+ moves:{title:"Stock movements", pages:["lib","value"], where:"ERP stock movements and warehouse records", refresh:"Daily", used:"Where every metre went, and what was reused, sold or disposed",
+  fields:[["code","Material code",["material code","codigo","2 n de art","2o n de art","article","reference"],1],["date","Date",["date","fecha","fecha movimiento"],1],["type","Movement type",["movement","type","tipo","movimiento"],1],
+          ["qty","Quantity",["quantity","qty","cantidad","metres","meters"],1],["ref","Reference (style, order)",["reference","ref","style","order","pedido","referencia","concepto"],0],["price","Resale price / m",["resale price","sale price","precio venta"],0]],
+  apply(rows,M){ let n=0; rows.forEach(r=>{const c=code(r[M.code]); const q=Math.abs(num(r[M.qty])); if(!c||!(q>0)) return; const l=LOTS.find(x=>x.base===c.base&&x.col===c.col)||LOTS.find(x=>x.base===c.base); if(!l) return;
+      const t=MVT(r[M.type]); const mv={d:isoDate(r[M.date]),t,q,ref:String(M.ref!=null&&r[M.ref]||"Uploaded movement"),by:"Upload"}; if(t==="Sold") mv.price=M.price!=null?num(r[M.price])||0:0; l.mv.push(mv); n++;});
+    return n?`${n} movements added.`:"No movement matched a lot in the library."; }},
+ tests:{title:"Quality test reports", pages:["lib"], where:"Lab PDFs, received by email or saved on SharePoint", refresh:"When a report arrives", used:"Test results, pass or fail, and why it failed", pdf:true,
+  fields:[["code","Material code (in file name or report)",[],1],["test","Test name and standard",[],1],["res","Result and requirement",[],1]], apply:null},
+ restr:{title:"Restrictions", pages:["lib"], where:"PLM material attributes (exclusive, logo), supplier contracts, certificates (RWS, GOTS…)", refresh:"On change", used:"Resale allowed, with conditions, or internal reuse only",
+  fields:[["code","Material code",["material code","codigo","reference","article"],1],["kind","Restriction",["restriction","restriccion","type","tipo"],1],["note","Detail",["detail","note","comment","detalle"],0]],
+  apply(rows,M){ let n=0; rows.forEach(r=>{const c=code(r[M.code]); if(!c) return; const k=norm(r[M.kind]); const kind=/logo|exclusive|artwork|internal|exclusiv/.test(k)?"block":/cert|rws|gots|fail|condition/.test(k)?"cond":"info";
+      LOTS.filter(l=>l.base===c.base&&(c.col==="0000"||l.col===c.col)).forEach(l=>{l.restr.push({k:kind,t:String(r[M.kind]),d:String(M.note!=null&&r[M.note]||"")});n++;});});
+    return n?`${n} restrictions added.`:"No material code matched a lot in the library."; }},
+ styles:{title:"Upcoming styles and draft BOMs", pages:["lib","sales"], where:"PLM, FW27 line plan with draft BOMs", refresh:"Daily during development", used:"Styles a lot fits, need = consumption × planned units",
+  fields:[["style","Style code",["style","style code","estilo","modelo"],1],["name","Description",["description","name","descripcion"],0],["cat","Category",["category","categoria","family","familia"],1],
+          ["base","Base fabric code",["base fabric","fabric","material code","codigo","tejido"],1],["cons","Consumption m / unit",["consumption","yield","consumo"],1],["units","Planned units",["units","planned units","quantity","unidades","cantidad"],1]],
+  apply(rows,M){ const out=[]; rows.forEach(r=>{const c=code(r[M.base]); const cons=num(r[M.cons]), u=num(r[M.units]); if(!c||!(cons>0)||!(u>0)) return;
+      out.push({id:String(r[M.style]),name:String(M.name!=null&&r[M.name]||r[M.style]),cat:String(r[M.cat]),base:c.base,cons,units:u});});
+    if(!out.length) return "No row had a base fabric, consumption and units."; STYLES.splice(0,STYLES.length,...out); return `${out.length} styles loaded.`; }},
+ sales:{title:"Sales by style", pages:["sales"], where:"Power BI sell-through report (from the ERP and stores)", refresh:"Weekly", used:"Signal per quality: unit-weighted sell-through",
+  fields:[["base","Base fabric code",["base fabric","fabric","material code","codigo","tejido"],1],["season","Season",["season","temporada"],0],["style","Style",["style","estilo","modelo","description"],1],
+          ["units","Units sold",["units","units sold","unidades","sales units"],1],["st","Sell-through %",["sell through","sell-through","st","sellthrough"],1],["weeks","Weeks on floor",["weeks","semanas"],0]],
+  apply(rows,M){ const out={}; let n=0; rows.forEach(r=>{const c=code(r[M.base]); const u=num(r[M.units]); let st=num(r[M.st]); if(!c||!(u>0)||isNaN(st)) return; if(st<=1) st*=100;
+      (out[c.base]=out[c.base]||[]).push([String(M.season!=null&&r[M.season]||""),String(r[M.style]),u,Math.round(st),M.weeks!=null?num(r[M.weeks])||"—":"—"]); n++;});
+    if(!n) return "No row had a base fabric, units and sell-through."; Object.keys(SALES).forEach(k=>delete SALES[k]); Object.assign(SALES,out); return `${n} past styles loaded.`; }},
+ lineplan:{title:"Line review history", pages:["sales"], where:"PLM style status and past line plans", refresh:"Each season", used:"Base survival rate per category",
+  fields:[["cat","Category",["category","categoria","family"],1],["kept","Styles kept",["kept","survived","final","mantenidos"],1],["total","Styles at pre-buy",["total","initial","pre buy","inicial"],1]],
+  apply(rows,M){ let n=0; rows.forEach(r=>{const k=num(r[M.kept]), t=num(r[M.total]); if(!(t>0)) return; BASE_ODDS[String(r[M.cat])]=Math.round(100*k/t); n++;});
+    return n?`${n} category base rates updated.`:"No row had kept and total style counts."; }},
+ lead:{title:"Lead times", pages:["sales"], where:"Purchase order export (order date → promised delivery)", refresh:"Daily", used:"Lead time per supplier for reorder alerts",
+  fields:[["supplier","Supplier",["supplier","proveedor","vendor","mill"],1],["ord","Order date",["fch ord","order date","fecha pedido","fecha orden"],0],["del","Promised delivery",["entrega prometida","promised delivery","delivery date"],0],["days","Lead time days",["lead time","days","dias"],0]],
+  apply(rows,M){ const acc={}; rows.forEach(r=>{const sup=String(r[M.supplier]||"").trim(); if(!sup) return; let d=M.days!=null?num(r[M.days]):NaN;
+      if(isNaN(d)&&M.ord!=null&&M.del!=null){d=(new Date(isoDate(r[M.del]))-new Date(isoDate(r[M.ord])))/864e5;} if(!(d>0)) return; acc[sup]=Math.max(acc[sup]||0,Math.round(d));});
+    const k=Object.keys(acc); if(!k.length) return "No lead time could be read."; k.forEach(s=>SUPPLIERS[s]={lead:acc[s]}); return `${k.length} supplier lead times updated (longest per supplier).`; }},
+ nona:{title:"Nona Source sales", pages:["value"], where:"Nona Source sales reports for LOEWE lots", refresh:"Monthly", used:"Resale revenue per lot",
+  fields:[["code","Material code",["material code","reference","codigo","sku"],1],["date","Date",["date","fecha"],1],["qty","Metres sold",["quantity","qty","metres","meters","cantidad"],1],["price","Price / m",["price","precio","unit price"],1],["order","Order",["order","pedido"],0]],
+  apply(rows,M){ let n=0; rows.forEach(r=>{const c=code(r[M.code]); const q=num(r[M.qty]); if(!c||!(q>0)) return; const l=LOTS.find(x=>x.base===c.base&&x.col===c.col); if(!l) return;
+      l.mv.push({d:isoDate(r[M.date]),t:"Sold",q,ref:"Nona Source"+(M.order!=null&&r[M.order]?" · "+r[M.order]:""),by:"Upload",price:num(r[M.price])||0}); n++;});
+    return n?`${n} Nona Source sales added.`:"No sale matched a lot in the library."; }}
+};
+const UP = {}; // id -> {file, rows, headers, map, msg}
+
+function matchCols(headers, fields){
+  const H=headers.map(h=>({h,n:norm(h)})); const M={};
+  fields.forEach(([k,label,aliases])=>{ const cand=[norm(label),...aliases.map(norm)];
+    let hit=H.find(x=>cand.includes(x.n)) || H.find(x=>cand.some(c=>c.length>3&&(x.n.includes(c)||c.includes(x.n)&&x.n.length>3)));
+    if(hit) M[k]=hit.h; });
+  return M;
+}
+function parseCSV(text){
+  const first=text.split(/\r?\n/)[0]; const d=(first.match(/;/g)||[]).length>(first.match(/,/g)||[]).length?";":(first.includes("\t")?"\t":",");
+  const out=[]; let row=[],f="",q=false;
+  for(let i=0;i<text.length;i++){const ch=text[i];
+    if(q){ if(ch==='"'){ if(text[i+1]==='"'){f+='"';i++;} else q=false;} else f+=ch; }
+    else if(ch==='"') q=true; else if(ch===d){row.push(f);f="";} else if(ch==="\n"||ch==="\r"){ if(ch==="\r"&&text[i+1]==="\n") i++; row.push(f); out.push(row); row=[]; f=""; } else f+=ch; }
+  if(f||row.length){row.push(f);out.push(row);}
+  const hdr=(out.shift()||[]).map(h=>h.replace(/^﻿/,"").trim());
+  return {headers:hdr, rows:out.filter(r=>r.some(c=>c!=="")).map(r=>Object.fromEntries(hdr.map((h,i)=>[h,r[i]??""])))};
+}
+async function readFile(file){
+  const name=file.name.toLowerCase();
+  if(/\.(xlsx|xls|xlsm)$/.test(name)){
+    if(!window.XLSX) throw new Error("Excel reader not loaded (offline?). Save the sheet as CSV and try again.");
+    const wb=XLSX.read(await file.arrayBuffer(),{type:"array",cellDates:true}); const ws=wb.Sheets[wb.SheetNames[0]];
+    const aoa=XLSX.utils.sheet_to_json(ws,{header:1,raw:true,defval:""});
+    let hi=aoa.findIndex(r=>r.filter(c=>String(c).trim()!=="").length>=2); if(hi<0) hi=0;
+    const hdr=aoa[hi].map(h=>String(h).trim());
+    return {headers:hdr, rows:aoa.slice(hi+1).filter(r=>r.some(c=>c!==""&&c!==null)).map(r=>Object.fromEntries(hdr.map((h,i)=>[h,r[i]??""])))};
+  }
+  return parseCSV(await file.text());
+}
+function srcCard(id){
+  const S=SOURCES[id], u=UP[id];
+  const req=S.fields.filter(f=>f[3]), opt=S.fields.filter(f=>!f[3]);
+  const chip=(f)=>{ if(!u||S.pdf) return `<span class="col ${f[3]?'':'opt'}">${esc(f[1])}${f[3]?'':' (optional)'}</span>`;
+    const hit=u.map[f[0]]; return `<span class="col ${hit?'ok':f[3]?'miss':'opt'}">${hit?'✓ ':f[3]?'✕ ':''}${esc(f[1])}${hit?` ← ${esc(hit)}`:''}</span>`; };
+  const missing = u&&!S.pdf ? req.filter(f=>!u.map[f[0]]) : [];
+  const status = u ? (u.applied?`<span class="pill g">In use · ${esc(u.file)}</span>`:`<span class="pill b">Uploaded · ${esc(u.file)}</span>`) : '<span class="pill">Sample data</span>';
+  let prev="";
+  if(u && !S.pdf){
+    const cols=u.headers.slice(0,8);
+    prev=`<div class="prev"><div class="small muted" style="margin-bottom:6px">${fmt(u.rows.length)} rows · first 5 shown${u.headers.length>8?` · ${u.headers.length} columns, 8 shown`:''}</div>
+      <div class="tblwrap"><table><tr>${cols.map(h=>`<th>${esc(h)}</th>`).join("")}</tr>${u.rows.slice(0,5).map(r=>`<tr>${cols.map(h=>`<td class="num" style="white-space:nowrap">${esc(r[h] instanceof Date?r[h].toISOString().slice(0,10):r[h])}</td>`).join("")}</tr>`).join("")}</table></div>
+      <div class="btns" style="margin-top:10px">${S.apply?`<button class="btn pri" data-apply="${id}" ${missing.length?'disabled':''}>Use this file in the demo</button>`:''}<button class="btn" data-reset="${id}">Remove file</button>
+      ${missing.length?`<span class="small" style="align-self:center;color:var(--red)">Missing: ${missing.map(f=>esc(f[1])).join(", ")}. Rename the column header and upload again.</span>`:''}
+      ${u.msg?`<span class="small" style="align-self:center;color:var(--green)">${esc(u.msg)}</span>`:''}</div></div>`;
+  }
+  if(u && S.pdf){
+    prev=`<div class="verdict a" style="margin-top:12px"><div><div class="t">${u.count} PDF${u.count>1?'s':''} received: ${esc(u.file)}</div><div class="small">Reading a lab report needs the AI model connected (see AI-powered). In the demo, open the cashmere jersey passport to see the result of a reading.</div></div></div>
+      <div class="btns" style="margin-top:10px"><button class="btn" data-reset="${id}">Remove</button></div>`;
+  }
+  return `<div class="srccard" id="src-${id}">
+    <div class="srctop"><div><div class="t">${esc(S.title)}</div><div class="small muted">${esc(S.used)}</div></div>
+      <div class="btns">${status}<label class="upl">Upload ${S.pdf?'PDF':'CSV or Excel'}<input type="file" data-up="${id}" accept="${S.pdf?'.pdf':'.csv,.xlsx,.xls,.xlsm,.txt'}" ${S.pdf?'multiple':''}></label></div></div>
+    <div class="srcmeta"><div>Where it lives<b>${esc(S.where)}</b></div><div>Refresh<b>${esc(S.refresh)}</b></div><div>Connection when hosted<b>${S.pdf?'SharePoint folder or mailbox, read-only':'Scheduled export or Microsoft Graph, read-only'}</b></div></div>
+    <div class="small muted">Columns ${u&&!S.pdf?'found in your file':'it needs'}${S.pdf?' (read by AI from the PDF)':''}</div>
+    <div class="cols">${req.map(chip).join("")}${opt.map(chip).join("")}</div>
+    ${prev}
+  </div>`;
+}
+const FLOW = {
+  lib:[["Leftover stock","Power BI / ERP"],["Material master, photos","PLM"],["Movements","ERP, warehouse"],["Lab reports","PDF, SharePoint"],["Restrictions","PLM, contracts"],["FW27 draft BOMs","PLM"]],
+  sales:[["Sales by style","Power BI"],["Past BOMs","PLM"],["Line review history","PLM"],["Lead times","Order export"],["FW27 draft BOMs","PLM"],["Undyed stock","Library"]],
+  value:[["Purchase price","Order export, PLM"],["Movements","ERP, warehouse"],["Nona Source sales","Nona Source reports"]]
+};
+const OUT = {lib:"Fabric cards and passports", sales:"Survival odds, firm tranche, reorder holds", value:"Value recovered → Savings report"};
+function renderData(page){
+  const ids=Object.keys(SOURCES).filter(k=>SOURCES[k].pages.includes(page));
+  $(`#${page}-data`).innerHTML=`
+    <div class="flowmap"><div class="boxes">${FLOW[page].map(f=>`<div class="b"><b>${f[0]}</b> · ${f[1]}</div>`).join("")}</div><div class="arrow">→</div>
+      <div class="b" style="border:1px solid var(--ink);border-radius:10px;padding:14px;background:#fff"><span class="kicker">This page</span><div style="font-weight:600;margin-top:4px">${OUT[page]}</div>
+      <div class="small muted" style="margin-top:6px">Files are read in your browser only: nothing is uploaded to a server. A file replaces the sample data for this session; reload the page to go back to the sample.</div></div></div>
+    <div class="srcgrid">${ids.map(srcCard).join("")}</div>`;
+  const box=$(`#${page}-data`);
+  box.querySelectorAll("[data-up]").forEach(inp=>inp.onchange=async()=>{
+    const id=inp.dataset.up, S=SOURCES[id], files=[...inp.files]; if(!files.length) return;
+    try{
+      if(S.pdf){ UP[id]={file:files.map(f=>f.name).join(", "),count:files.length}; }
+      else { const {headers,rows}=await readFile(files[0]); if(!headers.length) throw new Error("No header row found."); UP[id]={file:files[0].name,headers,rows,map:matchCols(headers,S.fields)}; }
+      toast(`${files[0].name} read`);
+    }catch(e){ toast("Could not read the file: "+e.message); }
+    renderAllData();
+  });
+  box.querySelectorAll("[data-apply]").forEach(b=>b.onclick=()=>{const id=b.dataset.apply,u=UP[id]; const msg=SOURCES[id].apply(u.rows,u.map); u.msg=msg; u.applied=!/^No /.test(msg); toast(msg); refreshAll();});
+  box.querySelectorAll("[data-reset]").forEach(b=>b.onclick=()=>{delete UP[b.dataset.reset]; renderAllData();});
+}
+function renderAllData(){["lib","sales","value"].forEach(renderData);}
+
+/* ---------------- AI-POWERED ---------------- */
+const AI = {
+ lib:{intro:"AI reads documents, photos and free text, and matches fabrics. Quantities, prices and eligibility rules stay in code, so every number stays checkable.",
+  rows:[["Read lab reports","Drop the PDF: test names, results, requirements and pass/fail fill in, each with the page it came from. A person checks before saving.","GPT or Gemini (document reading)","Lab PDFs","Shown in the demo (cashmere jersey)"],
+        ["Explain a failure","One plain sentence on why a lot failed and which uses are still safe (“fine for unwashed or pre-shrunk uses”).","GPT or Gemini","Test results, PLM material","To build"],
+        ["Search by look","Upload a swatch photo or click “more like this”: the closest fabrics in stock, by colour, texture and pattern.","Gemini or GPT (vision), image embeddings","PLM photos","To build (phase 2)"],
+        ["Search by sentence","“Black lining under 15€/m, at least 200 m” sets the filters, which stay visible and editable.","GPT or Gemini returns filter values; code applies them","Library fields","To build"],
+        ["Flag restrictions","Reads PLM notes and supplier contracts for “exclusive”, logo, artwork or certificate clauses and proposes a restriction for review.","GPT or Gemini","PLM notes, contracts","To build"],
+        ["Match beyond the same code","Suggests similar qualities for an FW27 style when no lot has the same base fabric (composition, weight, look).","Embeddings over PLM attributes and photos","PLM, draft BOMs","To build"],
+        ["Clean names for the shop view","Turns PLM descriptions into readable names like “Striped Cotton Poplin” and fills transparency or elasticity when missing.","GPT or Gemini","PLM descriptions","To build"]]},
+ sales:{intro:"AI finds comparable styles and explains the numbers. The survival odds, tranches and hold quantities are calculated in code from those comparables, so the commitment stays reproducible.",
+  rows:[["Comparable styles by look and build","When a fabric has little history, finds past styles that look and are built like the new one, from the sketch and attributes.","Style profile engine: embeddings over sketches and PLM attributes","PLM sketches, BOMs, sales","Core of Early Line, to build"],
+        ["Sell-through estimate","A predicted sell-through range for the new style, next to the history-based signal, with the styles it learned from.","Forecast model trained on past sales (gradient boosting or similar)","Power BI sales, PLM attributes","To build"],
+        ["Explain the odds","“78%: shirts usually survive 70% of the time, and this poplin sold 76% across three styles.”","GPT or Gemini writes the sentence from the computed figures","Computed odds","To build"],
+        ["Weekly reorder watch","A short note each week: which fast sellers have long lead times, and how much undyed fabric to hold.","GPT or Gemini over the computed alerts","Sales, lead times, stock","To build"],
+        ["Ask the sales data","“How did linen sell in SS26?” answered from the Power BI data, with the table behind the answer.","GPT or Gemini writes the query; the result is shown as is","Power BI dataset","To build"]]},
+ value:{intro:"AI writes and sorts; the euros are added up in code. That keeps the Savings report defendable in front of finance.",
+  rows:[["End-of-season report","A one-page draft of what leftovers cost, what came back and what was avoided by reserving stock, ready to edit and export.","GPT or Gemini over the computed figures","Movements, prices","To build"],
+        ["Sort free-text reasons","Movement and disposal notes (“water damage”, “rejected at test”) grouped into causes, to see what creates loss.","GPT or Gemini (classification)","Movement references","To build"],
+        ["Suggest a resale price","A price range per metre from past Nona Source sales of similar fabrics, before listing.","Regression on past resale prices","Nona Source sales, PLM attributes","To build"],
+        ["Spot unusual losses","Flags lots where disposal or discount is far above similar lots, to check with the warehouse.","Anomaly detection on movement values","Movements","To build"]]}
+};
+function renderAI(page){
+  const A=AI[page];
+  $(`#${page}-ai`).innerHTML=`<p class="lede" style="margin-bottom:16px">${esc(A.intro)}</p>
+    <div class="tblwrap"><table class="aitbl"><tr><th>Feature</th><th>What the user sees</th><th>Model</th><th>Data it needs</th><th>Status</th></tr>
+    ${A.rows.map(r=>`<tr><td>${esc(r[0])}</td><td>${esc(r[1])}</td><td class="small">${esc(r[2])}</td><td class="small muted">${esc(r[3])}</td><td>${/demo/.test(r[4])?`<span class="pill g">${esc(r[4])}</span>`:`<span class="pill">${esc(r[4])}</span>`}</td></tr>`).join("")}</table></div>
+    <div class="guard">
+      <div><b>Numbers stay in code</b>Metres, euros, odds and holds are calculated, never generated, so the same inputs always give the same result.</div>
+      <div><b>A person confirms</b>Anything AI reads or proposes (test results, restrictions, names) is shown with its source and saved only once checked.</div>
+      <div><b>Group environment</b>Models run under LVMH's licensed accounts, inside the approved hosting, because collection data is confidential.</div>
+    </div>`;
+}
+
 /* ---------------- WIRING ---------------- */
-function refreshAll(){renderLibrary();renderSales();renderValue();if(openId)renderPassport();}
+function refreshAll(){renderLibrary();renderSales();renderValue();renderAllData();if(openId)renderPassport();}
 document.querySelectorAll("nav.tabs button").forEach(b=>b.onclick=()=>{
   document.querySelectorAll("nav.tabs button").forEach(x=>x.classList.toggle("on",x===b));
   document.querySelectorAll(".view").forEach(v=>v.classList.toggle("on",v.id==="v-"+b.dataset.v));
@@ -785,6 +1089,11 @@ document.querySelectorAll("nav.tabs button").forEach(b=>b.onclick=()=>{
 $("#scrim").onclick=closePassport;
 document.addEventListener("keydown",e=>{if(e.key==="Escape")closePassport();});
 ["#rST","#rLT","#rBuf"].forEach(s=>$(s).addEventListener("input",renderSales));
+document.querySelectorAll(".subtabs").forEach(bar=>bar.querySelectorAll("button").forEach(b=>b.onclick=()=>{
+  bar.querySelectorAll("button").forEach(x=>x.classList.toggle("on",x===b));
+  bar.parentElement.querySelectorAll(":scope > .sub").forEach(sv=>sv.classList.toggle("on",sv.dataset.sub===b.dataset.sub));
+}));
+["lib","sales","value"].forEach(renderAI);
 initFilters(); refreshAll();
 </script>
 </body>

@@ -1,0 +1,12 @@
+# Early Line: fabric passport and early sales signal
+
+Working prototype with sample data. A single static page, no server; nothing is uploaded or stored.
+
+Live: https://clarissaractliffe-ops.github.io/early-line/
+
+- **Library**: leftover lots as Nona Source-style cards. Each lot's passport shows movements (where every metre went), quality tests and why a lot failed, restrictions and Nona Source eligibility, the FW27 styles it fits, how the quality sold, and the value recovered.
+- **Sales signal**: Power BI sell-through by base fabric moves each style's survival odds at pre-buy, and flags fast sellers with long lead times so undyed (RTD) fabric can be held for a reorder.
+- **Nona Source export**: eligible lots in one CSV; restricted lots are kept out with the reason.
+- **Value recovered**: reuse and resale against disposal, per lot, feeding the Savings report.
+
+To make it permanent it needs hosting inside LVMH with sign-in, and read access to PLM, Power BI/ERP stock, sales and lab reports.

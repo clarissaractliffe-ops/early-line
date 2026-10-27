@@ -195,6 +195,11 @@ tr.base.open td:first-child::before{content:"▾ ";color:var(--mute)}
 tr.colr td{background:#fcfaf6;font-size:12px}
 tr.colr td:first-child{padding-left:28px;color:var(--ink2)}
 .gpos{color:var(--amber);font-weight:600}.gneg{color:var(--red);font-weight:600}
+.tmcal{display:flex;gap:8px 22px;flex-wrap:wrap;font-size:12px;color:var(--ink2);margin:0 0 14px}
+.tmcal b{color:var(--ink)}
+.chk input[type=number]{border:1px solid var(--line);border-radius:8px;padding:5px 6px;background:#fff;text-align:right}
+#tmTbl select{border:1px solid var(--line);border-radius:7px;padding:3px 4px;background:#fff;font-size:12px}
+#tmTbl td.chkcol{min-width:190px}
 .act{font-size:12px;color:var(--ink2);max-width:300px}
 @media (max-width:900px){.steps{grid-template-columns:1fr 1fr}}
 
@@ -310,9 +315,10 @@ tr.click:hover td{background:#fcfaf6}
 <header class="top">
   <div class="wrap row">
         <span class="sample" id="sampleBadge">Sample data · illustrative</span>
-        <button class="btn clearbtn" id="clearSample" title="Remove all sample fabrics, styles, sales and orders. Files you have used stay.">Clear sample data</button>
+        <button class="btn clearbtn" id="clearSample" title="Remove all sample fabrics, styles, sales, orders and calendars. Files you have used stay.">Clear sample data</button>
     <nav class="tabs" role="tablist">
       <button data-v="library" class="on">Library</button>
+      <button data-v="timing">Pre-buy timing</button>
       <button data-v="pvp">Pre-buy vs production</button>
       <button data-v="sales">Sales signal</button>
       <button data-v="value">Value recovered</button>
@@ -345,6 +351,32 @@ tr.click:hover td{background:#fcfaf6}
     </div>
     </div>
     <div class="sub" data-sub="data" id="lib-data"></div>
+  </section>
+
+  <!-- PRE-BUY TIMING -->
+  <section class="view" id="v-timing">
+    <h1>Pre-buy timing</h1>
+    <p class="lede">Which fabric has to go in which pre-buy so that it is in house in time for its store drop. For every fabric in every drop, the tool counts back from the in-store date: minus the time to make and ship the garments, minus the fabric’s lead time from PLM, gives the latest date to order. The fabric goes in the latest pre-buy that closes on or before that date, so you commit as late as possible.</p>
+    <div class="subtabs" data-for="timing"><button class="on" data-sub="main">Timing sheet</button><button data-sub="data">Data sources</button></div>
+    <div class="sub on" data-sub="main">
+      <div class="steps">
+        <div><span class="n">01</span><b>Drop date</b>From Merch’s drop calendar: when each drop is in store, and which styles are in it.</div>
+        <div><span class="n">02</span><b>Fabric in house by</b>In-store date minus the days to make and ship the garments (set below).</div>
+        <div><span class="n">03</span><b>Order by</b>Minus the fabric lead time, from PLM at fabric level.</div>
+        <div><span class="n">04</span><b>Pre-buy</b>The latest pre-buy in your calendar that closes on or before the order-by date.</div>
+      </div>
+      <div class="kpis" id="tmKpis"></div>
+      <div class="tmcal" id="tmCal"></div>
+      <div class="pvpctl">
+        <div class="seg" id="tmFilter"><button class="on" data-f="all">All</button><button data-f="act">Act now</button><button data-f="tight">Tight</button><button data-f="ok">On time</button></div>
+        <label class="chk">Fabric in house <input type="number" id="tmBuf" min="0" max="365" step="5" value="90" aria-label="Days before the drop"> days before the drop</label>
+        <label class="chk">Tight under <input type="number" id="tmTight" min="0" max="90" step="1" value="14" aria-label="Days to spare"> days to spare</label>
+        <button class="btn" id="tmExport">Download timing sheet</button>
+      </div>
+      <div class="tblwrap"><table id="tmTbl"></table></div>
+      <p class="small muted" style="margin-top:10px" id="tmNote"></p>
+    </div>
+    <div class="sub" data-sub="data" id="timing-data"></div>
   </section>
 
   <!-- PRE-BUY VS PRODUCTION -->
@@ -526,16 +558,24 @@ LOTS.forEach(l=>{Object.assign(l,EXTRA[l.id]); l._sample=true;});
 const TYPES = ["Suiting & Coating","Shirting","Flou & Fluid","Couture & Fantaisie","Casual & Technical","Jersey & Knit","Lining, Construction & Greige"];
 
 const STYLES = [
- {id:"F27-SH-021", name:"Long-sleeve oversized shirt", cat:"Shirts", base:"2329998", cons:2.05, units:600},
- {id:"F27-SH-040", name:"Short-sleeve shirt", cat:"Shirts", base:"2329998", cons:1.60, units:300},
- {id:"F27-DR-033", name:"Shirt dress", cat:"Dresses", base:"2329998", cons:3.10, units:250},
- {id:"F27-JK-012", name:"Workwear jacket", cat:"Jackets", base:"2330103", cons:2.40, units:350},
- {id:"F27-TR-008", name:"Pleated trouser", cat:"Trousers", base:"2318840", cons:1.55, units:400},
- {id:"F27-TR-019", name:"Tiger denim trouser", cat:"Denim", base:"2327662", cons:1.45, units:500},
- {id:"F27-KN-004", name:"Cashmere jersey top", cat:"Jersey", base:"2330456", cons:1.20, units:300},
- {id:"F27-DR-005", name:"Bias slip dress", cat:"Dresses", base:"2324019", cons:2.60, units:180},
- {id:"F27-BG-002", name:"Bag lining (leather goods)", cat:"Accessories", base:"2322903", cons:0.35, units:900}
+ {id:"F27-SH-021", name:"Long-sleeve oversized shirt", cat:"Shirts", base:"2329998", cons:2.05, units:600, drop:"D1"},
+ {id:"F27-SH-040", name:"Short-sleeve shirt", cat:"Shirts", base:"2329998", cons:1.60, units:300, drop:"D2"},
+ {id:"F27-DR-033", name:"Shirt dress", cat:"Dresses", base:"2329998", cons:3.10, units:250, drop:"D2"},
+ {id:"F27-JK-012", name:"Workwear jacket", cat:"Jackets", base:"2330103", cons:2.40, units:350, drop:"D3"},
+ {id:"F27-TR-008", name:"Pleated trouser", cat:"Trousers", base:"2318840", cons:1.55, units:400, drop:"D1"},
+ {id:"F27-TR-019", name:"Tiger denim trouser", cat:"Denim", base:"2327662", cons:1.45, units:500, drop:"D3"},
+ {id:"F27-KN-004", name:"Cashmere jersey top", cat:"Jersey", base:"2330456", cons:1.20, units:300, drop:"D1"},
+ {id:"F27-DR-005", name:"Bias slip dress", cat:"Dresses", base:"2324019", cons:2.60, units:180, drop:"D2"},
+ {id:"F27-BG-002", name:"Bag lining (leather goods)", cat:"Accessories", base:"2322903", cons:0.35, units:900, drop:"D3"}
 ];
+// Pre-buy calendar (issued by Sourcing): the date each pre-buy closes for orders
+const PBCAL = [{pb:"PB1",close:"2026-06-05"},{pb:"PB2",close:"2026-09-25"},{pb:"PB3",close:"2026-11-27"}];
+// Drop calendar (issued by Merch): in-store date per drop; DROPSTYLE = style -> drop when the calendar lists styles
+const DROPS = [{drop:"D1",store:"2027-05-15"},{drop:"D2",store:"2027-06-15"},{drop:"D3",store:"2027-07-15"}];
+const DROPSTYLE = {};
+// PLM fabric data: lead time in days, by base fabric (first 7 digits)
+const FABLEAD = {"2329998":110,"2330103":95,"2318840":150,"2330456":160,"2324019":85,"2322903":200}; // Berto denim has none: the supplier lead time is used
+const OVERRIDE = {}; // "base|drop" -> pre-buy you picked instead of the suggestion
 const BASE_ODDS = {Shirts:70, Dresses:55, Jackets:60, Trousers:65, Denim:58, Jersey:68, Accessories:80};
 const MEDIAN = 60;
 
@@ -1012,6 +1052,95 @@ function renderPvp(){
   $("#pvpNote").innerHTML=`Gap value = gap × pre-buy price per metre. Lead time = longest order-to-promised-delivery on that fabric’s lines. ${cancelled.length?`${cancelled.length} cancelled line${cancelled.length>1?'s':''} left out (${cancelled.map(o=>o.code.slice(0,7)+"-"+o.code.slice(-4)).join(", ")}).`:''} ${ORDERS.some(o=>o.cur&&o.cur!=="EUR")?'Some lines are not in EUR: values are shown as in the file.':''}`;
 }
 
+/* ---------------- PRE-BUY TIMING ---------------- */
+const addDays = (iso,n) => { const d=new Date(iso+"T12:00:00"); d.setDate(d.getDate()+n); return d.toISOString().slice(0,10); };
+const daysBetween = (a,b) => Math.round((new Date(b+"T12:00:00")-new Date(a+"T12:00:00"))/864e5);
+const pbNum = s => { const x=String(s).match(/PB\s*(\d+)/i); return x?+x[1]:null; };
+let tmFilter="all", tmLast=[];
+function tmCompute(){
+  const buf=Math.max(0,+$("#tmBuf").value||0), tight=Math.max(0,+$("#tmTight").value||0);
+  const cal=[...PBCAL].sort((a,b)=>a.close<b.close?-1:1);
+  const dropOf = st => DROPSTYLE[st.id] || st.drop || "";
+  const groups={}, noDrop=[], unknownDrop=new Set();
+  STYLES.forEach(st=>{ const d=dropOf(st); if(!d){ noDrop.push(st.id); return; }
+    const D=DROPS.find(x=>x.drop===d); if(!D){ unknownDrop.add(d); return; }
+    const k=st.base+"|"+d; const g=groups[k]=groups[k]||{key:k,base:st.base,drop:d,store:D.store,styles:[],need:0};
+    g.styles.push(st.id); g.need+=st.cons*st.units; });
+  const rows=Object.values(groups).map(g=>{
+    const lot=LOTS.find(l=>l.base===g.base), ords=ORDERS.filter(o=>!o.cancel&&o.code.slice(0,7)===g.base);
+    const name=lot?(lot.title||lot.name):(ords[0]?ords[0].desc.split(",")[0]:"Not in the library");
+    const sup=lot?lot.supplier:(ords[0]?ords[0].sup:"");
+    let lead=FABLEAD[g.base], leadSrc="PLM";
+    if(!(lead>0)){ const sl=SUPPLIERS[sup]&&SUPPLIERS[sup].lead; if(sl>0){ lead=sl; leadSrc="supplier"; } else { lead=null; leadSrc=""; } }
+    const inhouse=addDays(g.store,-buf), orderBy=lead!=null?addDays(inhouse,-lead):null;
+    let rec=null; if(orderBy) cal.forEach(pb=>{ if(pb.close<=orderBy) rec=pb; });
+    const ov=OVERRIDE[g.key], chosen=ov?(cal.find(pb=>pb.pb===ov)||rec):rec;
+    const spare=chosen&&orderBy?daysBetween(chosen.close,orderBy):null;
+    let st, stTxt;
+    if(lead==null){ st="nolead"; stTxt="No lead time"; }
+    else if(!chosen){ st="before"; stTxt="Before the first pre-buy"; }
+    else if(spare<0){ st="late"; stTxt="Too late in "+chosen.pb; }
+    else if(spare<tight){ st="tight"; stTxt="Tight · "+spare+" day"+(spare===1?"":"s"); }
+    else { st="ok"; stTxt="On time · "+spare+" days"; }
+    // what the order export says
+    const pbo=ords.filter(isPB); let chk="", chkCls="", act=["nolead","before","late"].includes(st);
+    if(pbo.length){
+      const nums=[...new Set(pbo.map(o=>pbNum(o.season)).filter(x=>x!=null))].sort((a,b)=>a-b);
+      const prom=pbo.map(o=>o.prom).sort().pop();
+      const where=nums.length?nums.map(x=>"PB"+x).join(", "):"a pre-buy";
+      if(prom>inhouse){ chk=`Ordered in ${where}, arrives ${date(prom)}: after the in-house date`; chkCls="r"; act=true; }
+      else if(chosen&&nums.length&&pbNum(chosen.pb)!=null&&nums[0]<pbNum(chosen.pb)){ chk=`Ordered in ${where}: ${chosen.pb} would have been enough`; chkCls="a"; }
+      else { chk=`Ordered in ${where} · arrives ${date(prom)}`; chkCls="g"; }
+    } else if(chosen){
+      if(chosen.close<TODAY){ chk=`Not ordered: ${chosen.pb} closed on ${date(chosen.close)}`; chkCls="r"; act=true; }
+      else { chk=`Not ordered yet · ${chosen.pb} closes ${date(chosen.close)}`; chkCls=""; }
+    } else if(st==="before"){ chk="Not ordered: order outside the calendar now"; chkCls="r"; }
+    return {...g,name,sup,lead,leadSrc,inhouse,orderBy,rec,chosen,ov:!!ov,spare,st,stTxt,chk,chkCls,act};
+  }).sort((a,b)=>(a.orderBy||"0")<(b.orderBy||"0")?-1:1);
+  return {rows,cal,buf,noDrop,unknownDrop:[...unknownDrop]};
+}
+const TMST={ok:"g",tight:"a",late:"r",before:"r",nolead:""};
+function renderTiming(){
+  const {rows,cal,buf,noDrop,unknownDrop}=tmCompute(); tmLast=rows;
+  const next=cal.find(pb=>pb.close>=TODAY), inNext=next?rows.filter(r=>r.chosen&&r.chosen.pb===next.pb):[];
+  $("#tmKpis").innerHTML=[[fmt(rows.length),"fabric × drop lines to plan"],[fmt(rows.filter(r=>r.act).length),"to act on now"],[fmt(rows.filter(r=>r.st==="tight").length),"tight: little time to spare"],
+    [next?next.pb+" · "+date(next.close):"—",next?`next pre-buy closes: ${inNext.length} fabric line${inNext.length===1?"":"s"}, ${m(Math.round(inNext.reduce((a,r)=>a+r.need,0)))}`:"no pre-buy still open"],
+    [fmt(rows.filter(r=>r.chkCls==="a").length),"bought in an earlier pre-buy than needed"]]
+    .map(k=>`<div class="kpi"><div class="v num">${k[0]}</div><div class="l">${k[1]}</div></div>`).join("");
+  $("#tmCal").innerHTML=`<span><b>Pre-buys</b> ${cal.length?cal.map(pb=>`${esc(pb.pb)} closes ${date(pb.close)}`).join(" · "):"none loaded"}</span><span><b>Drops</b> ${DROPS.length?DROPS.map(d=>`${esc(d.drop)} in store ${date(d.store)}`).join(" · "):"none loaded"}</span>`;
+  document.querySelectorAll("#tmFilter button").forEach(b=>b.classList.toggle("on",b.dataset.f===tmFilter));
+  const list=rows.filter(r=>tmFilter==="all"||(tmFilter==="act"?r.act:tmFilter==="tight"?r.st==="tight":r.st==="ok"&&!r.act));
+  const missing=[!STYLES.length&&"upcoming styles",!DROPS.length&&"a drop calendar",!PBCAL.length&&"a pre-buy calendar"].filter(Boolean);
+  $("#tmTbl").innerHTML=`<tr><th>Fabric (first 7 digits)</th><th>Drop</th><th class="r">Need</th><th>In house by</th><th class="r">Lead time</th><th>Order by</th><th>Pre-buy</th><th>Status</th><th>In the order export</th></tr>
+  ${list.length?list.map(r=>`<tr>
+    <td><b class="num">${r.base}</b> · ${esc(r.name)}<br><span class="small muted">${esc(r.sup||"Supplier unknown")}</span></td>
+    <td><b>${esc(r.drop)}</b> · ${date(r.store)}<br><span class="small muted">${r.styles.length} style${r.styles.length===1?"":"s"}: ${r.styles.map(x=>`<span style="white-space:nowrap">${esc(x)}</span>`).join(", ")}</span></td>
+    <td class="r num" style="white-space:nowrap">${m(Math.round(r.need))}</td>
+    <td class="num" style="white-space:nowrap">${date(r.inhouse)}</td>
+    <td class="r num" style="white-space:nowrap">${r.lead!=null?r.lead+" days":"—"}${r.leadSrc==="supplier"?'<br><span class="small muted">supplier estimate</span>':r.leadSrc?'<br><span class="small muted">PLM</span>':''}</td>
+    <td class="num" style="white-space:nowrap">${r.orderBy?date(r.orderBy):"—"}</td>
+    <td>${cal.length&&r.orderBy?`<select data-ov="${esc(r.key)}" aria-label="Pre-buy for ${esc(r.base)} ${esc(r.drop)}"><option value="">${r.rec?"Suggested: "+esc(r.rec.pb):"No pre-buy fits"}</option>${cal.map(pb=>`<option value="${esc(pb.pb)}" ${r.ov&&r.chosen&&r.chosen.pb===pb.pb?"selected":""}>${esc(pb.pb)}</option>`).join("")}</select>${r.ov?'<br><span class="small muted">your choice</span>':''}`:"—"}</td>
+    <td><span class="pill ${TMST[r.st]}">${esc(r.stTxt)}</span></td>
+    <td class="small chkcol">${r.chk?`<span class="${r.chkCls==="r"?"gneg":r.chkCls==="a"?"gpos":""}" ${r.chkCls==="g"?'style="color:var(--green)"':''}>${esc(r.chk)}</span>`:""}</td></tr>`).join("")
+  :`<tr><td colspan="9" class="muted">${missing.length?`To plan the timing, load ${missing.join(", ")} in <b>Data sources</b>.`:rows.length?"No fabric in this group.":"No style is in a drop yet. Add a Drop column to the styles file, or list the styles in the drop calendar."}</td></tr>`}`;
+  document.querySelectorAll("#tmTbl [data-ov]").forEach(sel=>sel.onchange=()=>{ if(sel.value) OVERRIDE[sel.dataset.ov]=sel.value; else delete OVERRIDE[sel.dataset.ov]; renderTiming(); });
+  const sup=rows.filter(r=>r.leadSrc==="supplier").length;
+  $("#tmNote").innerHTML=[`Need = consumption × planned units of the drop’s styles in that fabric. Order by = in-store date − ${buf} days − fabric lead time. Spare = days between the pre-buy closing and the order-by date.`,
+    sup?`${sup} line${sup>1?"s use":" uses"} the supplier’s lead time from the order export because PLM has none for that fabric.`:"",
+    noDrop.length?`${noDrop.length} style${noDrop.length>1?"s are":" is"} not in any drop (${noDrop.map(esc).join(", ")}).`:"",
+    unknownDrop.length?`Drop ${unknownDrop.map(esc).join(", ")} is not in the drop calendar.`:""].filter(Boolean).join(" ");
+}
+function exportTiming(){
+  const out=tmLast.map(r=>({"Fabric code":r.base,"Fabric":r.name,"Supplier":r.sup,"Drop":r.drop,"In store":r.store,"Styles":r.styles.join(", "),"Need (m)":Math.round(r.need),
+    "Fabric in house by":r.inhouse,"Lead time (days)":r.lead??"","Lead time from":r.leadSrc==="supplier"?"Supplier (order export)":r.leadSrc,"Order by":r.orderBy||"",
+    "Suggested pre-buy":r.rec?r.rec.pb:"None fits","Chosen pre-buy":r.chosen?r.chosen.pb:"","Chosen by":r.ov?"You":"Tool","Days to spare":r.spare??"","Status":r.stTxt,"Order export":r.chk}));
+  if(!out.length){ toast("Nothing to download yet"); return; }
+  if(window.XLSX){ const wb=XLSX.utils.book_new(); XLSX.utils.book_append_sheet(wb,XLSX.utils.json_to_sheet(out),"Pre-buy timing"); XLSX.writeFile(wb,"pre-buy-timing.xlsx"); return; }
+  const cols=Object.keys(out[0]), q=v=>`"${String(v).replace(/"/g,'""')}"`;
+  const csv=[cols.map(q).join(","),...out.map(r=>cols.map(c=>q(r[c])).join(","))].join("\n");
+  const a=document.createElement("a"); a.href=URL.createObjectURL(new Blob(["\ufeff"+csv],{type:"text/csv"})); a.download="pre-buy-timing.csv"; a.click();
+}
+
 /* ---------------- VALUE ---------------- */
 function renderValue(){
   let T={pur:0,reuse:0,resale:0,disc:0,lost:0,stock:0};
@@ -1104,11 +1233,12 @@ const SOURCES = {
   apply(rows,M){ let n=0; rows.forEach(r=>{const c=code(r[M.code]); if(!c) return; const k=norm(r[M.kind]); const kind=/logo|exclusive|artwork|internal|exclusiv/.test(k)?"block":/cert|rws|gots|fail|condition/.test(k)?"cond":"info";
       LOTS.filter(l=>l.base===c.base&&(c.col==="0000"||l.col===c.col)).forEach(l=>{l.restr.push({k:kind,t:String(r[M.kind]),d:String(M.note!=null&&r[M.note]||"")});n++;});});
     return n?`${n} restrictions added.`:"No material code matched a lot in the library."; }},
- styles:{title:"Upcoming styles and draft BOMs", pages:["lib","sales"], where:"PLM, FW27 line plan with draft BOMs", refresh:"Daily during development", used:"Styles a lot fits, need = consumption × planned units",
+ styles:{title:"Upcoming styles and draft BOMs", pages:["lib","sales","timing"], where:"PLM, FW27 line plan with draft BOMs", refresh:"Daily during development", used:"Styles a lot fits, need = consumption × planned units",
   fields:[["style","Style code",["style","style code","estilo","modelo"],1],["name","Description",["description","name","descripcion"],0],["cat","Category",["category","categoria","family","familia"],1],
-          ["base","Base fabric code",["base fabric","fabric","material code","codigo","tejido"],1],["cons","Consumption m / unit",["consumption","yield","consumo"],1],["units","Planned units",["units","planned units","quantity","unidades","cantidad"],1]],
+          ["base","Base fabric code",["base fabric","fabric","material code","codigo","tejido"],1],["cons","Consumption m / unit",["consumption","yield","consumo"],1],["units","Planned units",["units","planned units","quantity","unidades","cantidad"],1],
+          ["drop","Drop",["drop","delivery","entrega"],0]],
   apply(rows,M){ const out=[]; rows.forEach(r=>{const c=code(r[M.base]); const cons=num(r[M.cons]), u=num(r[M.units]); if(!c||!(cons>0)||!(u>0)) return;
-      out.push({id:String(r[M.style]),name:String(M.name!=null&&r[M.name]||r[M.style]),cat:String(r[M.cat]),base:c.base,cons,units:u});});
+      out.push({id:String(r[M.style]).trim(),name:String(M.name!=null&&r[M.name]||r[M.style]),cat:String(r[M.cat]),base:c.base,cons,units:u,drop:String(M.drop!=null&&r[M.drop]||"").trim()});});
     if(!out.length) return "No row had a base fabric, consumption and units."; STYLES.splice(0,STYLES.length,...out); return `${out.length} styles loaded.`; }},
  sales:{title:"Sales by style", pages:["sales"], where:"Power BI sell-through report (from the ERP and stores)", refresh:"Weekly", used:"Signal per quality: unit-weighted sell-through",
   fields:[["base","Base fabric code",["base fabric","fabric","material code","codigo","tejido"],1],["season","Season",["season","temporada"],0],["style","Style",["style","estilo","modelo","description"],1],
@@ -1125,10 +1255,25 @@ const SOURCES = {
   apply(rows,M){ const acc={}; rows.forEach(r=>{const sup=String(r[M.supplier]||"").trim(); if(!sup) return; let d=M.days!=null?num(r[M.days]):NaN;
       if(isNaN(d)&&M.ord!=null&&M.del!=null){d=(new Date(isoDate(r[M.del]))-new Date(isoDate(r[M.ord])))/864e5;} if(!(d>0)) return; acc[sup]=Math.max(acc[sup]||0,Math.round(d));});
     const k=Object.keys(acc); if(!k.length) return "No lead time could be read."; k.forEach(s=>SUPPLIERS[s]={lead:acc[s]}); return `${k.length} supplier lead times updated (longest per supplier).`; }},
- prebuy:{title:"Pre-buy order export", pages:["pvp"], where:"Purchase order export shared by Merch (ERP), e.g. “FW27 WRTW Precollection Prebuy 1”", refresh:"Daily during the buy", used:"Metres pre-bought, still to ship, price, lead time. Lines without PB in the season are read as production.",
+ prebuy:{title:"Pre-buy order export", pages:["pvp","timing"], where:"Purchase order export shared by Merch (ERP), e.g. “FW27 WRTW Precollection Prebuy 1”", refresh:"Daily during the buy", used:"Metres pre-bought, still to ship, price, lead time. Lines without PB in the season are read as production.",
   fields:ORDER_FIELDS, apply(rows,M){ return loadOrders(rows,M,"auto","prebuy"); }},
  prod:{title:"Production order export", pages:["pvp"], where:"Same ERP export, production orders (season without PB)", refresh:"Daily once the line is final", used:"Metres production needs, per fabric and colour",
   fields:ORDER_FIELDS, apply(rows,M){ return loadOrders(rows,M,"prod","prod"); }},
+ prebuycal:{title:"Pre-buy calendar", pages:["timing"], where:"Issued by Sourcing: one row per pre-buy with the date it closes for orders", refresh:"Each season", used:"Which pre-buy each fabric goes in",
+  fields:[["pb","Pre-buy",["pre buy","prebuy","pb","pre buy name","ventana"],1],["close","Order deadline",["order deadline","deadline","closes","close date","closing date","cierre","fecha cierre","fecha limite","order by"],1]],
+  apply(rows,M){ const out=[]; rows.forEach(r=>{const pb=String(r[M.pb]||"").trim(); const d=r[M.close]; if(!pb||!String(d||"").trim()) return; out.push({pb,close:isoDate(d)});});
+    if(!out.length) return "No row had a pre-buy and a date."; PBCAL.splice(0,PBCAL.length,...out); Object.keys(OVERRIDE).forEach(k=>delete OVERRIDE[k]); return `${out.length} pre-buys loaded.`; }},
+ drops:{title:"Drop calendar", pages:["timing"], where:"Issued by the Merch team: each drop’s in-store date, and the styles in it", refresh:"When Merch updates it", used:"The date each fabric has to serve, and which styles are in each drop",
+  fields:[["drop","Drop",["drop","drop name","delivery","entrega"],1],["store","In-store date",["in store date","in store","store date","instore","floor date","launch date","fecha tienda"],1],["style","Style code (one row per style)",["style","style code","estilo","modelo"],0]],
+  apply(rows,M){ const ds={}, map={}; let ns=0; rows.forEach(r=>{const d=String(r[M.drop]||"").trim(); if(!d) return; if(String(r[M.store]||"").trim()&&!ds[d]) ds[d]=isoDate(r[M.store]);
+      if(M.style!=null&&String(r[M.style]||"").trim()){ map[String(r[M.style]).trim()]=d; ns++; }});
+    const out=Object.entries(ds).map(([drop,store])=>({drop,store})); if(!out.length) return "No row had a drop and an in-store date.";
+    DROPS.splice(0,DROPS.length,...out); Object.keys(DROPSTYLE).forEach(k=>delete DROPSTYLE[k]); Object.assign(DROPSTYLE,map);
+    return `${out.length} drops loaded${ns?`, ${ns} styles placed in a drop`:""}.`; }},
+ fablead:{title:"Fabric lead times (PLM)", pages:["timing"], where:"PLM, fabric data: lead time per fabric", refresh:"On change", used:"The order-by date of each fabric. Without it, the supplier’s lead time from the order export is used, marked as an estimate",
+  fields:[["code","Material code",["material code","fabric code","codigo","reference","article","2 n de art","2o n de art"],1],["lead","Lead time in days",["lead time days","lead time","leadtime","plazo","plazo entrega","dias","days"],0,/week|seman/],["weeks","Lead time in weeks",["lead time weeks","weeks","semanas"],0]],
+  apply(rows,M){ const out={}; rows.forEach(r=>{const c=code(r[M.code]); let d=M.lead!=null?num(r[M.lead]):NaN; if(!(d>0)&&M.weeks!=null) d=num(r[M.weeks])*7; if(!c||!(d>0)) return; out[c.base]=Math.max(out[c.base]||0,Math.round(d));});
+    const k=Object.keys(out); if(!k.length) return "No row had a material code and a lead time in days or weeks."; Object.keys(FABLEAD).forEach(x=>delete FABLEAD[x]); Object.assign(FABLEAD,out); return `${k.length} fabric lead times loaded.`; }},
  nona:{title:"Resale (ex. Nona Source)", pages:["value"], where:"Sales reports from the resale platform for LOEWE lots", refresh:"Monthly", used:"Resale revenue per lot",
   fields:[["code","Material code",["material code","reference","codigo","sku"],1],["date","Date",["date","fecha"],1],["qty","Metres sold",["quantity","qty","metres","meters","cantidad"],1],["price","Price / m",["price","precio","unit price"],1],["order","Order",["order","pedido"],0]],
   apply(rows,M){ let n=0; rows.forEach(r=>{const c=code(r[M.code]); const q=num(r[M.qty]); if(!c||!(q>0)) return; const l=LOTS.find(x=>x.base===c.base&&x.col===c.col); if(!l) return;
@@ -1139,8 +1284,8 @@ const UP = {}; // id -> {file, rows, headers, map, msg}
 
 function matchCols(headers, fields){
   const H=headers.map(h=>({h,n:norm(h)})); const M={};
-  fields.forEach(([k,label,aliases])=>{ const cand=[norm(label),...aliases.map(norm)];
-    let hit=H.find(x=>cand.includes(x.n)) || H.find(x=>cand.some(c=>c.length>3&&(x.n.includes(c)||c.includes(x.n)&&x.n.length>3)));
+  fields.forEach(([k,label,aliases,req,not])=>{ const cand=[norm(label),...aliases.map(norm)]; const H2=not?H.filter(x=>!not.test(x.n)):H;
+    let hit=H2.find(x=>cand.includes(x.n)) || H2.find(x=>cand.some(c=>c.length>3&&(x.n.includes(c)||c.includes(x.n)&&x.n.length>3)));
     if(hit) M[k]=hit.h; });
   return M;
 }
@@ -1199,9 +1344,10 @@ const FLOW = {
   lib:[["Leftover stock","Power BI / ERP"],["Material master, photos","PLM"],["Movements","ERP, warehouse"],["Lab reports","PDF, SharePoint"],["Restrictions","PLM, contracts"],["FW27 draft BOMs","PLM"]],
   sales:[["Sales by style","Power BI"],["Past BOMs","PLM"],["Line review history","PLM"],["Lead times","Order export"],["FW27 draft BOMs","PLM"],["Undyed stock","Library"]],
   pvp:[["Pre-buy order lines","ERP order export (PB1)"],["Production order lines","ERP order export"],["Lead times","Order date → promised delivery"],["Prices","Precio unitario"]],
-  value:[["Purchase price","Order export, PLM"],["Movements","ERP, warehouse"],["Resale (ex. Nona Source)","Resale sales reports"]]
+  value:[["Purchase price","Order export, PLM"],["Movements","ERP, warehouse"],["Resale (ex. Nona Source)","Resale sales reports"]],
+  timing:[["Pre-buy calendar","You (Sourcing)"],["Drop calendar","Merch team"],["Fabric lead times","PLM, fabric data"],["Styles and draft BOMs","PLM"],["Pre-buy order lines","ERP order export"]]
 };
-const OUT = {pvp:"Over, short and value per fabric and colour", lib:"Fabric cards and passports", sales:"Survival odds, firm tranche, reorder holds", value:"Value recovered → Savings report"};
+const OUT = {timing:"Which pre-buy each fabric goes in, and what to act on now", pvp:"Over, short and value per fabric and colour", lib:"Fabric cards and passports", sales:"Survival odds, firm tranche, reorder holds", value:"Value recovered → Savings report"};
 function renderData(page){
   const ids=Object.keys(SOURCES).filter(k=>SOURCES[k].pages.includes(page));
   $(`#${page}-data`).innerHTML=`
@@ -1222,7 +1368,7 @@ function renderData(page){
   box.querySelectorAll("[data-apply]").forEach(b=>b.onclick=()=>{const id=b.dataset.apply,u=UP[id]; const msg=SOURCES[id].apply(u.rows,u.map); u.msg=msg; u.applied=!/^No /.test(msg); toast(msg); refreshAll();});
   box.querySelectorAll("[data-reset]").forEach(b=>b.onclick=()=>{delete UP[b.dataset.reset]; renderAllData();});
 }
-function renderAllData(){["lib","pvp","sales","value"].forEach(renderData);}
+function renderAllData(){["lib","timing","pvp","sales","value"].forEach(renderData);}
 
 
 /* ---------------- CLEAR SAMPLE DATA ---------------- */
@@ -1239,6 +1385,10 @@ function clearSample(){
   if(!(UP.sales&&UP.sales.applied)) Object.keys(SALES).forEach(k=>delete SALES[k]);
   if(!(UP.lineplan&&UP.lineplan.applied)) SAMPLE_ODDS.forEach(k=>delete BASE_ODDS[k]);
   if(!(UP.lead&&UP.lead.applied)) SAMPLE_SUPPLIERS.forEach(k=>delete SUPPLIERS[k]);
+  if(!(UP.prebuycal&&UP.prebuycal.applied)) PBCAL.splice(0,PBCAL.length);
+  if(!(UP.drops&&UP.drops.applied)){ DROPS.splice(0,DROPS.length); Object.keys(DROPSTYLE).forEach(k=>delete DROPSTYLE[k]); }
+  if(!(UP.fablead&&UP.fablead.applied)) Object.keys(FABLEAD).forEach(k=>delete FABLEAD[k]);
+  Object.keys(OVERRIDE).forEach(k=>delete OVERRIDE[k]);
   Object.assign(F,{type:"",newIn:false,rtd:false,fit:false}); F.vendor.clear(); F.quality.clear(); F.resale.clear(); $("#q").value="";
   pvpOpen.clear(); sampleCleared = true; showSampleState();
 }
@@ -1246,7 +1396,7 @@ function showSampleState(){
   const b=$("#sampleBadge"), btn=$("#clearSample");
   b.textContent = sampleCleared ? "Sample data cleared" : "Sample data · illustrative"; b.classList.toggle("off",sampleCleared);
   btn.textContent = sampleCleared ? "Restore sample data" : "Clear sample data"; btn.classList.remove("confirm");
-  btn.title = sampleCleared ? "Reload the page with the sample data. Files you have used this session are dropped." : "Remove all sample fabrics, styles, sales and orders. Files you have used stay.";
+  btn.title = sampleCleared ? "Reload the page with the sample data. Files you have used this session are dropped." : "Remove all sample fabrics, styles, sales, orders and calendars. Files you have used stay.";
 }
 $("#clearSample").onclick=()=>{
   const btn=$("#clearSample");
@@ -1260,7 +1410,7 @@ $("#clearSample").onclick=()=>{
 };
 
 /* ---------------- WIRING ---------------- */
-function refreshAll(){renderLibrary();renderPvp();renderSales();renderValue();renderAllData();if(openId)renderPassport();}
+function refreshAll(){renderLibrary();renderTiming();renderPvp();renderSales();renderValue();renderAllData();if(openId)renderPassport();}
 document.querySelectorAll("nav.tabs button").forEach(b=>b.onclick=()=>{
   document.querySelectorAll("nav.tabs button").forEach(x=>x.classList.toggle("on",x===b));
   document.querySelectorAll(".view").forEach(v=>v.classList.toggle("on",v.id==="v-"+b.dataset.v));
@@ -1275,6 +1425,9 @@ document.querySelectorAll(".subtabs").forEach(bar=>bar.querySelectorAll("button"
 }));
 document.querySelectorAll("#pvpFilter button").forEach(b=>b.onclick=()=>{pvpFilter=b.dataset.f;renderPvp();});
 $("#pvpRtd").onchange=renderPvp;
+document.querySelectorAll("#tmFilter button").forEach(b=>b.onclick=()=>{tmFilter=b.dataset.f;renderTiming();});
+["#tmBuf","#tmTight"].forEach(s=>$(s).addEventListener("input",renderTiming));
+$("#tmExport").onclick=exportTiming;
 initFilters(); if(store.get()==="1") clearSample(); refreshAll();
 </script>
 </body>

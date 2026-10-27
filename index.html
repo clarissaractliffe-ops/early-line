@@ -388,7 +388,7 @@ tr.click:hover td{background:#fcfaf6}
     <div class="subtabs" data-for="pvp"><button class="on" data-sub="main">Comparison</button><button data-sub="data">Data sources</button></div>
     <div class="sub on" data-sub="main">
       <div class="steps">
-        <div><span class="n">01</span><b>Read the order exports</b>Lines from the pre-buy export are pre-buy, lines from the production export are production. Cancelled lines are left out.</div>
+        <div><span class="n">01</span><b>Read the order export</b>Pre-buy and production lines are separated. Cancelled lines are left out.</div>
         <div><span class="n">02</span><b>Split the code</b>First 7 digits = the fabric, last 4 = the colour. 2790 = undyed, ready to dye.</div>
         <div><span class="n">03</span><b>Compare</b>Metres pre-bought vs metres production needs, for the fabric in all colours, then per colour.</div>
         <div><span class="n">04</span><b>Act</b>Over: cut what hasn't shipped, the rest goes to the library. Short: top up now, against the mill's lead time.</div>
@@ -595,36 +595,36 @@ const SALES = {
  "2322903":[]
 };
 
-/* Order export lines (sample, FW27): kind PB = from the pre-buy export, PROD = from the production export */
+/* Order export lines: PB1 = pre-buy, no PB = production (sample, FW27) */
 const ORDERS = [];
 (function(){
-  const L=(kind,code,desc,sup,ord,rec,date,prom,price,cancel)=>ORDERS.push({kind,code,desc,sup,ordered:ord,received:rec,ord:date,prom,price,cancel:cancel||"",_sample:true});
-  // pre-buy
-  L("PB","23301032790","Bianco 4963 RTD","Tessitura Moretti",9000,6000,"2026-05-12","2026-08-14",19.80);
-  L("PB","23301032790","Bianco 4963 RTD","Tessitura Moretti",6000,0,"2026-06-02","2026-09-05",19.80);
-  L("PB","23299980676","Albini Downing","Albini",3200,3200,"2026-04-20","2026-08-08",17.45);
-  L("PB","23299982016","Albini Downing","Albini",1350,800,"2026-04-20","2026-08-08",17.45);
-  L("PB","23299984985","Albini Downing","Albini",1000,1000,"2026-04-20","2026-08-08",17.45);
-  L("PB","23299985497","Albini Downing","Albini",750,750,"2026-04-20","2026-08-08",17.45);
-  L("PB","23276622834","Berto 4783 Tiger","Berto",10500,10500,"2026-05-04","2026-07-18",8.65);
-  L("PB","23188400410","Gabardine 260","Lanificio Varese",4000,2500,"2026-04-28","2026-08-26",32.40);
-  L("PB","23188401010","Gabardine 260","Lanificio Varese",600,0,"2026-04-28","2026-08-26",32.40,"2026-07-02");
-  L("PB","23304560102","Cashmere jersey","Maglificio Bassano",1200,1200,"2026-04-15","2026-08-23",61.00);
-  L("PB","23240191010","Viscose satin","Tessitura Moretti",2000,2000,"2026-05-20","2026-07-19",11.30);
+  const L=(season,code,desc,sup,ord,rec,date,prom,price,cancel)=>ORDERS.push({season,code,desc,sup,ordered:ord,received:rec,ord:date,prom,price,cancel:cancel||"",_sample:true});
+  // pre-buy (FW27 PB1)
+  L("FW27 PB1","23301032790","Bianco 4963 RTD","Tessitura Moretti",9000,6000,"2026-05-12","2026-08-14",19.80);
+  L("FW27 PB1","23301032790","Bianco 4963 RTD","Tessitura Moretti",6000,0,"2026-06-02","2026-09-05",19.80);
+  L("FW27 PB1","23299980676","Albini Downing","Albini",3200,3200,"2026-04-20","2026-08-08",17.45);
+  L("FW27 PB1","23299982016","Albini Downing","Albini",1350,800,"2026-04-20","2026-08-08",17.45);
+  L("FW27 PB1","23299984985","Albini Downing","Albini",1000,1000,"2026-04-20","2026-08-08",17.45);
+  L("FW27 PB1","23299985497","Albini Downing","Albini",750,750,"2026-04-20","2026-08-08",17.45);
+  L("FW27 PB1","23276622834","Berto 4783 Tiger","Berto",10500,10500,"2026-05-04","2026-07-18",8.65);
+  L("FW27 PB1","23188400410","Gabardine 260","Lanificio Varese",4000,2500,"2026-04-28","2026-08-26",32.40);
+  L("FW27 PB1","23188401010","Gabardine 260","Lanificio Varese",600,0,"2026-04-28","2026-08-26",32.40,"2026-07-02");
+  L("FW27 PB1","23304560102","Cashmere jersey","Maglificio Bassano",1200,1200,"2026-04-15","2026-08-23",61.00);
+  L("FW27 PB1","23240191010","Viscose satin","Tessitura Moretti",2000,2000,"2026-05-20","2026-07-19",11.30);
   // production (FW27)
-  L("PROD","23301030450","Bianco 4963, dyed navy","Tessitura Moretti",7000,0,"2026-09-15","2026-11-20",21.50);
-  L("PROD","23301031010","Bianco 4963, dyed black","Tessitura Moretti",5400,0,"2026-09-15","2026-11-20",21.50);
-  L("PROD","23299980676","Albini Downing","Albini",3450,0,"2026-09-10","2026-12-01",17.45);
-  L("PROD","23299982016","Albini Downing","Albini",900,0,"2026-09-10","2026-12-01",17.45);
-  L("PROD","23299984985","Albini Downing","Albini",1000,0,"2026-09-10","2026-12-01",17.45);
-  L("PROD","23299985497","Albini Downing","Albini",600,0,"2026-09-10","2026-12-01",17.45);
-  L("PROD","23276622834","Berto 4783 Tiger","Berto",10800,0,"2026-09-08","2026-11-12",8.65);
-  L("PROD","23188400410","Gabardine 260","Lanificio Varese",3100,0,"2026-09-12","2026-12-10",32.40);
-  L("PROD","23304560102","Cashmere jersey","Maglificio Bassano",1500,0,"2026-09-18","2027-01-25",61.00);
-  L("PROD","23240191010","Viscose satin","Tessitura Moretti",2000,0,"2026-09-20","2026-11-15",11.30);
-  L("PROD","23351200001","Silk crepe","Seteria Lario",800,0,"2026-09-22","2026-12-05",42.00);
+  L("FW27","23301030450","Bianco 4963, dyed navy","Tessitura Moretti",7000,0,"2026-09-15","2026-11-20",21.50);
+  L("FW27","23301031010","Bianco 4963, dyed black","Tessitura Moretti",5400,0,"2026-09-15","2026-11-20",21.50);
+  L("FW27","23299980676","Albini Downing","Albini",3450,0,"2026-09-10","2026-12-01",17.45);
+  L("FW27","23299982016","Albini Downing","Albini",900,0,"2026-09-10","2026-12-01",17.45);
+  L("FW27","23299984985","Albini Downing","Albini",1000,0,"2026-09-10","2026-12-01",17.45);
+  L("FW27","23299985497","Albini Downing","Albini",600,0,"2026-09-10","2026-12-01",17.45);
+  L("FW27","23276622834","Berto 4783 Tiger","Berto",10800,0,"2026-09-08","2026-11-12",8.65);
+  L("FW27","23188400410","Gabardine 260","Lanificio Varese",3100,0,"2026-09-12","2026-12-10",32.40);
+  L("FW27","23304560102","Cashmere jersey","Maglificio Bassano",1500,0,"2026-09-18","2027-01-25",61.00);
+  L("FW27","23240191010","Viscose satin","Tessitura Moretti",2000,0,"2026-09-20","2026-11-15",11.30);
+  L("FW27","23351200001","Silk crepe","Seteria Lario",800,0,"2026-09-22","2026-12-05",42.00);
 })();
-const isPB = o => o.kind==="PB";
+const isPB = o => /PB/i.test(o.season);
 let pvpFilter="all";
 
 /* ---------------- HELPERS ---------------- */
@@ -1044,6 +1044,7 @@ function renderPvp(){
 /* ---------------- PRE-BUY TIMING ---------------- */
 const addDays = (iso,n) => { const d=new Date(iso+"T12:00:00"); d.setDate(d.getDate()+n); return d.toISOString().slice(0,10); };
 const daysBetween = (a,b) => Math.round((new Date(b+"T12:00:00")-new Date(a+"T12:00:00"))/864e5);
+const pbNum = s => { const x=String(s).match(/PB\s*(\d+)/i); return x?+x[1]:null; };
 let tmFilter="all", tmLast=[];
 function tmCompute(){
   const buf=Math.max(0,+$("#tmBuf").value||0), tight=Math.max(0,+$("#tmTight").value||0);
@@ -1073,11 +1074,11 @@ function tmCompute(){
     // what the order export says
     const pbo=ords.filter(isPB); let chk="", chkCls="", act=["nolead","before","late"].includes(st);
     if(pbo.length){
-      const idx=[...new Set(pbo.map(o=>cal.findIndex(pb=>o.ord<=pb.close)).filter(i=>i>=0))].sort((a,b)=>a-b);
+      const nums=[...new Set(pbo.map(o=>pbNum(o.season)).filter(x=>x!=null))].sort((a,b)=>a-b);
       const prom=pbo.map(o=>o.prom).sort().pop();
-      const where=idx.length?idx.map(i=>cal[i].pb).join(", "):"a pre-buy";
+      const where=nums.length?nums.map(x=>"PB"+x).join(", "):"a pre-buy";
       if(prom>inhouse){ chk=`Ordered in ${where}, arrives ${date(prom)}: after the in-house date`; chkCls="r"; act=true; }
-      else if(chosen&&idx.length&&idx[0]<cal.indexOf(chosen)){ chk=`Ordered in ${where}: ${chosen.pb} would have been enough`; chkCls="a"; }
+      else if(chosen&&nums.length&&pbNum(chosen.pb)!=null&&nums[0]<pbNum(chosen.pb)){ chk=`Ordered in ${where}: ${chosen.pb} would have been enough`; chkCls="a"; }
       else { chk=`Ordered in ${where} · arrives ${date(prom)}`; chkCls="g"; }
     } else if(chosen){
       if(chosen.close<TODAY){ chk=`Not ordered: ${chosen.pb} closed on ${date(chosen.close)}`; chkCls="r"; act=true; }
@@ -1113,7 +1114,7 @@ function renderTiming(){
   :`<tr><td colspan="9" class="muted">${missing.length?`To plan the timing, load ${missing.join(", ")} in <b>Data sources</b>.`:rows.length?"No fabric in this group.":"No style is in a drop yet. Add a Drop column to the styles file, or list the styles in the drop calendar."}</td></tr>`}`;
   document.querySelectorAll("#tmTbl [data-ov]").forEach(sel=>sel.onchange=()=>{ if(sel.value) OVERRIDE[sel.dataset.ov]=sel.value; else delete OVERRIDE[sel.dataset.ov]; renderTiming(); });
   const sup=rows.filter(r=>r.leadSrc==="supplier").length;
-  $("#tmNote").innerHTML=[`Need = consumption × planned units of the drop’s styles in that fabric. Order by = in-store date − ${buf} days − fabric lead time. Spare = days between the pre-buy closing and the order-by date. An order counts in the first pre-buy that was still open on its order date.`,
+  $("#tmNote").innerHTML=[`Need = consumption × planned units of the drop’s styles in that fabric. Order by = in-store date − ${buf} days − fabric lead time. Spare = days between the pre-buy closing and the order-by date.`,
     sup?`${sup} line${sup>1?"s use":" uses"} the supplier’s lead time from the order export because PLM has none for that fabric.`:"",
     noDrop.length?`${noDrop.length} style${noDrop.length>1?"s are":" is"} not in any drop (${noDrop.map(esc).join(", ")}).`:"",
     unknownDrop.length?`Drop ${unknownDrop.map(esc).join(", ")} is not in the drop calendar.`:""].filter(Boolean).join(" ");
@@ -1166,22 +1167,26 @@ const SWKEYS = ["sky","undyed","navy","linen","camel","black","stripe"];
 
 const ORDER_FIELDS=[["code","Article code (2º nº de art)",["2 n de art","2o n de art","n de art","material code","codigo","article","referencia"],1],
   ["ordered","Quantity ordered",["cantidad ordenada","ordered","quantity ordered","qty ordered","cantidad"],1],
+  ["season","Season (Temporada Pedido Compra)",["temporada pedido compra","temporada","season"],0],
   ["received","Quantity received",["cantidad recibida","received","qty received"],0],
   ["desc","Description",["descripcion","description","nombre"],0],["sup","Supplier",["proveedor","supplier","vendor","nombre proveedor"],0],
   ["ord","Order date (Fch ord)",["fch ord","fecha pedido","order date"],0],["prom","Promised delivery",["entrega prometida","promised delivery","fecha entrega"],0],
   ["cancel","Cancel date",["fecha cancel","cancel date","fecha cancelacion"],0],["price","Unit price",["precio unitario","unit price","precio"],0],["cur","Currency",["cod moneda","currency","moneda"],0]];
 const LOADED={prebuy:false,prod:false};
-function loadOrders(rows,M,key){
-  const kind = key==="prebuy" ? "PB" : "PROD";
+function loadOrders(rows,M,mode,key){
   const out=[]; rows.forEach(r=>{ const c=code(r[M.code]); const q=num(r[M.ordered]); if(!c||!(q>0)) return;
-    out.push({kind, code:c.base+c.col, desc:String(M.desc!=null&&r[M.desc]||c.base), sup:String(M.sup!=null&&r[M.sup]||"Unknown").trim(),
+    const season=String(M.season!=null&&r[M.season]||"").trim();
+    const pb = mode==="prod" ? false : (season ? /PB/i.test(season) : true);
+    out.push({season: pb?(season||"PB"):(season&&!/PB/i.test(season)?season:"PROD"), code:c.base+c.col, desc:String(M.desc!=null&&r[M.desc]||c.base), sup:String(M.sup!=null&&r[M.sup]||"Unknown").trim(),
       ordered:q, received:M.received!=null?num(r[M.received])||0:0, ord:M.ord!=null?isoDate(r[M.ord]):TODAY, prom:M.prom!=null?isoDate(r[M.prom]):TODAY,
       price:M.price!=null?num(r[M.price])||0:0, cur:M.cur!=null?String(r[M.cur]||"").trim().toUpperCase():"", cancel:M.cancel!=null&&String(r[M.cancel]||"").trim()?"x":""}); });
   if(!out.length) return "No line had an article code and a quantity ordered.";
-  // a file replaces every sample order line, and the lines of its own kind loaded before
-  for(let i=ORDERS.length-1;i>=0;i--){ const o=ORDERS[i]; if(o._sample||o.kind===kind) ORDERS.splice(i,1); }
+  // first upload of each kind replaces the sample lines of that kind
+  const keepPB = key==="prod", keepProd = key==="prebuy" && !out.some(o=>!/PB/i.test(o.season));
+  if(!LOADED.prebuy && !LOADED.prod){ for(let i=ORDERS.length-1;i>=0;i--){ const pbl=isPB(ORDERS[i]); if((pbl&&!keepPB)||(!pbl&&!keepProd)) ORDERS.splice(i,1);} }
+  else { for(let i=ORDERS.length-1;i>=0;i--){ const pbl=isPB(ORDERS[i]); if(key==="prebuy"?pbl:!pbl) ORDERS.splice(i,1);} }
   LOADED[key]=true; ORDERS.push(...out);
-  return `${out.length} ${kind==="PB"?"pre-buy":"production"} lines loaded.`;
+  const nPB=out.filter(isPB).length; return `${out.length} lines loaded (${nPB} pre-buy, ${out.length-nPB} production).`;
 }
 const SOURCES = {
  stock:{title:"Leftover stock", pages:["lib","value"], where:"Power BI leftover report (from the ERP), or the stock Excel on SharePoint", refresh:"Daily", used:"Every card: metres in stock, price, location, origin season",
@@ -1237,10 +1242,10 @@ const SOURCES = {
   apply(rows,M){ const acc={}; rows.forEach(r=>{const sup=String(r[M.supplier]||"").trim(); if(!sup) return; let d=M.days!=null?num(r[M.days]):NaN;
       if(isNaN(d)&&M.ord!=null&&M.del!=null){d=(new Date(isoDate(r[M.del]))-new Date(isoDate(r[M.ord])))/864e5;} if(!(d>0)) return; acc[sup]=Math.max(acc[sup]||0,Math.round(d));});
     const k=Object.keys(acc); if(!k.length) return "No lead time could be read."; k.forEach(s=>SUPPLIERS[s]={lead:acc[s]}); return `${k.length} supplier lead times updated (longest per supplier).`; }},
- prebuy:{title:"Pre-buy order export", pages:["pvp","timing"], where:"Purchase order export shared by Merch (ERP), e.g. “FW27 WRTW Precollection Prebuy 1”", refresh:"Daily during the buy", used:"Metres pre-bought, still to ship, price, lead time. Every line in this file counts as pre-buy.",
-  fields:ORDER_FIELDS, apply(rows,M){ return loadOrders(rows,M,"prebuy"); }},
- prod:{title:"Production order export", pages:["pvp"], where:"Same ERP export, production orders", refresh:"Daily once the line is final", used:"Metres production needs, per fabric and colour. Every line in this file counts as production.",
-  fields:ORDER_FIELDS, apply(rows,M){ return loadOrders(rows,M,"prod"); }},
+ prebuy:{title:"Pre-buy order export", pages:["pvp","timing"], where:"Purchase order export shared by Merch (ERP), e.g. “FW27 WRTW Precollection Prebuy 1”", refresh:"Daily during the buy", used:"Metres pre-bought, still to ship, price, lead time",
+  fields:ORDER_FIELDS, apply(rows,M){ return loadOrders(rows,M,"auto","prebuy"); }},
+ prod:{title:"Production order export", pages:["pvp"], where:"Same ERP export, production orders", refresh:"Daily once the line is final", used:"Metres production needs, per fabric and colour",
+  fields:ORDER_FIELDS, apply(rows,M){ return loadOrders(rows,M,"prod","prod"); }},
  prebuycal:{title:"Pre-buy calendar", pages:["timing"], where:"Issued by Sourcing: one row per pre-buy with the date it closes for orders", refresh:"Each season", used:"Which pre-buy each fabric goes in",
   fields:[["pb","Pre-buy",["pre buy","prebuy","pb","pre buy name","ventana"],1],["close","Order deadline",["order deadline","deadline","closes","close date","closing date","cierre","fecha cierre","fecha limite","order by"],1]],
   apply(rows,M){ const out=[]; rows.forEach(r=>{const pb=String(r[M.pb]||"").trim(); const d=r[M.close]; if(!pb||!String(d||"").trim()) return; out.push({pb,close:isoDate(d)});});

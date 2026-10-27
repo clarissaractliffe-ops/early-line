@@ -217,6 +217,8 @@ tr.colr td:first-child{padding-left:28px;color:var(--ink2)}
 .sec{padding:22px 28px;border-bottom:1px solid var(--line2)}
 .sec:last-child{border-bottom:0}
 .sechead{display:flex;justify-content:space-between;align-items:baseline;gap:10px;margin-bottom:12px;flex-wrap:wrap}
+.hiddenbar{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;border:1px dashed var(--line);border-radius:12px;padding:10px 14px;margin:28px 0 16px;font-size:12px;color:var(--mute)}
+.hiddenbar .btn{font-size:12px;padding:5px 10px}
 .sechead h3{margin:0}
 .src{font-size:11px;color:var(--mute)}
 
@@ -424,8 +426,11 @@ tr.click:hover td{background:#fcfaf6}
     </div>
     <div class="alerts" id="alerts"></div>
 
+    <div class="hiddenbar" id="commitBar"><span id="commitBarTxt">Hidden section · FW27 pre-buy: survival odds and commitment</span><button class="btn" id="commitToggle">Show</button></div>
+    <div id="commitSec" hidden>
     <div class="sechead"><h2>FW27 pre-buy · survival odds and commitment</h2><span class="src">Need = consumption × planned units · reserved stock goes to its style, then free stock of the same quality in row order · click a row for the comparable styles</span></div>
     <div class="tblwrap"><table id="commitTbl"></table></div>
+    </div>
     </div>
     <div class="sub" data-sub="data" id="sales-data"></div>
   </section>
@@ -1428,6 +1433,13 @@ $("#pvpRtd").onchange=renderPvp;
 document.querySelectorAll("#tmFilter button").forEach(b=>b.onclick=()=>{tmFilter=b.dataset.f;renderTiming();});
 ["#tmBuf","#tmTight"].forEach(s=>$(s).addEventListener("input",renderTiming));
 $("#tmExport").onclick=exportTiming;
+// hidden section: the FW27 commitment table stays in the page but is hidden until shown (remembered in this browser)
+const COMMIT_KEY="earlyline.commitShown";
+function setCommit(show,save){ $("#commitSec").hidden=!show; $("#commitToggle").textContent=show?"Hide":"Show";
+  $("#commitBarTxt").textContent=(show?"Shown · ":"Hidden section · ")+"FW27 pre-buy: survival odds and commitment";
+  if(save){ try{ show?localStorage.setItem(COMMIT_KEY,"1"):localStorage.removeItem(COMMIT_KEY); }catch(e){} } }
+$("#commitToggle").onclick=()=>setCommit($("#commitSec").hidden,true);
+setCommit((()=>{ try{ return localStorage.getItem(COMMIT_KEY)==="1"; }catch(e){ return false; } })(),false);
 initFilters(); if(store.get()==="1") clearSample(); refreshAll();
 </script>
 </body>

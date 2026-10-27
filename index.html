@@ -217,8 +217,8 @@ tr.colr td:first-child{padding-left:28px;color:var(--ink2)}
 .sec{padding:22px 28px;border-bottom:1px solid var(--line2)}
 .sec:last-child{border-bottom:0}
 .sechead{display:flex;justify-content:space-between;align-items:baseline;gap:10px;margin-bottom:12px;flex-wrap:wrap}
-.hiddenbar{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;border:1px dashed var(--line);border-radius:12px;padding:10px 14px;margin:28px 0 16px;font-size:12px;color:var(--mute)}
-.hiddenbar .btn{font-size:12px;padding:5px 10px}
+.hiddenbar{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;border:1px solid var(--line);background:var(--soft);border-radius:12px;padding:14px 16px;margin:28px 0 16px}
+.hiddenbar .t{font-family:var(--serif);font-size:22px;line-height:1.2}
 .sechead h3{margin:0}
 .src{font-size:11px;color:var(--mute)}
 
@@ -388,7 +388,7 @@ tr.click:hover td{background:#fcfaf6}
     <div class="subtabs" data-for="pvp"><button class="on" data-sub="main">Comparison</button><button data-sub="data">Data sources</button></div>
     <div class="sub on" data-sub="main">
       <div class="steps">
-        <div><span class="n">01</span><b>Read the order export</b>Season code “PB1” = pre-buy; no PB = production. Cancelled lines are left out.</div>
+        <div><span class="n">01</span><b>Read the order exports</b>Lines from the pre-buy export are pre-buy, lines from the production export are production. Cancelled lines are left out.</div>
         <div><span class="n">02</span><b>Split the code</b>First 7 digits = the fabric, last 4 = the colour. 2790 = undyed, ready to dye.</div>
         <div><span class="n">03</span><b>Compare</b>Metres pre-bought vs metres production needs, for the fabric in all colours, then per colour.</div>
         <div><span class="n">04</span><b>Act</b>Over: cut what hasn't shipped, the rest goes to the library. Short: top up now, against the mill's lead time.</div>
@@ -426,9 +426,9 @@ tr.click:hover td{background:#fcfaf6}
     </div>
     <div class="alerts" id="alerts"></div>
 
-    <div class="hiddenbar" id="commitBar"><span id="commitBarTxt">Hidden section · FW27 pre-buy: survival odds and commitment</span><button class="btn" id="commitToggle">Show</button></div>
+    <div class="hiddenbar" id="commitBar"><div><div class="t">FW27 pre-buy · survival odds and commitment</div><div class="small muted" id="commitBarTxt">Hidden section</div></div><button class="btn pri" id="commitToggle">Show table</button></div>
     <div id="commitSec" hidden>
-    <div class="sechead"><h2>FW27 pre-buy · survival odds and commitment</h2><span class="src">Need = consumption × planned units · reserved stock goes to its style, then free stock of the same quality in row order · click a row for the comparable styles</span></div>
+    <div class="sechead"><span class="src">Need = consumption × planned units · reserved stock goes to its style, then free stock of the same quality in row order · click a row for the comparable styles</span></div>
     <div class="tblwrap"><table id="commitTbl"></table></div>
     </div>
     </div>
@@ -484,64 +484,62 @@ const LOTS = [
   mv:[{d:"2026-03-12",t:"Received",q:420,ref:"FW26 production excess · PO 48812",by:"Warehouse"},
       {d:"2026-06-03",t:"Used",q:180,ref:"SS27 SH-014 oversized shirt",by:"Production"},
       {d:"2026-10-02",t:"Reserved",q:120,ref:"F27-SH-040",by:"Sourcing"}],
-  tests:{status:"pass",report:"TR-26-0412_Albini_Downing.pdf",lab:"Lab report · 14 Mar 2026",rows:[
+  tests:{status:"pass",rows:[
       ["Dimensional stability","ISO 5077","−1.5%","±3%",true],["Colour fastness, washing","ISO 105-C06","4–5","≥ 4",true],
       ["Colour fastness, rubbing (wet)","ISO 105-X12","3–4","≥ 3",true],["Tear strength","ISO 13937-2","14 N","≥ 10 N",true]]},
   restr:[]},
  {id:"L10", base:"2329998", col:"2016", colName:"Ecru / navy stripe", name:"Albini Downing", cat:"Shirting", supplier:"Albini", comp:"100% Cotton", gsm:115, width:150, price:17.45, season:"FW27 PB1", loc:"Barcelona · Rack B4", sw:"stripe",
   mv:[{d:"2026-09-20",t:"Received",q:450,ref:"FW27 pre-buy 1 over production (+450 m)",by:"Warehouse"}],
-  tests:{status:"pass",report:"TR-26-0412_Albini_Downing.pdf",lab:"Shared with base 2329998",rows:[
+  tests:{status:"pass",rows:[
       ["Dimensional stability","ISO 5077","−1.5%","±3%",true],["Colour fastness, washing","ISO 105-C06","4","≥ 4",true],
       ["Colour fastness, rubbing (wet)","ISO 105-X12","3","≥ 3",true],["Tear strength","ISO 13937-2","14 N","≥ 10 N",true]]},
   restr:[]},
  {id:"L02", base:"2330103", col:"2790", colName:"Undyed (RTD)", name:"Bianco 4963 RTD", cat:"Twill", supplier:"Tessitura Moretti", comp:"100% Cotton", gsm:210, width:145, price:19.80, season:"FW27 PB1", loc:"Barcelona · Rack C1", sw:"undyed",
   mv:[{d:"2026-09-28",t:"Received",q:1300,ref:"FW27 pre-buy 1 over production",by:"Warehouse"},
       {d:"2026-10-14",t:"Reserved",q:400,ref:"F27-JK-012 (to dye)",by:"Sourcing"}],
-  tests:{status:"pass",report:"TR-26-0871_Bianco_RTD.pdf",lab:"Greige test · re-test after dyeing",rows:[
+  tests:{status:"pass",rows:[
       ["Dimensional stability","ISO 5077","−2.0%","±3%",true],["Tear strength","ISO 13937-2","22 N","≥ 12 N",true],["Tensile strength","ISO 13934-1","640 N","≥ 400 N",true]]},
   restr:[{k:"info",t:"Ready to dye",d:"Can cover production in any colour of base 2330103."}]},
  {id:"L03", base:"2327662", col:"2834", colName:"Tiger", name:"Berto 4783 Tiger", cat:"Denim", supplier:"Berto", comp:"98% Cotton, 2% Elastane", gsm:340, width:150, price:8.65, season:"FW26", loc:"Barcelona · Rack D2", sw:"tiger",
   mv:[{d:"2026-02-10",t:"Received",q:640,ref:"FW26 production excess · PO 47710",by:"Warehouse"},
       {d:"2026-05-18",t:"Used",q:210,ref:"FW26 capsule TR-061 re-run",by:"Production"}],
-  tests:{status:"pass",report:"TR-26-0118_Berto_Tiger.pdf",lab:"Lab report · 12 Feb 2026",rows:[
+  tests:{status:"pass",rows:[
       ["Dimensional stability","ISO 5077","−2.5%","±3%",true],["Colour fastness, rubbing (dry)","ISO 105-X12","4","≥ 3–4",true],["Tear strength","ISO 13937-2","38 N","≥ 20 N",true]]},
   restr:[{k:"block",t:"Exclusive LOEWE artwork",d:"Tiger print is LOEWE artwork: internal reuse only, cannot be resold."}]},
  {id:"L04", base:"2318840", col:"0410", colName:"Navy", name:"Gabardine 260", cat:"Suiting", supplier:"Lanificio Varese", comp:"100% Wool (RWS)", gsm:260, width:152, price:32.40, season:"FW25", loc:"Barcelona · Rack A3", sw:"navy",
   mv:[{d:"2025-11-04",t:"Received",q:380,ref:"FW25 production excess · PO 45102",by:"Warehouse"},
       {d:"2026-02-20",t:"Used",q:150,ref:"SS26 TR-012 tailored trouser",by:"Production"}],
-  tests:{status:"pass",report:"TR-25-0933_Gabardine.pdf",lab:"Lab report · 6 Nov 2025",rows:[
+  tests:{status:"pass",rows:[
       ["Pilling (Martindale)","ISO 12945-2","4","≥ 3–4",true],["Dimensional stability","ISO 5077","−1.0%","±2%",true],["Colour fastness, light","ISO 105-B02","5","≥ 4",true]]},
   restr:[{k:"cond",t:"RWS certification",d:"Resale allowed, but the buyer cannot claim RWS without a transaction certificate."}]},
  {id:"L05", base:"2321577", col:"0310", colName:"Rust / ecru", name:"Anagram print twill", cat:"Silk", supplier:"Seteria Lario", comp:"100% Silk", gsm:70, width:140, price:48.00, season:"SS26", loc:"Barcelona · Secure cage", sw:"silk",
   mv:[{d:"2026-01-15",t:"Received",q:260,ref:"SS26 production excess · PO 46230",by:"Warehouse"}],
-  tests:{status:"pass",report:"TR-26-0044_Anagram_twill.pdf",lab:"Lab report · 19 Jan 2026",rows:[
+  tests:{status:"pass",rows:[
       ["Colour fastness, light","ISO 105-B02","4","≥ 4",true],["Seam slippage","ISO 13936-2","4 mm","≤ 6 mm",true]]},
   restr:[{k:"block",t:"Logo print",d:"Carries the Anagram: cannot be resold. Internal reuse or controlled destruction only."}]},
  {id:"L06", base:"2325510", col:"0920", colName:"Natural", name:"Linen canvas", cat:"Linen", supplier:"Tejidos Ribera", comp:"100% Linen", gsm:340, width:140, price:14.20, season:"SS26", loc:"Barcelona · Rack C4", sw:"linen",
   mv:[{d:"2026-04-02",t:"Received",q:520,ref:"SS26 bulk, rejected at test · PO 46907",by:"Warehouse"},
       {d:"2026-07-10",t:"Sold",q:300,ref:"Resale (ex. Nona Source) · order NS-2207",by:"Sourcing",price:6.00}],
-  tests:{status:"fail",report:"TR-26-0302_Linen_canvas.pdf",lab:"Lab report · 8 Apr 2026",rows:[
+  tests:{status:"fail",rows:[
       ["Dimensional stability","ISO 5077","−5.5%","±3%",false],["Colour fastness, washing","ISO 105-C06","4","≥ 4",true],["Tear strength","ISO 13937-2","31 N","≥ 15 N",true]],
       why:"Shrinks 5.5% after washing, almost twice the ±3% limit. Fine for unwashed or pre-shrunk uses; not for LOEWE garments."},
   restr:[{k:"cond",t:"Failed quality",d:"Not for LOEWE production. Resale only with the test report disclosed."}]},
  {id:"L07", base:"2330456", col:"0102", colName:"Camel", name:"Cashmere jersey", cat:"Jersey", supplier:"Maglificio Bassano", comp:"70% Wool, 30% Cashmere", gsm:280, width:160, price:61.00, season:"FW27 PB1", loc:"Barcelona · Rack A1", sw:"camel",
   mv:[{d:"2026-09-30",t:"Received",q:310,ref:"FW27 pre-buy 1 over production",by:"Warehouse"}],
-  tests:{status:"pending",report:"TR-26-0988_Cashmere_jersey.pdf",lab:"PDF received 22 Oct 2026 · not yet entered",rows:[],
-      ai:[["Pilling (Martindale)","ISO 12945-2","3–4","≥ 3–4",true,"p.2"],["Dimensional stability","ISO 5077","−2.8%","±3%",true,"p.2"],
-          ["Colour fastness, washing","ISO 105-C06","4","≥ 4",true,"p.3"],["Bursting strength","ISO 13938-2","410 kPa","≥ 350 kPa",true,"p.3"]]},
+  tests:{status:"pending",rows:[]},
   restr:[]},
  {id:"L08", base:"2324019", col:"1010", colName:"Black", name:"Viscose satin", cat:"Lining & satin", supplier:"Tessitura Moretti", comp:"100% Viscose", gsm:120, width:140, price:11.30, season:"FW25", loc:"Barcelona · Rack E2", sw:"black",
   mv:[{d:"2025-10-20",t:"Received",q:760,ref:"FW25 production excess · PO 44981",by:"Warehouse"},
       {d:"2026-01-14",t:"Used",q:180,ref:"SS26 linings, JK-031 and JK-036",by:"Production"},
       {d:"2026-04-22",t:"Sold",q:200,ref:"Resale (ex. Nona Source) · order NS-1964",by:"Sourcing",price:5.50},
       {d:"2026-06-30",t:"Disposed",q:60,ref:"Water damage in warehouse",by:"Warehouse"}],
-  tests:{status:"pass",report:"TR-25-0871_Viscose_satin.pdf",lab:"Lab report · 22 Oct 2025",rows:[
+  tests:{status:"pass",rows:[
       ["Seam slippage","ISO 13936-2","5 mm","≤ 6 mm",true],["Colour fastness, washing","ISO 105-C06","4","≥ 4",true]]},
   restr:[]},
  {id:"L09", base:"2322903", col:"4120", colName:"Tan / ecru", name:"Anagram jacquard", cat:"Jacquard", supplier:"Seteria Lario", comp:"60% Cotton, 40% Silk", gsm:230, width:140, price:39.00, season:"FW26", loc:"Barcelona · Secure cage", sw:"jacq",
   mv:[{d:"2026-03-01",t:"Received",q:180,ref:"FW26 production excess · PO 47355",by:"Warehouse"},
       {d:"2026-08-12",t:"Used",q:60,ref:"Leather goods: bag linings",by:"Production"}],
-  tests:{status:"pass",report:"TR-26-0190_Anagram_jacquard.pdf",lab:"Lab report · 4 Mar 2026",rows:[
+  tests:{status:"pass",rows:[
       ["Abrasion (Martindale)","ISO 12947-2","30,000 rubs","≥ 20,000",true],["Colour fastness, rubbing (dry)","ISO 105-X12","4","≥ 4",true]]},
   restr:[{k:"block",t:"Logo jacquard",d:"Woven Anagram: cannot be resold. Internal reuse only (linings, pouches)."}]}
 ];
@@ -597,36 +595,36 @@ const SALES = {
  "2322903":[]
 };
 
-/* Order export lines: PB1 = pre-buy, no PB = production (sample, FW27) */
+/* Order export lines (sample, FW27): kind PB = from the pre-buy export, PROD = from the production export */
 const ORDERS = [];
 (function(){
-  const L=(season,code,desc,sup,ord,rec,date,prom,price,cancel)=>ORDERS.push({season,code,desc,sup,ordered:ord,received:rec,ord:date,prom,price,cancel:cancel||"",_sample:true});
-  // pre-buy (FW27 PB1)
-  L("FW27 PB1","23301032790","Bianco 4963 RTD","Tessitura Moretti",9000,6000,"2026-05-12","2026-08-14",19.80);
-  L("FW27 PB1","23301032790","Bianco 4963 RTD","Tessitura Moretti",6000,0,"2026-06-02","2026-09-05",19.80);
-  L("FW27 PB1","23299980676","Albini Downing","Albini",3200,3200,"2026-04-20","2026-08-08",17.45);
-  L("FW27 PB1","23299982016","Albini Downing","Albini",1350,800,"2026-04-20","2026-08-08",17.45);
-  L("FW27 PB1","23299984985","Albini Downing","Albini",1000,1000,"2026-04-20","2026-08-08",17.45);
-  L("FW27 PB1","23299985497","Albini Downing","Albini",750,750,"2026-04-20","2026-08-08",17.45);
-  L("FW27 PB1","23276622834","Berto 4783 Tiger","Berto",10500,10500,"2026-05-04","2026-07-18",8.65);
-  L("FW27 PB1","23188400410","Gabardine 260","Lanificio Varese",4000,2500,"2026-04-28","2026-08-26",32.40);
-  L("FW27 PB1","23188401010","Gabardine 260","Lanificio Varese",600,0,"2026-04-28","2026-08-26",32.40,"2026-07-02");
-  L("FW27 PB1","23304560102","Cashmere jersey","Maglificio Bassano",1200,1200,"2026-04-15","2026-08-23",61.00);
-  L("FW27 PB1","23240191010","Viscose satin","Tessitura Moretti",2000,2000,"2026-05-20","2026-07-19",11.30);
+  const L=(kind,code,desc,sup,ord,rec,date,prom,price,cancel)=>ORDERS.push({kind,code,desc,sup,ordered:ord,received:rec,ord:date,prom,price,cancel:cancel||"",_sample:true});
+  // pre-buy
+  L("PB","23301032790","Bianco 4963 RTD","Tessitura Moretti",9000,6000,"2026-05-12","2026-08-14",19.80);
+  L("PB","23301032790","Bianco 4963 RTD","Tessitura Moretti",6000,0,"2026-06-02","2026-09-05",19.80);
+  L("PB","23299980676","Albini Downing","Albini",3200,3200,"2026-04-20","2026-08-08",17.45);
+  L("PB","23299982016","Albini Downing","Albini",1350,800,"2026-04-20","2026-08-08",17.45);
+  L("PB","23299984985","Albini Downing","Albini",1000,1000,"2026-04-20","2026-08-08",17.45);
+  L("PB","23299985497","Albini Downing","Albini",750,750,"2026-04-20","2026-08-08",17.45);
+  L("PB","23276622834","Berto 4783 Tiger","Berto",10500,10500,"2026-05-04","2026-07-18",8.65);
+  L("PB","23188400410","Gabardine 260","Lanificio Varese",4000,2500,"2026-04-28","2026-08-26",32.40);
+  L("PB","23188401010","Gabardine 260","Lanificio Varese",600,0,"2026-04-28","2026-08-26",32.40,"2026-07-02");
+  L("PB","23304560102","Cashmere jersey","Maglificio Bassano",1200,1200,"2026-04-15","2026-08-23",61.00);
+  L("PB","23240191010","Viscose satin","Tessitura Moretti",2000,2000,"2026-05-20","2026-07-19",11.30);
   // production (FW27)
-  L("FW27","23301030450","Bianco 4963, dyed navy","Tessitura Moretti",7000,0,"2026-09-15","2026-11-20",21.50);
-  L("FW27","23301031010","Bianco 4963, dyed black","Tessitura Moretti",5400,0,"2026-09-15","2026-11-20",21.50);
-  L("FW27","23299980676","Albini Downing","Albini",3450,0,"2026-09-10","2026-12-01",17.45);
-  L("FW27","23299982016","Albini Downing","Albini",900,0,"2026-09-10","2026-12-01",17.45);
-  L("FW27","23299984985","Albini Downing","Albini",1000,0,"2026-09-10","2026-12-01",17.45);
-  L("FW27","23299985497","Albini Downing","Albini",600,0,"2026-09-10","2026-12-01",17.45);
-  L("FW27","23276622834","Berto 4783 Tiger","Berto",10800,0,"2026-09-08","2026-11-12",8.65);
-  L("FW27","23188400410","Gabardine 260","Lanificio Varese",3100,0,"2026-09-12","2026-12-10",32.40);
-  L("FW27","23304560102","Cashmere jersey","Maglificio Bassano",1500,0,"2026-09-18","2027-01-25",61.00);
-  L("FW27","23240191010","Viscose satin","Tessitura Moretti",2000,0,"2026-09-20","2026-11-15",11.30);
-  L("FW27","23351200001","Silk crepe","Seteria Lario",800,0,"2026-09-22","2026-12-05",42.00);
+  L("PROD","23301030450","Bianco 4963, dyed navy","Tessitura Moretti",7000,0,"2026-09-15","2026-11-20",21.50);
+  L("PROD","23301031010","Bianco 4963, dyed black","Tessitura Moretti",5400,0,"2026-09-15","2026-11-20",21.50);
+  L("PROD","23299980676","Albini Downing","Albini",3450,0,"2026-09-10","2026-12-01",17.45);
+  L("PROD","23299982016","Albini Downing","Albini",900,0,"2026-09-10","2026-12-01",17.45);
+  L("PROD","23299984985","Albini Downing","Albini",1000,0,"2026-09-10","2026-12-01",17.45);
+  L("PROD","23299985497","Albini Downing","Albini",600,0,"2026-09-10","2026-12-01",17.45);
+  L("PROD","23276622834","Berto 4783 Tiger","Berto",10800,0,"2026-09-08","2026-11-12",8.65);
+  L("PROD","23188400410","Gabardine 260","Lanificio Varese",3100,0,"2026-09-12","2026-12-10",32.40);
+  L("PROD","23304560102","Cashmere jersey","Maglificio Bassano",1500,0,"2026-09-18","2027-01-25",61.00);
+  L("PROD","23240191010","Viscose satin","Tessitura Moretti",2000,0,"2026-09-20","2026-11-15",11.30);
+  L("PROD","23351200001","Silk crepe","Seteria Lario",800,0,"2026-09-22","2026-12-05",42.00);
 })();
-const isPB = o => /PB/i.test(o.season);
+const isPB = o => o.kind==="PB";
 let pvpFilter="all";
 
 /* ---------------- HELPERS ---------------- */
@@ -661,7 +659,7 @@ function resale(l){
 function testPill(l){
   if(l.tests.status==="pass") return '<span class="pill g"><span class="dot"></span>Tests passed</span>';
   if(l.tests.status==="fail") return '<span class="pill r"><span class="dot"></span>Test failed</span>';
-  return '<span class="pill a"><span class="dot"></span>Report to read</span>';
+  return '<span class="pill a"><span class="dot"></span>No test results</span>';
 }
 function matches(l){
   if(l.tests.status==="fail") return [];
@@ -703,7 +701,7 @@ function renderSide(){
   const vendors=[...new Set(LOTS.map(l=>l.supplier))].sort();
   $("#side").innerHTML=
     facetList("Vendor","vendor",vendors.map(v=>({v,l:v,c:cnt(l=>l.supplier===v)}))) +
-    facetList("Quality","quality",[{v:"pass",l:"Tests passed",c:cnt(l=>l.tests.status==="pass")},{v:"fail",l:"Test failed",c:cnt(l=>l.tests.status==="fail")},{v:"pending",l:"Report to read",c:cnt(l=>l.tests.status==="pending")}]) +
+    facetList("Quality","quality",[{v:"pass",l:"Tests passed",c:cnt(l=>l.tests.status==="pass")},{v:"fail",l:"Test failed",c:cnt(l=>l.tests.status==="fail")},{v:"pending",l:"No test results",c:cnt(l=>l.tests.status==="pending")}]) +
     facetList("Resale","resale",["Resale allowed","Resale with conditions","Internal reuse only"].map(v=>({v,l:v,c:cnt(l=>resale(l).label===v)}))) +
     `<div class="facet"><h4>Other</h4>
       <label><input type="checkbox" data-b="newIn" ${F.newIn?'checked':''}> New in (FW27 pre-buy)<span class="c">${cnt(isNew)}</span></label>
@@ -743,7 +741,7 @@ function renderLibrary(){
   $("#grid").innerHTML = list.length? list.map(l=>{
     const s=qty(l), mt=matches(l), rs=resale(l);
     const badges=[isNew(l)?'<span class="badge">New</span>':'', l.col==="2790"?'<span class="badge">Ready to dye</span>':'',
-      rs.cls==="r"?'<span class="badge k">Internal only</span>':'', l.tests.status==="fail"?'<span class="badge r">Test failed</span>':'', l.tests.status==="pending"?'<span class="badge a">Report to read</span>':''].join("");
+      rs.cls==="r"?'<span class="badge k">Internal only</span>':'', l.tests.status==="fail"?'<span class="badge r">Test failed</span>':'', l.tests.status==="pending"?'<span class="badge a">No test results</span>':''].join("");
     return `<button class="prod" data-id="${l.id}">
       <div class="img"><div class="inner" style="${swatch(l)}"></div><div class="badges">${badges}</div></div>
       <div class="pn">${esc(l.title)} ${esc(l.colName)}</div>
@@ -826,11 +824,9 @@ function renderPassport(){
   </div>
 
   <div class="sec" id="qsec">
-    <div class="sechead"><h3>Quality tests</h3><span class="src">📎 ${esc(t.report)} · ${esc(t.lab)}</span></div>
+    <div class="sechead"><h3>Quality tests</h3></div>
     ${t.status==="pending" ? `
-      <div class="verdict a"><div><div class="t">Test report received, results not entered</div><div class="small">AI reads the PDF and fills the fields below. Each value shows the page it came from, and someone checks it before saving.</div></div></div>
-      <div class="btns" style="margin-top:12px">${(t.ai||[]).length?'<button class="btn blue" id="aiBtn">Read report with AI</button>':'<span class="small muted">No lab PDF linked yet: add it in Data sources → Quality test reports.</span>'}<span class="small muted" style="align-self:center">Demo: the extraction is simulated</span></div>
-      <div id="aiOut" style="margin-top:12px"></div>` : `
+      <div class="verdict a"><div><div class="t">No test results yet</div><div class="small">No quality test has been recorded for this lot.</div></div></div>` : `
       ${t.why?`<div class="verdict r" style="margin-bottom:12px"><div><div class="t">Why it failed</div><div class="small">${esc(t.why)}</div></div></div>`:''}
       <div class="tblwrap"><table><tr><th>Test</th><th>Standard</th><th class="r">Result</th><th class="r">Required</th><th>Status</th></tr>${testRows}</table></div>`}
   </div>
@@ -876,7 +872,6 @@ function renderPassport(){
     const st=STYLES.find(x=>x.id===b.dataset.reserve); const q=Math.min(qty(l).free,Math.round(st.cons*st.units));
     l.mv.push({d:TODAY,t:"Reserved",q,ref:st.id,by:"Sourcing"}); toast(`${m(q)} reserved for ${st.id}`); refreshAll();
   });
-  const ai=$("#aiBtn"); if(ai) ai.onclick=runAI;
   $("#photoIn").onchange=e=>{const f=e.target.files[0]; if(!f) return; const r=new FileReader(); r.onload=()=>{l.photo=r.result; addDoc(l,f,"Fabric photo",false); toast("Photo added"); refreshAll();}; r.readAsDataURL(f);};
   $("#docIn").onchange=e=>{[...e.target.files].forEach(f=>addDoc(l,f,guessType(f.name),true)); toast("Source attached"); refreshAll();};
   document.querySelectorAll("[data-doctype]").forEach(sel=>sel.onchange=()=>{l.docs[+sel.dataset.doctype].type=sel.value;});
@@ -913,21 +908,10 @@ function saveForm(l){
 function addFabric(){
   const n=LOTS.filter(l=>/^N/.test(l.id)).length+1;
   const l={id:"N"+String(n).padStart(2,"0"),_new:true,base:"",col:"",colName:"",name:"",title:"",cat:"",type:TYPES[1],supplier:"",comp:"",gsm:"",width:"",price:"",season:"",loc:"Barcelona",
-    sw:"undyed",origin:"",transp:"",elast:"",mv:[],tests:{status:"pending",report:"—",lab:"No report linked",rows:[],ai:[]},restr:[],docs:[]};
+    sw:"undyed",origin:"",transp:"",elast:"",mv:[],tests:{status:"pending",rows:[]},restr:[],docs:[]};
   LOTS.unshift(l); editId=l.id; openPassport(l.id);
 }
 function mvPill(t){const c={Received:"",Used:"b",Sold:"b",Disposed:"r",Reserved:"a"}[t];return `<span class="pill ${c}">${t==="Sold"?"Resale":t}</span>`;}
-function runAI(){
-  const l=lotById(openId), out=$("#aiOut"); $("#aiBtn").disabled=true;
-  out.innerHTML='<div class="scan"><span class="spin"></span>Reading TR-26-0988 (4 pages)…</div>';
-  setTimeout(()=>{
-    out.innerHTML=`<div class="tblwrap"><table><tr><th>Test</th><th>Standard</th><th class="r">Result</th><th class="r">Required</th><th>Status</th><th>Source</th></tr>
-    ${l.tests.ai.map(r=>`<tr class="ai"><td>${r[0]}</td><td class="muted">${r[1]}</td><td class="r num">${r[2]}</td><td class="r num muted">${r[3]}</td><td>${r[4]?'<span class="pill g">Pass</span>':'<span class="pill r">Fail</span>'}</td><td class="small muted">${r[5]}</td></tr>`).join("")}</table></div>
-    <div class="verdict" style="margin-top:10px"><div class="small">Dimensional stability −2.8% is close to the ±3% limit: worth a note for production.</div></div>
-    <div class="btns" style="margin-top:10px"><button class="btn pri" id="aiSave">Checked, save to passport</button></div>`;
-    $("#aiSave").onclick=()=>{l.tests.rows=l.tests.ai.map(r=>r.slice(0,5));l.tests.status="pass";l.tests.lab="Entered from PDF, checked "+date(TODAY);toast("Test results saved");refreshAll();};
-  },1400);
-}
 
 /* ---------------- SALES SIGNAL ---------------- */
 function renderSales(){
@@ -1060,7 +1044,6 @@ function renderPvp(){
 /* ---------------- PRE-BUY TIMING ---------------- */
 const addDays = (iso,n) => { const d=new Date(iso+"T12:00:00"); d.setDate(d.getDate()+n); return d.toISOString().slice(0,10); };
 const daysBetween = (a,b) => Math.round((new Date(b+"T12:00:00")-new Date(a+"T12:00:00"))/864e5);
-const pbNum = s => { const x=String(s).match(/PB\s*(\d+)/i); return x?+x[1]:null; };
 let tmFilter="all", tmLast=[];
 function tmCompute(){
   const buf=Math.max(0,+$("#tmBuf").value||0), tight=Math.max(0,+$("#tmTight").value||0);
@@ -1090,11 +1073,11 @@ function tmCompute(){
     // what the order export says
     const pbo=ords.filter(isPB); let chk="", chkCls="", act=["nolead","before","late"].includes(st);
     if(pbo.length){
-      const nums=[...new Set(pbo.map(o=>pbNum(o.season)).filter(x=>x!=null))].sort((a,b)=>a-b);
+      const idx=[...new Set(pbo.map(o=>cal.findIndex(pb=>o.ord<=pb.close)).filter(i=>i>=0))].sort((a,b)=>a-b);
       const prom=pbo.map(o=>o.prom).sort().pop();
-      const where=nums.length?nums.map(x=>"PB"+x).join(", "):"a pre-buy";
+      const where=idx.length?idx.map(i=>cal[i].pb).join(", "):"a pre-buy";
       if(prom>inhouse){ chk=`Ordered in ${where}, arrives ${date(prom)}: after the in-house date`; chkCls="r"; act=true; }
-      else if(chosen&&nums.length&&pbNum(chosen.pb)!=null&&nums[0]<pbNum(chosen.pb)){ chk=`Ordered in ${where}: ${chosen.pb} would have been enough`; chkCls="a"; }
+      else if(chosen&&idx.length&&idx[0]<cal.indexOf(chosen)){ chk=`Ordered in ${where}: ${chosen.pb} would have been enough`; chkCls="a"; }
       else { chk=`Ordered in ${where} · arrives ${date(prom)}`; chkCls="g"; }
     } else if(chosen){
       if(chosen.close<TODAY){ chk=`Not ordered: ${chosen.pb} closed on ${date(chosen.close)}`; chkCls="r"; act=true; }
@@ -1130,7 +1113,7 @@ function renderTiming(){
   :`<tr><td colspan="9" class="muted">${missing.length?`To plan the timing, load ${missing.join(", ")} in <b>Data sources</b>.`:rows.length?"No fabric in this group.":"No style is in a drop yet. Add a Drop column to the styles file, or list the styles in the drop calendar."}</td></tr>`}`;
   document.querySelectorAll("#tmTbl [data-ov]").forEach(sel=>sel.onchange=()=>{ if(sel.value) OVERRIDE[sel.dataset.ov]=sel.value; else delete OVERRIDE[sel.dataset.ov]; renderTiming(); });
   const sup=rows.filter(r=>r.leadSrc==="supplier").length;
-  $("#tmNote").innerHTML=[`Need = consumption × planned units of the drop’s styles in that fabric. Order by = in-store date − ${buf} days − fabric lead time. Spare = days between the pre-buy closing and the order-by date.`,
+  $("#tmNote").innerHTML=[`Need = consumption × planned units of the drop’s styles in that fabric. Order by = in-store date − ${buf} days − fabric lead time. Spare = days between the pre-buy closing and the order-by date. An order counts in the first pre-buy that was still open on its order date.`,
     sup?`${sup} line${sup>1?"s use":" uses"} the supplier’s lead time from the order export because PLM has none for that fabric.`:"",
     noDrop.length?`${noDrop.length} style${noDrop.length>1?"s are":" is"} not in any drop (${noDrop.map(esc).join(", ")}).`:"",
     unknownDrop.length?`Drop ${unknownDrop.map(esc).join(", ")} is not in the drop calendar.`:""].filter(Boolean).join(" ");
@@ -1183,26 +1166,22 @@ const SWKEYS = ["sky","undyed","navy","linen","camel","black","stripe"];
 
 const ORDER_FIELDS=[["code","Article code (2º nº de art)",["2 n de art","2o n de art","n de art","material code","codigo","article","referencia"],1],
   ["ordered","Quantity ordered",["cantidad ordenada","ordered","quantity ordered","qty ordered","cantidad"],1],
-  ["season","Season (Temporada Pedido Compra)",["temporada pedido compra","temporada","season"],0],
   ["received","Quantity received",["cantidad recibida","received","qty received"],0],
   ["desc","Description",["descripcion","description","nombre"],0],["sup","Supplier",["proveedor","supplier","vendor","nombre proveedor"],0],
   ["ord","Order date (Fch ord)",["fch ord","fecha pedido","order date"],0],["prom","Promised delivery",["entrega prometida","promised delivery","fecha entrega"],0],
   ["cancel","Cancel date",["fecha cancel","cancel date","fecha cancelacion"],0],["price","Unit price",["precio unitario","unit price","precio"],0],["cur","Currency",["cod moneda","currency","moneda"],0]];
 const LOADED={prebuy:false,prod:false};
-function loadOrders(rows,M,mode,key){
+function loadOrders(rows,M,key){
+  const kind = key==="prebuy" ? "PB" : "PROD";
   const out=[]; rows.forEach(r=>{ const c=code(r[M.code]); const q=num(r[M.ordered]); if(!c||!(q>0)) return;
-    const season=String(M.season!=null&&r[M.season]||"").trim();
-    const pb = mode==="prod" ? false : (season ? /PB/i.test(season) : true);
-    out.push({season: pb?(season||"PB"):(season&&!/PB/i.test(season)?season:"PROD"), code:c.base+c.col, desc:String(M.desc!=null&&r[M.desc]||c.base), sup:String(M.sup!=null&&r[M.sup]||"Unknown").trim(),
+    out.push({kind, code:c.base+c.col, desc:String(M.desc!=null&&r[M.desc]||c.base), sup:String(M.sup!=null&&r[M.sup]||"Unknown").trim(),
       ordered:q, received:M.received!=null?num(r[M.received])||0:0, ord:M.ord!=null?isoDate(r[M.ord]):TODAY, prom:M.prom!=null?isoDate(r[M.prom]):TODAY,
       price:M.price!=null?num(r[M.price])||0:0, cur:M.cur!=null?String(r[M.cur]||"").trim().toUpperCase():"", cancel:M.cancel!=null&&String(r[M.cancel]||"").trim()?"x":""}); });
   if(!out.length) return "No line had an article code and a quantity ordered.";
-  // first upload of each kind replaces the sample lines of that kind
-  const keepPB = key==="prod", keepProd = key==="prebuy" && !out.some(o=>!/PB/i.test(o.season));
-  if(!LOADED.prebuy && !LOADED.prod){ for(let i=ORDERS.length-1;i>=0;i--){ const pbl=isPB(ORDERS[i]); if((pbl&&!keepPB)||(!pbl&&!keepProd)) ORDERS.splice(i,1);} }
-  else { for(let i=ORDERS.length-1;i>=0;i--){ const pbl=isPB(ORDERS[i]); if(key==="prebuy"?pbl:!pbl) ORDERS.splice(i,1);} }
+  // a file replaces every sample order line, and the lines of its own kind loaded before
+  for(let i=ORDERS.length-1;i>=0;i--){ const o=ORDERS[i]; if(o._sample||o.kind===kind) ORDERS.splice(i,1); }
   LOADED[key]=true; ORDERS.push(...out);
-  const nPB=out.filter(isPB).length; return `${out.length} lines loaded (${nPB} pre-buy, ${out.length-nPB} production).`;
+  return `${out.length} ${kind==="PB"?"pre-buy":"production"} lines loaded.`;
 }
 const SOURCES = {
  stock:{title:"Leftover stock", pages:["lib","value"], where:"Power BI leftover report (from the ERP), or the stock Excel on SharePoint", refresh:"Daily", used:"Every card: metres in stock, price, location, origin season",
@@ -1216,7 +1195,7 @@ const SOURCES = {
       out.push({id:"U"+String(i+1).padStart(2,"0"),base:c.base,col:c.col,colName:"",name:String(r[M.desc]||c.base),title:String(r[M.desc]||c.base),cat:"",type:String(M.type!=null&&r[M.type]||"Uploaded"),
         supplier:sup,comp:String(M.comp!=null&&r[M.comp]||"—"),gsm:M.gsm!=null?num(r[M.gsm])||"—":"—",width:M.width!=null?num(r[M.width])||"—":"—",price:num(r[M.price])||0,
         season:String(M.season!=null&&r[M.season]||"—"),loc:String(M.loc!=null&&r[M.loc]||"—"),sw:SWKEYS[i%SWKEYS.length],origin:"—",transp:"—",elast:"—",
-        mv:[{d:TODAY,t:"Received",q,ref:"Uploaded stock file",by:"Upload"}],tests:{status:"pending",report:"—",lab:"No report linked",rows:[],ai:[]},restr:[]});});
+        mv:[{d:TODAY,t:"Received",q,ref:"Uploaded stock file",by:"Upload"}],tests:{status:"pending",rows:[]},restr:[]});});
     if(!out.length) return "No row had a valid material code and a quantity above zero.";
     LOTS.splice(0,LOTS.length,...out); F.type=""; return `${out.length} lots loaded into the library.`; }},
  plm:{title:"Material master and photos", pages:["lib"], where:"PLM, by material code", refresh:"Daily or on change", used:"Names, composition, weight, width, transparency, elasticity, origin, photo",
@@ -1231,8 +1210,6 @@ const SOURCES = {
   apply(rows,M){ let n=0; rows.forEach(r=>{const c=code(r[M.code]); const q=Math.abs(num(r[M.qty])); if(!c||!(q>0)) return; const l=LOTS.find(x=>x.base===c.base&&x.col===c.col)||LOTS.find(x=>x.base===c.base); if(!l) return;
       const t=MVT(r[M.type]); const mv={d:isoDate(r[M.date]),t,q,ref:String(M.ref!=null&&r[M.ref]||"Uploaded movement"),by:"Upload"}; if(t==="Sold") mv.price=M.price!=null?num(r[M.price])||0:0; l.mv.push(mv); n++;});
     return n?`${n} movements added.`:"No movement matched a lot in the library."; }},
- tests:{title:"Quality test reports", pages:["lib"], where:"Lab PDFs, received by email or saved on SharePoint", refresh:"When a report arrives", used:"Test results, pass or fail, and why it failed", pdf:true,
-  fields:[["code","Material code (in file name or report)",[],1],["test","Test name and standard",[],1],["res","Result and requirement",[],1]], apply:null},
  restr:{title:"Restrictions", pages:["lib"], where:"PLM material attributes (exclusive, logo), supplier contracts, certificates (RWS, GOTS…)", refresh:"On change", used:"Resale allowed, with conditions, or internal reuse only",
   fields:[["code","Material code",["material code","codigo","reference","article"],1],["kind","Restriction",["restriction","restriccion","type","tipo"],1],["note","Detail",["detail","note","comment","detalle"],0]],
   apply(rows,M){ let n=0; rows.forEach(r=>{const c=code(r[M.code]); if(!c) return; const k=norm(r[M.kind]); const kind=/logo|exclusive|artwork|internal|exclusiv/.test(k)?"block":/cert|rws|gots|fail|condition/.test(k)?"cond":"info";
@@ -1260,10 +1237,10 @@ const SOURCES = {
   apply(rows,M){ const acc={}; rows.forEach(r=>{const sup=String(r[M.supplier]||"").trim(); if(!sup) return; let d=M.days!=null?num(r[M.days]):NaN;
       if(isNaN(d)&&M.ord!=null&&M.del!=null){d=(new Date(isoDate(r[M.del]))-new Date(isoDate(r[M.ord])))/864e5;} if(!(d>0)) return; acc[sup]=Math.max(acc[sup]||0,Math.round(d));});
     const k=Object.keys(acc); if(!k.length) return "No lead time could be read."; k.forEach(s=>SUPPLIERS[s]={lead:acc[s]}); return `${k.length} supplier lead times updated (longest per supplier).`; }},
- prebuy:{title:"Pre-buy order export", pages:["pvp","timing"], where:"Purchase order export shared by Merch (ERP), e.g. “FW27 WRTW Precollection Prebuy 1”", refresh:"Daily during the buy", used:"Metres pre-bought, still to ship, price, lead time. Lines without PB in the season are read as production.",
-  fields:ORDER_FIELDS, apply(rows,M){ return loadOrders(rows,M,"auto","prebuy"); }},
- prod:{title:"Production order export", pages:["pvp"], where:"Same ERP export, production orders (season without PB)", refresh:"Daily once the line is final", used:"Metres production needs, per fabric and colour",
-  fields:ORDER_FIELDS, apply(rows,M){ return loadOrders(rows,M,"prod","prod"); }},
+ prebuy:{title:"Pre-buy order export", pages:["pvp","timing"], where:"Purchase order export shared by Merch (ERP), e.g. “FW27 WRTW Precollection Prebuy 1”", refresh:"Daily during the buy", used:"Metres pre-bought, still to ship, price, lead time. Every line in this file counts as pre-buy.",
+  fields:ORDER_FIELDS, apply(rows,M){ return loadOrders(rows,M,"prebuy"); }},
+ prod:{title:"Production order export", pages:["pvp"], where:"Same ERP export, production orders", refresh:"Daily once the line is final", used:"Metres production needs, per fabric and colour. Every line in this file counts as production.",
+  fields:ORDER_FIELDS, apply(rows,M){ return loadOrders(rows,M,"prod"); }},
  prebuycal:{title:"Pre-buy calendar", pages:["timing"], where:"Issued by Sourcing: one row per pre-buy with the date it closes for orders", refresh:"Each season", used:"Which pre-buy each fabric goes in",
   fields:[["pb","Pre-buy",["pre buy","prebuy","pb","pre buy name","ventana"],1],["close","Order deadline",["order deadline","deadline","closes","close date","closing date","cierre","fecha cierre","fecha limite","order by"],1]],
   apply(rows,M){ const out=[]; rows.forEach(r=>{const pb=String(r[M.pb]||"").trim(); const d=r[M.close]; if(!pb||!String(d||"").trim()) return; out.push({pb,close:isoDate(d)});});
@@ -1332,23 +1309,19 @@ function srcCard(id){
       ${missing.length?`<span class="small" style="align-self:center;color:var(--red)">Missing: ${missing.map(f=>esc(f[1])).join(", ")}. Rename the column header and upload again.</span>`:''}
       ${u.msg?`<span class="small" style="align-self:center;color:var(--green)">${esc(u.msg)}</span>`:''}</div></div>`;
   }
-  if(u && S.pdf){
-    prev=`<div class="verdict a" style="margin-top:12px"><div><div class="t">${u.count} PDF${u.count>1?'s':''} received: ${esc(u.file)}</div><div class="small">Reading a lab report needs the AI model connected once the tool is hosted. In the demo, open the cashmere jersey passport to see the result of a reading.</div></div></div>
-      <div class="btns" style="margin-top:10px"><button class="btn" data-reset="${id}">Remove</button></div>`;
-  }
   return `<div class="srccard" id="src-${id}">
     <div class="srctop"><div><div class="t">${esc(S.title)}</div><div class="small muted">${esc(S.used)}</div></div>
       <div class="btns">${status}<label class="upl">Upload ${S.pdf?'PDF':'CSV or Excel'}<input type="file" data-up="${id}" accept="${S.pdf?'.pdf':'.csv,.xlsx,.xls,.xlsm,.txt'}" ${S.pdf?'multiple':''}></label></div></div>
     <div class="srcmeta"><div>Where it lives<b>${esc(S.where)}</b></div><div>Refresh<b>${esc(S.refresh)}</b></div><div>Connection when hosted<b>${S.pdf?'SharePoint folder or mailbox, read-only':'Scheduled export or Microsoft Graph, read-only'}</b></div></div>
-    <div class="small muted">Columns ${u&&!S.pdf?'found in your file':'it needs'}${S.pdf?' (read by AI from the PDF)':''}</div>
+    <div class="small muted">Columns ${u&&!S.pdf?'found in your file':'it needs'}</div>
     <div class="cols">${req.map(chip).join("")}${opt.map(chip).join("")}</div>
     ${prev}
   </div>`;
 }
 const FLOW = {
-  lib:[["Leftover stock","Power BI / ERP"],["Material master, photos","PLM"],["Movements","ERP, warehouse"],["Lab reports","PDF, SharePoint"],["Restrictions","PLM, contracts"],["FW27 draft BOMs","PLM"]],
+  lib:[["Leftover stock","Power BI / ERP"],["Material master, photos","PLM"],["Movements","ERP, warehouse"],["Restrictions","PLM, contracts"],["FW27 draft BOMs","PLM"]],
   sales:[["Sales by style","Power BI"],["Past BOMs","PLM"],["Line review history","PLM"],["Lead times","Order export"],["FW27 draft BOMs","PLM"],["Undyed stock","Library"]],
-  pvp:[["Pre-buy order lines","ERP order export (PB1)"],["Production order lines","ERP order export"],["Lead times","Order date → promised delivery"],["Prices","Precio unitario"]],
+  pvp:[["Pre-buy order lines","ERP order export"],["Production order lines","ERP order export"],["Lead times","Order date → promised delivery"],["Prices","Precio unitario"]],
   value:[["Purchase price","Order export, PLM"],["Movements","ERP, warehouse"],["Resale (ex. Nona Source)","Resale sales reports"]],
   timing:[["Pre-buy calendar","You (Sourcing)"],["Drop calendar","Merch team"],["Fabric lead times","PLM, fabric data"],["Styles and draft BOMs","PLM"],["Pre-buy order lines","ERP order export"]]
 };
@@ -1435,8 +1408,8 @@ document.querySelectorAll("#tmFilter button").forEach(b=>b.onclick=()=>{tmFilter
 $("#tmExport").onclick=exportTiming;
 // hidden section: the FW27 commitment table stays in the page but is hidden until shown (remembered in this browser)
 const COMMIT_KEY="earlyline.commitShown";
-function setCommit(show,save){ $("#commitSec").hidden=!show; $("#commitToggle").textContent=show?"Hide":"Show";
-  $("#commitBarTxt").textContent=(show?"Shown · ":"Hidden section · ")+"FW27 pre-buy: survival odds and commitment";
+function setCommit(show,save){ $("#commitSec").hidden=!show; $("#commitToggle").textContent=show?"Hide table":"Show table";
+  $("#commitBarTxt").textContent=show?"Shown: Hide table puts it away again":"Hidden section: the table is still there, Show table brings it back";
   if(save){ try{ show?localStorage.setItem(COMMIT_KEY,"1"):localStorage.removeItem(COMMIT_KEY); }catch(e){} } }
 $("#commitToggle").onclick=()=>setCommit($("#commitSec").hidden,true);
 setCommit((()=>{ try{ return localStorage.getItem(COMMIT_KEY)==="1"; }catch(e){ return false; } })(),false);

@@ -31,6 +31,9 @@ header.top{border-bottom:1px solid var(--line);background:#fff;position:sticky;t
 .kicker{font-size:11px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--blue)}
 .brand .name{font-family:var(--serif);font-size:22px}
 .sample{font-size:11px;font-weight:600;color:var(--amber);background:var(--amber-soft);border:1px solid #ead9c2;padding:3px 8px;border-radius:99px;white-space:nowrap}
+.sample.off{color:var(--ink2);background:var(--soft2);border-color:var(--line)}
+.clearbtn{font-size:12px;padding:5px 10px;white-space:nowrap}
+.clearbtn.confirm{background:var(--red);border-color:var(--red);color:#fff}
 nav.tabs{display:flex;gap:2px;margin-left:auto;flex-wrap:wrap}
 main{padding-top:22px}
 nav.tabs button{white-space:nowrap;background:none;border:0;padding:10px 14px;border-radius:8px;color:var(--ink2);font-weight:500}
@@ -306,7 +309,8 @@ tr.click:hover td{background:#fcfaf6}
 <body>
 <header class="top">
   <div class="wrap row">
-        <span class="sample">Sample data · illustrative</span>
+        <span class="sample" id="sampleBadge">Sample data · illustrative</span>
+        <button class="btn clearbtn" id="clearSample" title="Remove all sample fabrics, styles, sales and orders. Files you have used stay.">Clear sample data</button>
     <nav class="tabs" role="tablist">
       <button data-v="library" class="on">Library</button>
       <button data-v="pvp">Pre-buy vs production</button>
@@ -518,7 +522,7 @@ const EXTRA = {
  L08:{title:"Viscose Satin",type:"Lining, Construction & Greige",origin:"Italy",transp:"Semi-opaque",elast:"None"},
  L09:{title:"Cotton Silk Jacquard",type:"Couture & Fantaisie",origin:"Italy",transp:"Opaque",elast:"None"}
 };
-LOTS.forEach(l=>Object.assign(l,EXTRA[l.id]));
+LOTS.forEach(l=>{Object.assign(l,EXTRA[l.id]); l._sample=true;});
 const TYPES = ["Suiting & Coating","Shirting","Flou & Fluid","Couture & Fantaisie","Casual & Technical","Jersey & Knit","Lining, Construction & Greige"];
 
 const STYLES = [
@@ -551,7 +555,7 @@ const SALES = {
 /* Order export lines: PB1 = pre-buy, no PB = production (sample, FW27) */
 const ORDERS = [];
 (function(){
-  const L=(season,code,desc,sup,ord,rec,date,prom,price,cancel)=>ORDERS.push({season,code,desc,sup,ordered:ord,received:rec,ord:date,prom,price,cancel:cancel||""});
+  const L=(season,code,desc,sup,ord,rec,date,prom,price,cancel)=>ORDERS.push({season,code,desc,sup,ordered:ord,received:rec,ord:date,prom,price,cancel:cancel||"",_sample:true});
   // pre-buy (FW27 PB1)
   L("FW27 PB1","23301032790","Bianco 4963 RTD","Tessitura Moretti",9000,6000,"2026-05-12","2026-08-14",19.80);
   L("FW27 PB1","23301032790","Bianco 4963 RTD","Tessitura Moretti",6000,0,"2026-06-02","2026-09-05",19.80);
@@ -703,7 +707,8 @@ function renderLibrary(){
       <div class="ps num">${fmt(s.avail)}m in stock${s.res?` · ${fmt(s.res)}m reserved`:''}</div>
       ${mt.length?`<div class="pfit">Fits ${mt.length} FW27 style${mt.length>1?'s':''}</div>`:''}
     </button>`;
-  }).join("") : '<div class="empty" style="grid-column:1/-1">No fabric matches these filters.</div>';
+  }).join("") : LOTS.some(l=>!l._new) ? '<div class="empty" style="grid-column:1/-1">No fabric matches these filters.</div>'
+    : '<div class="empty" style="grid-column:1/-1">No fabrics yet. Upload your leftover stock in <b>Data sources</b>, or use <b>+ Add a fabric</b>.</div>';
   $("#seen").textContent=`You have seen ${list.length} items out of ${LOTS.length}`;
   document.querySelectorAll(".prod").forEach(c=>c.addEventListener("click",()=>openPassport(c.dataset.id)));
 }
@@ -896,7 +901,7 @@ function renderSales(){
       al.push({b,name:lot.name,sup,lead,sg,need,hold,rtd});
     }
   });
-  $("#alerts").innerHTML = al.length? al.map(a=>`<div class="alert">
+  $("#alerts").innerHTML = !STYLES.length ? '<div class="empty">No upcoming styles yet. Upload the FW27 styles and draft BOMs, and the sales by style, in <b>Data sources</b>.</div>' : al.length? al.map(a=>`<div class="alert">
       <div class="top2"><div><b>${esc(a.name)}</b><div class="small muted num">Base ${a.b} · ${esc(a.sup)}</div></div><span class="pill a">Reorder risk</span></div>
       <div class="facts num">
         <div>Fastest seller<b>${esc(a.sg.fastest[1])}</b></div><div>Sell-through<b>${a.sg.fastest[3]}% in ${a.sg.fastest[4]} wks</b></div>
@@ -930,6 +935,7 @@ function renderSales(){
     <td class="r num"><b>${m(Math.round(r.buy))}</b></td>
     <td class="r num muted">${m(Math.round(r.opt))}</td></tr>
     <tr class="det" id="det${i}" hidden><td colspan="8"><div class="expl">${r.o.sg?`<b>Comparable styles (${r.s.base}):</b> ${r.o.sg.rows.map(x=>`${x[0]} ${esc(x[1])}: ${fmt(x[2])} units, ${x[3]}% in ${x[4]} wks`).join(" · ")}. Weighted ${r.o.sg.st.toFixed(1)}% vs ${MEDIAN}% median → ${r.o.adj>=0?'+':'−'}${Math.abs(r.o.adj).toFixed(1)} pts on the ${r.s.cat.toLowerCase()} base rate of ${r.o.base}%.`:`No comparable styles in Power BI, so the ${r.s.cat.toLowerCase()} line-review base rate (${r.o.base}%) is used as is.`}</div></td></tr>`}).join("")}
+  ${rows.length?'':'<tr><td colspan="8" class="muted">No styles loaded yet.</td></tr>'}
   <tr><td colspan="2"><b>Total FW27</b></td><td class="r num"><b>${m(Math.round(tot.need))}</b></td><td></td><td class="r num"><b>${m(Math.round(tot.firm))}</b></td><td class="r num" style="color:var(--green)"><b>${m(Math.round(tot.stock))}</b></td><td class="r num"><b>${m(Math.round(tot.buy))}</b></td><td class="r num muted"><b>${m(Math.round(tot.opt))}</b></td></tr>`;
   document.querySelectorAll("#commitTbl tr.click").forEach(tr=>tr.onclick=()=>{const d=$("#det"+tr.dataset.i);d.hidden=!d.hidden;});
 }
@@ -1001,7 +1007,7 @@ function renderPvp(){
       ${open&&multi?r.cols.map(C=>`<tr class="colr"><td>↳ by colour</td><td class="num">${C.col}${C.col==="2790"?" · undyed":""}</td><td class="r num">${fmt(C.pb)}</td><td class="r num">${fmt(C.pr)}</td>
         <td class="r num">${sg(C.net)}${C.cover?`<br><span class="small" style="color:var(--green)">${fmt(C.cover)} m from undyed</span>`:''}${C.col==="2790"&&C.usedForColours?`<br><span class="small" style="color:var(--green)">${fmt(C.usedForColours)} m given to colours</span>`:''}</td>
         <td class="r num">${sv(C.val)}</td><td><span class="pill ${ST[C.status][0]}">${ST[C.status][1]}</span></td><td class="act">${C.col==="2790"?'Dye to the colours that are short':C.status==="short"?'Top up this colour':C.status==="over"?'Extra in this colour':C.status==="nopb"?'Ordered at production only':C.cover?'Covered by undyed 2790':''}</td></tr>`).join(""):''}`;}).join("")
-    :'<tr><td colspan="8" class="muted">No fabric in this group.</td></tr>'}`;
+    :`<tr><td colspan="8" class="muted">${rows.length?'No fabric in this group.':'No order lines yet. Upload the pre-buy and production order exports in <b>Data sources</b>.'}</td></tr>`}`;
   document.querySelectorAll("#pvpTbl tr.base.click").forEach(tr=>tr.onclick=()=>{const b=tr.dataset.b; pvpOpen.has(b)?pvpOpen.delete(b):pvpOpen.add(b); renderPvp();});
   $("#pvpNote").innerHTML=`Gap value = gap × pre-buy price per metre. Lead time = longest order-to-promised-delivery on that fabric’s lines. ${cancelled.length?`${cancelled.length} cancelled line${cancelled.length>1?'s':''} left out (${cancelled.map(o=>o.code.slice(0,7)+"-"+o.code.slice(-4)).join(", ")}).`:''} ${ORDERS.some(o=>o.cur&&o.cur!=="EUR")?'Some lines are not in EUR: values are shown as in the file.':''}`;
 }
@@ -1019,6 +1025,7 @@ function renderValue(){
    ${rows.map(r=>`<tr class="click" data-open="${r.l.id}"><td><b>${esc(r.l.name)}</b><br><span class="small muted num">${r.l.base} · ${r.l.col} ${esc(r.l.colName)}</span></td><td>${r.l.season}</td>
    <td class="r num">${eur(r.pur)}</td><td><div class="vbar">${seg(r,"reuse","c-reuse")}${seg(r,"resale","c-resale")}${seg(r,"disc","c-disc")}${seg(r,"lost","c-lost")}${seg(r,"stock","c-stock")}</div></td>
    <td class="r num">${eur(r.reuse+r.resale)}</td><td class="r num muted">${eur(r.stock)}</td></tr>`).join("")}
+   ${rows.length?'':'<tr><td colspan="6" class="muted">No lots yet. Upload leftover stock and movements in <b>Data sources</b>.</td></tr>'}
    <tr><td colspan="2"><b>Total</b></td><td class="r num"><b>${eur(T.pur)}</b></td><td></td><td class="r num"><b>${eur(T.reuse+T.resale)}</b></td><td class="r num muted"><b>${eur(T.stock)}</b></td></tr>`;
   document.querySelectorAll("#valTbl [data-open]").forEach(b=>b.onclick=()=>openPassport(b.dataset.open));
   // stock that has a home = reserved metres
@@ -1165,7 +1172,7 @@ function srcCard(id){
   const chip=(f)=>{ if(!u||S.pdf) return `<span class="col ${f[3]?'':'opt'}">${esc(f[1])}${f[3]?'':' (optional)'}</span>`;
     const hit=u.map[f[0]]; return `<span class="col ${hit?'ok':f[3]?'miss':'opt'}">${hit?'✓ ':f[3]?'✕ ':''}${esc(f[1])}${hit?` ← ${esc(hit)}`:''}</span>`; };
   const missing = u&&!S.pdf ? req.filter(f=>!u.map[f[0]]) : [];
-  const status = u ? (u.applied?`<span class="pill g">In use · ${esc(u.file)}</span>`:`<span class="pill b">Uploaded · ${esc(u.file)}</span>`) : '<span class="pill">Sample data</span>';
+  const status = u ? (u.applied?`<span class="pill g">In use · ${esc(u.file)}</span>`:`<span class="pill b">Uploaded · ${esc(u.file)}</span>`) : (sampleCleared?'<span class="pill">No data yet</span>':'<span class="pill">Sample data</span>');
   let prev="";
   if(u && !S.pdf){
     const cols=u.headers.slice(0,8);
@@ -1200,7 +1207,7 @@ function renderData(page){
   $(`#${page}-data`).innerHTML=`
     <div class="flowmap"><div class="boxes">${FLOW[page].map(f=>`<div class="b"><b>${f[0]}</b> · ${f[1]}</div>`).join("")}</div><div class="arrow">→</div>
       <div class="b" style="border:1px solid var(--ink);border-radius:10px;padding:14px;background:#fff"><span class="kicker">This page</span><div style="font-weight:600;margin-top:4px">${OUT[page]}</div>
-      <div class="small muted" style="margin-top:6px">Files are read in your browser only: nothing is uploaded to a server. A file replaces the sample data for this session; reload the page to go back to the sample.</div></div></div>
+      <div class="small muted" style="margin-top:6px">Files are read in your browser only: nothing is uploaded to a server. ${sampleCleared?'The sample data is cleared, so what you load here is all the tool shows. Files last until you reload the page.':'A file replaces the sample data for this session; reload the page to go back to the sample.'}</div></div></div>
     <div class="srcgrid">${ids.map(srcCard).join("")}</div>`;
   const box=$(`#${page}-data`);
   box.querySelectorAll("[data-up]").forEach(inp=>inp.onchange=async()=>{
@@ -1218,6 +1225,40 @@ function renderData(page){
 function renderAllData(){["lib","pvp","sales","value"].forEach(renderData);}
 
 
+/* ---------------- CLEAR SAMPLE DATA ---------------- */
+const SAMPLE_SUPPLIERS = Object.keys(SUPPLIERS), SAMPLE_ODDS = Object.keys(BASE_ODDS);
+const CLEAR_KEY = "earlyline.sampleCleared";
+const store = { get(){ try{ return localStorage.getItem(CLEAR_KEY); }catch(e){ return null; } },
+  set(v){ try{ v ? localStorage.setItem(CLEAR_KEY,"1") : localStorage.removeItem(CLEAR_KEY); }catch(e){} } };
+let sampleCleared = false;
+function clearSample(){
+  if(openId) closePassport();
+  for(let i=LOTS.length-1;i>=0;i--) if(LOTS[i]._sample) LOTS.splice(i,1);
+  for(let i=ORDERS.length-1;i>=0;i--) if(ORDERS[i]._sample) ORDERS.splice(i,1);
+  if(!(UP.styles&&UP.styles.applied)) STYLES.splice(0,STYLES.length);
+  if(!(UP.sales&&UP.sales.applied)) Object.keys(SALES).forEach(k=>delete SALES[k]);
+  if(!(UP.lineplan&&UP.lineplan.applied)) SAMPLE_ODDS.forEach(k=>delete BASE_ODDS[k]);
+  if(!(UP.lead&&UP.lead.applied)) SAMPLE_SUPPLIERS.forEach(k=>delete SUPPLIERS[k]);
+  Object.assign(F,{type:"",newIn:false,rtd:false,fit:false}); F.vendor.clear(); F.quality.clear(); F.resale.clear(); $("#q").value="";
+  pvpOpen.clear(); sampleCleared = true; showSampleState();
+}
+function showSampleState(){
+  const b=$("#sampleBadge"), btn=$("#clearSample");
+  b.textContent = sampleCleared ? "Sample data cleared" : "Sample data · illustrative"; b.classList.toggle("off",sampleCleared);
+  btn.textContent = sampleCleared ? "Restore sample data" : "Clear sample data"; btn.classList.remove("confirm");
+  btn.title = sampleCleared ? "Reload the page with the sample data. Files you have used this session are dropped." : "Remove all sample fabrics, styles, sales and orders. Files you have used stay.";
+}
+$("#clearSample").onclick=()=>{
+  const btn=$("#clearSample");
+  if(sampleCleared){ store.set(false); location.reload(); return; }
+  if(!btn.classList.contains("confirm")){
+    btn.classList.add("confirm"); btn.textContent="Click again to clear";
+    clearTimeout(btn._t); btn._t=setTimeout(showSampleState,4000); return;
+  }
+  clearTimeout(btn._t); clearSample(); store.set(true); refreshAll();
+  toast("Sample data cleared. Upload your files in Data sources.");
+};
+
 /* ---------------- WIRING ---------------- */
 function refreshAll(){renderLibrary();renderPvp();renderSales();renderValue();renderAllData();if(openId)renderPassport();}
 document.querySelectorAll("nav.tabs button").forEach(b=>b.onclick=()=>{
@@ -1234,7 +1275,7 @@ document.querySelectorAll(".subtabs").forEach(bar=>bar.querySelectorAll("button"
 }));
 document.querySelectorAll("#pvpFilter button").forEach(b=>b.onclick=()=>{pvpFilter=b.dataset.f;renderPvp();});
 $("#pvpRtd").onchange=renderPvp;
-initFilters(); refreshAll();
+initFilters(); if(store.get()==="1") clearSample(); refreshAll();
 </script>
 </body>
 </html>

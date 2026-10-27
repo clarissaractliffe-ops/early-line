@@ -8,5 +8,6 @@ Live: https://clarissaractliffe-ops.github.io/early-line/
 - **Sales signal**: Power BI sell-through by base fabric moves each style's survival odds at pre-buy, and flags fast sellers with long lead times so undyed (RTD) fabric can be held for a reorder.
 - **Nona Source export**: eligible lots in one CSV; restricted lots are kept out with the reason.
 - **Value recovered**: reuse and resale against disposal, per lot, feeding the Savings report.
+- **Clear sample data** (top of the page): removes every sample fabric, style, sales row, order line, lead time and survival rate, so the tool shows only the files you load in Data sources. Files you have already used stay. The choice is remembered in your browser; **Restore sample data** brings the sample back.
 
 To make it permanent it needs hosting inside LVMH with sign-in, and read access to PLM, Power BI/ERP stock, sales and lab reports.

@@ -656,7 +656,15 @@ function resale(l){
   if(l.restr.some(r=>r.k==="cond")) return {cls:"a",label:"Resale with conditions",why:l.restr.filter(r=>r.k==="cond").map(r=>r.t).join(", ")};
   return {cls:"g",label:"Resale allowed",why:"No restriction"};
 }
+// other lots of the same reference (base fabric) whose test results differ from this lot's
+function qualityConflicts(l){
+  if(l.tests.status==="pending") return [];
+  const res=Object.fromEntries(l.tests.rows.map(r=>[r[0],String(r[2])]));
+  return LOTS.filter(o=>o!==l && o.base===l.base && o.tests.status!=="pending" &&
+    (o.tests.status!==l.tests.status || o.tests.rows.some(r=>r[0] in res && res[r[0]]!==String(r[2]))));
+}
 function testPill(l){
+  if(qualityConflicts(l).length) return '<span class="pill a"><span class="dot"></span>Check with quality team</span>';
   if(l.tests.status==="pass") return '<span class="pill g"><span class="dot"></span>Tests passed</span>';
   if(l.tests.status==="fail") return '<span class="pill r"><span class="dot"></span>Test failed</span>';
   return '<span class="pill a"><span class="dot"></span>No test results</span>';
@@ -765,7 +773,7 @@ function renderPassport(){
   const pct=v=>s.rec?(100*v/s.rec).toFixed(2)+"%":"0%";
   const reuse=s.used*l.price, resold=s.soldVal, lost=s.disp*l.price, disc=s.sold*l.price-s.soldVal, left=(s.used+s.sold+s.disp)*l.price;
   const rec = left? (reuse+resold)/left : 0;
-  const t=l.tests;
+  const t=l.tests, qc=qualityConflicts(l);
   const testRows = t.rows.map(r=>`<tr><td>${r[0]}</td><td class="muted">${r[1]}</td><td class="r num">${r[2]}</td><td class="r num muted">${r[3]}</td><td>${r[4]?'<span class="pill g">Pass</span>':'<span class="pill r">Fail</span>'}</td></tr>`).join("");
   const other = LOTS.filter(x=>x.base===l.base && x.id!==l.id);
 
@@ -825,7 +833,9 @@ function renderPassport(){
 
   <div class="sec" id="qsec">
     <div class="sechead"><h3>Quality tests</h3></div>
-    ${t.status==="pending" ? `
+    ${qc.length ? `
+      <div class="verdict a"><div><div class="t">Check with quality team</div><div class="small">Lots of reference ${l.base} have different test results (${qc.map(o=>`${o.base}.${o.col} ${esc(o.colName)}`).join(", ")}).</div></div></div>` :
+    t.status==="pending" ? `
       <div class="verdict a"><div><div class="t">No test results yet</div><div class="small">No quality test has been recorded for this lot.</div></div></div>` : `
       ${t.why?`<div class="verdict r" style="margin-bottom:12px"><div><div class="t">Why it failed</div><div class="small">${esc(t.why)}</div></div></div>`:''}
       <div class="tblwrap"><table><tr><th>Test</th><th>Standard</th><th class="r">Result</th><th class="r">Required</th><th>Status</th></tr>${testRows}</table></div>`}
@@ -1220,7 +1230,7 @@ const SOURCES = {
   apply(rows,M){ let n=0; rows.forEach(r=>{const c=code(r[M.code]); if(!c) return; const k=norm(r[M.kind]); const kind=/logo|exclusive|artwork|internal|exclusiv/.test(k)?"block":/cert|rws|gots|fail|condition/.test(k)?"cond":"info";
       LOTS.filter(l=>l.base===c.base&&(c.col==="0000"||l.col===c.col)).forEach(l=>{l.restr.push({k:kind,t:String(r[M.kind]),d:String(M.note!=null&&r[M.note]||"")});n++;});});
     return n?`${n} restrictions added.`:"No material code matched a lot in the library."; }},
- styles:{title:"Upcoming styles and draft BOMs", pages:["lib","sales","timing"], where:"PLM, FW27 line plan with draft BOMs", refresh:"Daily during development", used:"Styles a lot fits, need = consumption × planned units",
+ styles:{title:"Upcoming styles and draft BOMs", titles:{timing:"RTW follow up pre-buy by style"}, pages:["lib","sales","timing"], where:"PLM, FW27 line plan with draft BOMs", refresh:"Daily during development", used:"Styles a lot fits, need = consumption × planned units",
   fields:[["style","Style code",["style","style code","estilo","modelo"],1],["name","Description",["description","name","descripcion"],0],["cat","Category",["category","categoria","family","familia"],1],
           ["base","Base fabric code",["base fabric","fabric","material code","codigo","tejido"],1],["cons","Consumption m / unit",["consumption","yield","consumo"],1],["units","Planned units",["units","planned units","quantity","unidades","cantidad"],1],
           ["drop","Drop",["drop","delivery","entrega"],0]],
@@ -1298,8 +1308,8 @@ async function readFile(file){
   }
   return parseCSV(await file.text());
 }
-function srcCard(id){
-  const S=SOURCES[id], u=UP[id];
+function srcCard(id, page){
+  const S=SOURCES[id], u=UP[id], title=(S.titles&&S.titles[page])||S.title;
   const req=S.fields.filter(f=>f[3]), opt=S.fields.filter(f=>!f[3]);
   const chip=(f)=>{ if(!u||S.pdf) return `<span class="col ${f[3]?'':'opt'}">${esc(f[1])}${f[3]?'':' (optional)'}</span>`;
     const hit=u.map[f[0]]; return `<span class="col ${hit?'ok':f[3]?'miss':'opt'}">${hit?'✓ ':f[3]?'✕ ':''}${esc(f[1])}${hit?` ← ${esc(hit)}`:''}</span>`; };
@@ -1315,7 +1325,7 @@ function srcCard(id){
       ${u.msg?`<span class="small" style="align-self:center;color:var(--green)">${esc(u.msg)}</span>`:''}</div></div>`;
   }
   return `<div class="srccard" id="src-${id}">
-    <div class="srctop"><div><div class="t">${esc(S.title)}</div><div class="small muted">${esc(S.used)}</div></div>
+    <div class="srctop"><div><div class="t">${esc(title)}</div><div class="small muted">${esc(S.used)}</div></div>
       <div class="btns">${status}<label class="upl">Upload ${S.pdf?'PDF':'CSV or Excel'}<input type="file" data-up="${id}" accept="${S.pdf?'.pdf':'.csv,.xlsx,.xls,.xlsm,.txt'}" ${S.pdf?'multiple':''}></label></div></div>
     <div class="srcmeta"><div>Where it lives<b>${esc(S.where)}</b></div><div>Refresh<b>${esc(S.refresh)}</b></div><div>Connection when hosted<b>${S.pdf?'SharePoint folder or mailbox, read-only':'Scheduled export or Microsoft Graph, read-only'}</b></div></div>
     <div class="small muted">Columns ${u&&!S.pdf?'found in your file':'it needs'}</div>
@@ -1328,7 +1338,7 @@ const FLOW = {
   sales:[["Sales by style","Power BI"],["Past BOMs","PLM"],["Line review history","PLM"],["Lead times","Order export"],["FW27 draft BOMs","PLM"],["Undyed stock","Library"]],
   pvp:[["Pre-buy order lines","ERP order export"],["Production order lines","ERP order export"],["Lead times","Order date → promised delivery"],["Prices","Precio unitario"]],
   value:[["Purchase price","Order export, PLM"],["Movements","ERP, warehouse"],["Resale (ex. Nona Source)","Resale sales reports"]],
-  timing:[["Pre-buy calendar","You (Sourcing)"],["Drop calendar","Merch team"],["Fabric lead times","PLM, fabric data"],["Styles and draft BOMs","PLM"],["Pre-buy order lines","ERP order export"]]
+  timing:[["Pre-buy calendar","You (Sourcing)"],["Drop calendar","Merch team"],["Fabric lead times","PLM, fabric data"],["RTW follow up pre-buy by style","PLM"],["Pre-buy order lines","ERP order export"]]
 };
 const OUT = {timing:"Which pre-buy each fabric goes in, and what to act on now", pvp:"Over, short and value per fabric and colour", lib:"Fabric cards and passports", sales:"Survival odds, firm tranche, reorder holds", value:"Value recovered → Savings report"};
 function renderData(page){
@@ -1337,7 +1347,7 @@ function renderData(page){
     <div class="flowmap"><div class="boxes">${FLOW[page].map(f=>`<div class="b"><b>${f[0]}</b> · ${f[1]}</div>`).join("")}</div><div class="arrow">→</div>
       <div class="b" style="border:1px solid var(--ink);border-radius:10px;padding:14px;background:#fff"><span class="kicker">This page</span><div style="font-weight:600;margin-top:4px">${OUT[page]}</div>
       <div class="small muted" style="margin-top:6px">Files are read in your browser only: nothing is uploaded to a server. ${sampleCleared?'The sample data is cleared, so what you load here is all the tool shows. Files last until you reload the page.':'A file replaces the sample data for this session; reload the page to go back to the sample.'}</div></div></div>
-    <div class="srcgrid">${ids.map(srcCard).join("")}</div>`;
+    <div class="srcgrid">${ids.map(id=>srcCard(id,page)).join("")}</div>`;
   const box=$(`#${page}-data`);
   box.querySelectorAll("[data-up]").forEach(inp=>inp.onchange=async()=>{
     const id=inp.dataset.up, S=SOURCES[id], files=[...inp.files]; if(!files.length) return;
